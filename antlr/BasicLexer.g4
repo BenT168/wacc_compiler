@@ -6,6 +6,7 @@ MINUS: '-' ;
 MULTI: '*' ;
 DIV : '/' ;
 MOD : '%' ;
+EQUALS : '=' ;
 
 //relational-operators
 LT : '<' ;
@@ -27,9 +28,6 @@ NOT : '!' ;
 INC : '+' ;
 DEC : '-' ;
 
-//brackets
-OPEN_PARENTHESES : '(' ;
-CLOSE_PARENTHESES : ')' ;
 
 //integer-sign
 POS : '+' ;
@@ -53,7 +51,7 @@ OPEN_SQUARE: '[' ;
 CLOSE_SQUARE: ']' ;
 
 //numbers
-fragment DIGIT : '0'..'9' ; 
+fragment DIGIT : '0'..'9' ;
 INTEGER: DIGIT+ ;
 
 //program keywords
@@ -129,4 +127,3 @@ IDENTITY: ID_BEGIN_CHAR ID_CHAR* ;
 
 //char literal:
 CHAR_LITER : APOSTROPHE ANY_CHAR APOSTROPHE ;
-
