@@ -1,8 +1,5 @@
 import antlr.BasicParser;
 
-/**
- * Created by aa14415 on 01/11/16.
- */
 public class Type {
 
     private BasicParser bp;
@@ -17,17 +14,19 @@ public class Type {
     }
 
     String getType() {
-        String kindoftype = bp.type().toString();
-        if(kindoftype.compareTo("baseType") == 0) {
+        String kindOfType = bp.type().toString();
+        if(kindOfType.compareTo("baseType") == 0) {
             return  bp.type().baseType().toString();
         }
-        if(kindoftype.compareTo("arrayType") == 0) {
+        if(kindOfType.compareTo("arrayType") == 0) {
             isArray = true;
             return  bp.type().arrayType().toString();
         }
-        if(kindoftype.compareTo("pairType") == 0) {
+        if(kindOfType.compareTo("pairType") == 0) {
             return  bp.type().baseType().toString();
         }
+        return "";
+        //TODO
     }
 
 }
