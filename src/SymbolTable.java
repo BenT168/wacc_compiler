@@ -3,7 +3,12 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 public class SymbolTable implements Cloneable {
-    private Map<String, Type> table = new HashMap<>();
+    private Map<String, Type> table;
+
+    /* Creates new symbol table */
+    public SymbolTable() {
+        this.table = new HashMap<>();
+    }
 
     /* Adds item to symbol table.
      * Every item is a pair of variable name and its associated type. */
