@@ -1,8 +1,9 @@
 lexer grammar BasicLexer;
 
+
 //binary-operators
 PLUS: '+' ;
-MINUS: '-' ;
+MINUS: '@' ;
 MULTI: '*' ;
 DIV : '/' ;
 MOD : '%' ;
@@ -26,7 +27,7 @@ ORD : 'ord' ;
 CHR : 'chr' ;
 NOT : '!' ;
 INC : '+' ;
-DEC : '-' ;
+DEC : '@' ;
 
 
 //integer-sign
@@ -127,3 +128,4 @@ IDENTITY: ID_BEGIN_CHAR ID_CHAR* ;
 
 //char literal:
 CHAR_LITER : APOSTROPHE ANY_CHAR APOSTROPHE ;
+

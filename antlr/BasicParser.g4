@@ -4,6 +4,7 @@ options {
   tokenVocab=BasicLexer;
 }
 
+
 program: BEGIN (func)* stat END ;
 
 func : type IDENTITY OPEN_PARENTHESES (paramList)? CLOSE_PARENTHESES IS stat END ;
@@ -65,15 +66,15 @@ expr: expr binaryOper expr
 | OPEN_PARENTHESES expr CLOSE_PARENTHESES
 ;
 
-unaryOper : LEN | ORD | CHR | NOT | INC | DEC ;
+intLiter :  intSign? INTEGER ;
+
+intSign : PLUS | NEG ;
+
+unaryOper : LEN | ORD | CHR | NOT | PLUS | MINUS ;
 
 binaryOper : PLUS | MINUS | MULTI | DIV | MOD | LT | GT | LTE | GTE | EQ | AND | NEQ | OR ;
 
 arrayElem : IDENTITY (OPEN_SQUARE expr CLOSE_SQUARE)+ ;
-
-intLiter : (intSign)? INTEGER ;
-
-intSign : POS | NEG ;
 
 boolLiter : TRUE | FALSE ;
 
