@@ -16,7 +16,7 @@ public class Type {
         this.type = type;
     }
 
-    String getType() {
+    public String getType() {
         String kindoftype = bp.type().toString();
         if(kindoftype.compareTo("baseType") == 0) {
             return  bp.type().baseType().toString();
@@ -28,6 +28,7 @@ public class Type {
         if(kindoftype.compareTo("pairType") == 0) {
             return  bp.type().baseType().toString();
         }
+        return bp.type().baseType().toString();
     }
 
 }
