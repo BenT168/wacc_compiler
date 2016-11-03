@@ -1,7 +1,5 @@
 import antlr.BasicLexer;
 import antlr.BasicParser;
-import antlr.BasicParserBaseVisitor;
-import antlr.BasicParserVisitor;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -40,7 +38,7 @@ public class Main {
             BasicParser parser = new BasicParser(tokens);
             ParseTree tree = parser.program();
 
-            //System.out.println(tree.toStringTree(parser));
+            System.out.println(tree.toStringTree(parser));
 
             /*Check if there are any Syntatic errors
              */
@@ -49,8 +47,13 @@ public class Main {
                 System.exit(100);
             }
 
-            String answer = new myVisitor().visit(tree);
-            System.out.println(answer);
+            myVisitor visitor = new myVisitor();
+
+            String answer = visitor.visit(tree);
+            //System.out.println(answer);
+
+            visitor.checkVariablesAreAdded();
+
 
             //TODO: Check if semantic error and exit with code 200
 
