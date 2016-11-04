@@ -6,10 +6,12 @@ public class SemanticError {
 
     public void semanticErrorCase(String name, String errorType) {
         switch(errorType) {
-            case "Variable" :
+            case "notInitialised" :
                 System.out.println("Semantic error: " + name + " has not been initialised.");
             case "exit" :
                 System.out.println("Semantic Error: exit is not executed with the right type");
+            case "add" :
+                System.out.println("Semantic error: " + name + " has already been initialised.");
         }
         System.exit(200);
     }

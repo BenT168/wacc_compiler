@@ -5,22 +5,49 @@ import org.antlr.v4.runtime.misc.NotNull;
 
 public class myVisitor extends BasicParserBaseVisitor<String> {
 
-    /* Maps Types and Variable
-     */
-    private SymbolTable symbolTable = new SymbolTable();
-
     /* For Storing Variables and its information
      */
-    private Assignments assignments = new Assignments();
+    private SymbolTable symbolTable = new SymbolTable();
 
     /* For calling semantic error     */
     private SemanticError semanticError = new SemanticError();
 
 
 
+
+    @Override
+    public String visitProgram(@NotNull BasicParser.ProgramContext ctx) {
+        System.out.println(ctx.start.getLine());
+        //if(ctx.BEGIN())
+        //assignments = new Assignments();
+        return visitChildren(ctx);
+    }
+
+
+
+    @Override
+    public String visitStat(@NotNull BasicParser.StatContext ctx) {
+        int numberOfStats = ctx.stat().size();
+
+        // Go through multiple stats
+        if(numberOfStats == 0) {
+            visitOneStat(ctx);
+        }
+        return visitChildren(ctx);
+    }
+
+
     //@Override
     public String visitOneStat(@NotNull BasicParser.StatContext ctx) {
         int exitValue; // in case of exit we have the exit code
+
+        // Check first two letters of stat and match
+        switch(ctx.getText().substring(0,2)) {
+            case "if" : //TODO
+                break;
+        }
+
+        if(ctx.getText().length() > 2)
 
         // Check first four letters of stat and match
         switch(ctx.getText().substring(0,4)) {
@@ -31,13 +58,12 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
             case "exit" :
                 String value = visitExpr(ctx.expr());
                 if(!isParsable(value)) {
-                    System.out.println(ctx.type());
-                    assignments.exitCount = 1;
-                    Type type = assignments.lookUpType(value);
+                    symbolTable.exitCount = 1;
+                    Type type = symbolTable.lookUpType(value);
                     if(!type.isInt()) {
                         semanticError.semanticErrorCase(value, "exit");
                     }
-                    exitValue = assignments.lookUpInt(value);
+                    exitValue = symbolTable.lookUpInt(value);
                 } else {
                     exitValue = Integer.parseInt(value);
                 }
@@ -53,18 +79,38 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
                 break;
         }
 
+        if(ctx.getText().length() > 5)
+
+        // Check first two letters of stat and match
+        switch(ctx.getText().substring(0,5)) {
+            case "begin" :
+                SymbolTable newScope = new SymbolTable();
+                SymbolTable tmp = symbolTable;
+                newScope.setParentSymbolTable(tmp);
+                symbolTable = newScope;
+            case "print" : //TODO
+                break;
+            case "while" : //TODO
+        }
+
+
+        System.out.println(ctx.getText().length());
+        System.out.println(ctx.getText());
+
         /* Check if current token is a type
          */
+        Boolean isString = false;
         Boolean isBool   = ctx.getText().substring(0,4).compareTo("bool")   == 0;
         Boolean isInt    = ctx.getText().substring(0,3).compareTo("int")    == 0;
         Boolean isChar   = ctx.getText().substring(0,4).compareTo("char")   == 0;
-        Boolean isString = ctx.getText().substring(0,6).compareTo("string") == 0;
+         if(ctx.getText().length() > 5) {
+             isString = ctx.getText().substring(0, 6).compareTo("string") == 0;
+         }
 
         Boolean isType = isBool | isInt | isChar | isString;
 
         if(isType) {
-            /* STAT of form: type IDENTITY EQUALS assignRHS
-             */
+            //STAT of form: type IDENTITY EQUALS assignRHS
 
             //Get Type of statement
             String sType = visitType(ctx.type());
@@ -73,13 +119,13 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
             //Get Variable name e.g x
             String varName = ctx.IDENTITY().getText();
 
-            // Get expression
+            // Get expression of RHS
             String value = visitExpr(ctx.assignRHS().expr(0));
 
             //Initialise Variable with name and type
             Variable variable = new Variable(varName, type);
 
-            //Check what value expression is
+            //Check what value of RHS expression is
 
             // Check if integer
             if (isParsable(value)) {
@@ -109,52 +155,35 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
             }
 
             //Add variable to Assignments
-            assignments.add(variable);
-            //Add type and varName to symboltable
-            symbolTable.add(varName, type);
+            symbolTable.add(variable);
         }
 
-    /*    if(ctx.getText().substring(0,6).compareTo("return") == 0) {
-
+        if(ctx.getText().length() >= 6) {
+            switch (ctx.getText().substring(0, 6)) {
+                case "return": //TODO
+                    break;
+            }
         }
 
-        switch(ctx.getText().substring(0,6)) {
-            case "return" :
+        if(ctx.getText().length() >= 7) {
+            switch (ctx.getText().substring(0, 7)) {
+                case "println": //TODO
+                    break;
+            }
         }
 
-        switch(ctx.getText().substring(0,9)) {
-            case "assignLHS" :
+        if (ctx.getText().length() >= 9) {
+            switch (ctx.getText().substring(0, 9)) {
+                case "assignLHS": //TODO
+            }
         }
-        switch(ctx.getText().substring(0,6)) {
-            case "return" :
-        }*/
-        //System.out.println(ctx.SEMI_COLON());
+
         return visitChildren(ctx);
     }
 
 
-    @Override
-    public String visitStat(@NotNull BasicParser.StatContext ctx) {
-        int numberOfStats = ctx.stat().size();
-        //System.out.println(numberOfStats);
 
-        // For just one stat
-        if(numberOfStats == 0) {
-            visitOneStat(ctx);
-        }
-
-        //For multiple stats
-        //System.out.println(ctx.stat(0).getText());
-       // for(int i = 0; i < numberOfStats; i++) {
-            //System.out.println("in  here");
-            //System.out.println(ctx.stat(0).getText());
-           // visitOneStat(ctx.stat(i));
-        //}
-        return visitChildren(ctx);
-    }
-
-
-    @Override
+        @Override
     public String visitExpr(@NotNull BasicParser.ExprContext ctx) {
         //System.out.println("expr " + ctx.getText());
         return ctx.getText();
@@ -179,7 +208,7 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
 
 
     public void checkVariablesAreAdded() {
-        assignments.printList();
+        symbolTable.printList();
     }
 
 

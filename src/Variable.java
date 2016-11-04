@@ -20,6 +20,7 @@ public class Variable {
         this.type = type;
     }
 
+    // Checks that valueType (actual type) is the same as expected type
     private void variableTypeCheck(String valueType) {
       SemanticError semanticError = new SemanticError();
       if(type.getType().compareTo(valueType) != 0) {

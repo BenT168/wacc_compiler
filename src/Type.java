@@ -1,6 +1,6 @@
 import antlr.BasicParser;
 
-public class Type {
+public class Type implements TypeInterface{
 
     private BasicParser bp;
     private String type;
@@ -18,26 +18,6 @@ public class Type {
             System.exit(-1);
         }
     }
-
-    /*public String getType() {
-        String kindOfType = bp.type().toString();
-
-        if(kindOfType.compareTo("baseType") == 0) {
-            return  bp.type().baseType().toString();
-        }
-
-        if(kindOfType.compareTo("arrayType") == 0) {
-            isArray = true;
-            arrayDepth++;
-            return  bp.type().arrayType().toString();
-
-        }
-        if(kindOfType.compareTo("pairType") == 0) {
-            return  bp.type().baseType().toString();
-        }
-        return "";
-        //TODO
-    }*/
 
     public String getType() {
         return type;
