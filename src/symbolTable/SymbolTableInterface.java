@@ -1,6 +1,7 @@
-package SymbolTable;
+package symbolTable;
 
-import com.sun.org.apache.xpath.internal.operations.Variable;
+import frontEnd.tree.Variable;
+import frontEnd.tree.Type;
 
 import java.util.List;
 

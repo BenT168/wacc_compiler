@@ -1,10 +1,12 @@
-package frontEnd;
+package frontEnd.visitor;
 
-import SymbolTable.SymbolTable;
-import antlr.BasicParser;
-import antlr.BasicParserBaseVisitor;
-import frontEnd.SemanticError;
+import frontEnd.semanticCheck.SemanticError;
+import frontEnd.antlr.BasicParser;
+import frontEnd.antlr.BasicParserBaseVisitor;
+import frontEnd.tree.Type;
+import frontEnd.tree.Variable;
 import org.antlr.v4.runtime.misc.NotNull;
+import symbolTable.SymbolTable;
 
 
 public class myVisitor extends BasicParserBaseVisitor<String> {
@@ -18,7 +20,6 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
 
 
 
-
     @Override
     public String visitProgram(@NotNull BasicParser.ProgramContext ctx) {
         System.out.println(ctx.start.getLine());
@@ -26,8 +27,6 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
         //assignments = new Assignments();
         return visitChildren(ctx);
     }
-
-
 
     @Override
     public String visitStat(@NotNull BasicParser.StatContext ctx) {
@@ -39,7 +38,6 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
         }
         return visitChildren(ctx);
     }
-
 
     //@Override
     public String visitOneStat(@NotNull BasicParser.StatContext ctx) {
@@ -62,7 +60,7 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
             case "exit" :
                 String value = visitExpr(ctx.expr());
                 if(!isParsable(value)) {
-                    symbolTable.exitCount = 1;
+                    symbolTable.exitCount() = 1;
                     Type type = symbolTable.lookUpType(value);
                     if(!type.isInt()) {
                         semanticError.semanticErrorCase(value, "exit");

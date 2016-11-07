@@ -1,8 +1,5 @@
-package frontEnd;
+package frontEnd.semanticCheck;
 
-/**
- * Created by aa14415 on 03/11/16.
- */
 public class SemanticError {
 
 

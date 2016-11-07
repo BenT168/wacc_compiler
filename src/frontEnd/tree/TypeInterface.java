@@ -1,8 +1,5 @@
-package frontEnd;
+package frontEnd.tree;
 
-/**
- * Created by aa14415 on 04/11/16.
- */
 public interface TypeInterface {
 
     String getType();

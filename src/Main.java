@@ -1,6 +1,7 @@
 import antlr.BasicLexer;
 import antlr.BasicParser;
-import frontEnd.myVisitor;
+import frontEnd.antlr.BasicParser;
+import frontEnd.visitor.myVisitor;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -34,7 +35,7 @@ public class Main {
         try {
             fis = new FileInputStream(file);
             CharStream input = new ANTLRInputStream(fis);
-            BasicLexer lexer = new BasicLexer(input);
+            BasicParser lexer = new BasicParser(input);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             BasicParser parser = new BasicParser(tokens);
             ParseTree tree = parser.program();

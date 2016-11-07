@@ -1,4 +1,6 @@
-package frontEnd;
+package frontEnd.tree;
+
+import frontEnd.semanticCheck.SemanticError;
 
 public class Variable {
 

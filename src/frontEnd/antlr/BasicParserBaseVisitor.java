@@ -1,5 +1,5 @@
 // Generated from ./BasicParser.g4 by ANTLR 4.4
-package antlr;
+package frontEnd.antlr;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 

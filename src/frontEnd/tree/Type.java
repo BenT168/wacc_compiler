@@ -1,6 +1,6 @@
-package frontEnd;
+package frontEnd.tree;
 
-import antlr.BasicParser;
+import frontEnd.antlr.BasicParser;
 
 public class Type implements TypeInterface {
 

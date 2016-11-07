@@ -1,13 +1,16 @@
 // Generated from ./BasicParser.g4 by ANTLR 4.4
-package antlr;
-import org.antlr.v4.runtime.atn.*;
-import org.antlr.v4.runtime.dfa.DFA;
+package frontEnd.antlr;
+
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.*;
-import org.antlr.v4.runtime.tree.*;
+import org.antlr.v4.runtime.atn.ATN;
+import org.antlr.v4.runtime.atn.ATNDeserializer;
+import org.antlr.v4.runtime.atn.ParserATNSimulator;
+import org.antlr.v4.runtime.atn.PredictionContextCache;
+import org.antlr.v4.runtime.dfa.DFA;
+import org.antlr.v4.runtime.tree.ParseTreeVisitor;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class BasicParser extends Parser {
@@ -91,7 +94,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_program; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitProgram(this);
+			if ( visitor instanceof BasicParserVisitor) return ((BasicParserVisitor<? extends T>)visitor).visitProgram(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -107,13 +110,13 @@ public class BasicParser extends Parser {
 			setState(54);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,0,_ctx);
-			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
+			while ( _alt!=2 && _alt!= ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
 					{
 					setState(51); func();
 					}
-					} 
+					}
 				}
 				setState(56);
 				_errHandler.sync(this);
@@ -155,7 +158,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_func; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitFunc(this);
+			if ( visitor instanceof BasicParserVisitor) return ((BasicParserVisitor<? extends T>)visitor).visitFunc(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -212,7 +215,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_paramList; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitParamList(this);
+			if ( visitor instanceof BasicParserVisitor) return ((BasicParserVisitor<? extends T>)visitor).visitParamList(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -263,7 +266,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_param; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitParam(this);
+			if ( visitor instanceof BasicParserVisitor) return ((BasicParserVisitor<? extends T>)visitor).visitParam(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -333,7 +336,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_stat; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitStat(this);
+			if ( visitor instanceof BasicParserVisitor) return ((BasicParserVisitor<? extends T>)visitor).visitStat(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -451,7 +454,7 @@ public class BasicParser extends Parser {
 			setState(130);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
-			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
+			while ( _alt!=2 && _alt!= ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
@@ -464,7 +467,7 @@ public class BasicParser extends Parser {
 					setState(126); match(SEMI_COLON);
 					setState(127); stat(2);
 					}
-					} 
+					}
 				}
 				setState(132);
 				_errHandler.sync(this);
@@ -497,7 +500,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_assignLHS; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitAssignLHS(this);
+			if ( visitor instanceof BasicParserVisitor) return ((BasicParserVisitor<? extends T>)visitor).visitAssignLHS(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -567,7 +570,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_assignRHS; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitAssignRHS(this);
+			if ( visitor instanceof BasicParserVisitor) return ((BasicParserVisitor<? extends T>)visitor).visitAssignRHS(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -672,7 +675,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_argList; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitArgList(this);
+			if ( visitor instanceof BasicParserVisitor) return ((BasicParserVisitor<? extends T>)visitor).visitArgList(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -724,7 +727,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_pairElem; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitPairElem(this);
+			if ( visitor instanceof BasicParserVisitor) return ((BasicParserVisitor<? extends T>)visitor).visitPairElem(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -780,7 +783,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_type; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitType(this);
+			if ( visitor instanceof BasicParserVisitor) return ((BasicParserVisitor<? extends T>)visitor).visitType(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -833,7 +836,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_baseType; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitBaseType(this);
+			if ( visitor instanceof BasicParserVisitor) return ((BasicParserVisitor<? extends T>)visitor).visitBaseType(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -882,7 +885,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_arrayType; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitArrayType(this);
+			if ( visitor instanceof BasicParserVisitor) return ((BasicParserVisitor<? extends T>)visitor).visitArrayType(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -928,7 +931,7 @@ public class BasicParser extends Parser {
 			setState(194);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,12,_ctx);
-			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
+			while ( _alt!=2 && _alt!= ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
@@ -941,7 +944,7 @@ public class BasicParser extends Parser {
 					setState(190); match(OPEN_SQUARE);
 					setState(191); match(CLOSE_SQUARE);
 					}
-					} 
+					}
 				}
 				setState(196);
 				_errHandler.sync(this);
@@ -977,7 +980,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_pairType; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitPairType(this);
+			if ( visitor instanceof BasicParserVisitor) return ((BasicParserVisitor<? extends T>)visitor).visitPairType(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1021,7 +1024,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_pairElemType; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitPairElemType(this);
+			if ( visitor instanceof BasicParserVisitor) return ((BasicParserVisitor<? extends T>)visitor).visitPairElemType(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1101,7 +1104,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_expr; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitExpr(this);
+			if ( visitor instanceof BasicParserVisitor) return ((BasicParserVisitor<? extends T>)visitor).visitExpr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1176,7 +1179,7 @@ public class BasicParser extends Parser {
 			setState(232);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,15,_ctx);
-			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
+			while ( _alt!=2 && _alt!= ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
@@ -1189,7 +1192,7 @@ public class BasicParser extends Parser {
 					setState(227); binaryOper();
 					setState(228); expr(11);
 					}
-					} 
+					}
 				}
 				setState(234);
 				_errHandler.sync(this);
@@ -1219,7 +1222,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_intLiter; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitIntLiter(this);
+			if ( visitor instanceof BasicParserVisitor) return ((BasicParserVisitor<? extends T>)visitor).visitIntLiter(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1262,7 +1265,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_intSign; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitIntSign(this);
+			if ( visitor instanceof BasicParserVisitor) return ((BasicParserVisitor<? extends T>)visitor).visitIntSign(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1306,7 +1309,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_unaryOper; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitUnaryOper(this);
+			if ( visitor instanceof BasicParserVisitor) return ((BasicParserVisitor<? extends T>)visitor).visitUnaryOper(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1357,7 +1360,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_binaryOper; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitBinaryOper(this);
+			if ( visitor instanceof BasicParserVisitor) return ((BasicParserVisitor<? extends T>)visitor).visitBinaryOper(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1410,7 +1413,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_arrayElem; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitArrayElem(this);
+			if ( visitor instanceof BasicParserVisitor) return ((BasicParserVisitor<? extends T>)visitor).visitArrayElem(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1423,7 +1426,7 @@ public class BasicParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(246); match(IDENTITY);
-			setState(251); 
+			setState(251);
 			_errHandler.sync(this);
 			_alt = 1;
 			do {
@@ -1440,10 +1443,10 @@ public class BasicParser extends Parser {
 				default:
 					throw new NoViableAltException(this);
 				}
-				setState(253); 
+				setState(253);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,17,_ctx);
-			} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
+			} while ( _alt!=2 && _alt!= ATN.INVALID_ALT_NUMBER );
 			}
 		}
 		catch (RecognitionException re) {
@@ -1466,7 +1469,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_boolLiter; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitBoolLiter(this);
+			if ( visitor instanceof BasicParserVisitor) return ((BasicParserVisitor<? extends T>)visitor).visitBoolLiter(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1505,7 +1508,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_charLiter; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitCharLiter(this);
+			if ( visitor instanceof BasicParserVisitor) return ((BasicParserVisitor<? extends T>)visitor).visitCharLiter(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1549,7 +1552,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_arrayLiter; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitArrayLiter(this);
+			if ( visitor instanceof BasicParserVisitor) return ((BasicParserVisitor<? extends T>)visitor).visitArrayLiter(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1606,7 +1609,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_pairLiter; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitPairLiter(this);
+			if ( visitor instanceof BasicParserVisitor) return ((BasicParserVisitor<? extends T>)visitor).visitPairLiter(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1639,7 +1642,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_comment; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitComment(this);
+			if ( visitor instanceof BasicParserVisitor) return ((BasicParserVisitor<? extends T>)visitor).visitComment(this);
 			else return visitor.visitChildren(this);
 		}
 	}

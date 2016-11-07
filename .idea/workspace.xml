@@ -2,36 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="74924932-13b5-4181-a219-7e9ee32e6170" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/frontEnd/Type.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/frontEnd/Variable.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/Expr.java" afterPath="$PROJECT_DIR$/src/frontEnd/Expr.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/SemanticError.java" afterPath="$PROJECT_DIR$/src/frontEnd/SemanticError.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/SymbolTable.java" afterPath="$PROJECT_DIR$/src/SymbolTable/SymbolTable.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/SymbolTableInterface.java" afterPath="$PROJECT_DIR$/src/SymbolTable/SymbolTableInterface.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/Type.java" afterPath="$PROJECT_DIR$/src/frontEnd/Type.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/TypeInterface.java" afterPath="$PROJECT_DIR$/src/frontEnd/TypeInterface.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/Variable.java" afterPath="$PROJECT_DIR$/src/frontEnd/Variable.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/myVisitor.java" afterPath="$PROJECT_DIR$/src/frontEnd/myVisitor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicLexer.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicLexer.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$ArgListContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$ArgListContext.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$ArrayElemContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$ArrayElemContext.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$ArrayLiterContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$ArrayLiterContext.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$ArrayTypeContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$ArrayTypeContext.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$BaseTypeContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$BaseTypeContext.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$BinaryOperContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$BinaryOperContext.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$BoolLiterContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$BoolLiterContext.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$CharLiterContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$CharLiterContext.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$CommentContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$CommentContext.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$ExprContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$ExprContext.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$IntLiterContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$IntLiterContext.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$IntSignContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$IntSignContext.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$PairElemContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$PairElemContext.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$PairElemTypeContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$PairElemTypeContext.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$PairLiterContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$PairLiterContext.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$PairTypeContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$PairTypeContext.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$TypeContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$TypeContext.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$UnaryOperContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$UnaryOperContext.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/frontEnd/antlr/BasicLexer.tokens" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/frontEnd/antlr/BasicParser.tokens" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/SymbolTable/SymbolTable.java" afterPath="$PROJECT_DIR$/src/symbolTable/SymbolTable.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/SymbolTable/SymbolTableInterface.java" afterPath="$PROJECT_DIR$/src/symbolTable/SymbolTableInterface.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/antlr/BasicLexer.java" afterPath="$PROJECT_DIR$/src/frontEnd/antlr/BasicLexer.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/antlr/BasicLexer.tokens" afterPath="$PROJECT_DIR$/src/frontEnd/antlr/BasicLexer.tokens" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/antlr/BasicParser.java" afterPath="$PROJECT_DIR$/src/frontEnd/antlr/BasicParser.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/antlr/BasicParser.tokens" afterPath="$PROJECT_DIR$/src/frontEnd/antlr/BasicParser.tokens" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/antlr/BasicParserBaseVisitor.java" afterPath="$PROJECT_DIR$/src/frontEnd/antlr/BasicParserBaseVisitor.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/antlr/BasicParserVisitor.java" afterPath="$PROJECT_DIR$/src/frontEnd/antlr/BasicParserVisitor.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/frontEnd/Expr.java" afterPath="$PROJECT_DIR$/src/frontEnd/tree/Expr.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/frontEnd/SemanticError.java" afterPath="$PROJECT_DIR$/src/frontEnd/semanticCheck/SemanticError.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/frontEnd/Type.java" afterPath="$PROJECT_DIR$/src/frontEnd/tree/Type.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/frontEnd/TypeInterface.java" afterPath="$PROJECT_DIR$/src/frontEnd/tree/TypeInterface.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/frontEnd/Variable.java" afterPath="$PROJECT_DIR$/src/frontEnd/tree/Variable.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/frontEnd/myVisitor.java" afterPath="$PROJECT_DIR$/src/frontEnd/visitor/myVisitor.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Main.java" afterPath="$PROJECT_DIR$/src/Main.java" />
     </list>
     <ignored path="wacc_10.iws" />
@@ -54,42 +40,20 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="Expr.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/frontEnd/Expr.java">
+        <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/Expr.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="36">
               <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TypeInterface.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/frontEnd/TypeInterface.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="5" column="17" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="myVisitor.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/frontEnd/myVisitor.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="126">
-              <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="SymbolTableInterface.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/SymbolTable/SymbolTableInterface.java">
+        <entry file="file://$PROJECT_DIR$/src/symbolTable/SymbolTableInterface.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="10" column="11" selection-start-line="10" selection-start-column="11" selection-end-line="10" selection-end-column="11" />
+            <state relative-caret-position="74">
+              <caret line="11" column="16" selection-start-line="11" selection-start-column="16" selection-end-line="11" selection-end-column="16" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -97,18 +61,18 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Variable.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/frontEnd/Variable.java">
+      <file leaf-file-name="Type.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/Type.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="36">
-              <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+            <state relative-caret-position="306">
+              <caret line="17" column="16" selection-start-line="17" selection-start-column="16" selection-end-line="17" selection-end-column="16" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Type.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/frontEnd/Type.java">
+      <file leaf-file-name="Variable.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/Variable.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="72">
               <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
@@ -117,32 +81,66 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SymbolTable.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/SymbolTable/SymbolTable.java">
+      <file leaf-file-name="TypeInterface.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/TypeInterface.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="324">
-              <caret line="21" column="5" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
+            <state relative-caret-position="36">
+              <caret line="2" column="17" selection-start-line="2" selection-start-column="17" selection-end-line="2" selection-end-column="17" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="myVisitor.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/frontEnd/visitor/myVisitor.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-198">
+              <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="650">
-              <caret line="50" column="48" selection-start-line="50" selection-start-column="48" selection-end-line="50" selection-end-column="48" />
+            <state relative-caret-position="702">
+              <caret line="49" column="13" selection-start-line="49" selection-start-column="13" selection-end-line="49" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BasicParser.tokens" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/frontEnd/antlr/BasicParser.tokens">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="SemanticError.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/frontEnd/SemanticError.java">
+        <entry file="file://$PROJECT_DIR$/src/frontEnd/semanticCheck/SemanticError.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+            <state relative-caret-position="36">
+              <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SymbolTable.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/symbolTable/SymbolTable.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="306">
+              <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -162,12 +160,19 @@
       <list>
         <option value="$PROJECT_DIR$/src/SymbolTable/SymbolTableInterface.java" />
         <option value="$PROJECT_DIR$/src/SymbolTable/SymbolTable.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/SemanticError.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/myVisitor.java" />
         <option value="$PROJECT_DIR$/src/frontEnd/Expr.java" />
         <option value="$PROJECT_DIR$/src/frontEnd/TypeInterface.java" />
         <option value="$PROJECT_DIR$/src/Variable.java" />
         <option value="$PROJECT_DIR$/src/frontEnd/Type.java" />
+        <option value="$PROJECT_DIR$/src/frontEnd/SemanticError.java" />
+        <option value="$PROJECT_DIR$/src/frontEnd/tree/Type.java" />
+        <option value="$PROJECT_DIR$/src/frontEnd/tree/TypeInterface.java" />
+        <option value="$PROJECT_DIR$/src/symbolTable/SymbolTable.java" />
+        <option value="$PROJECT_DIR$/src/symbolTable/SymbolTableInterface.java" />
+        <option value="$PROJECT_DIR$/src/Main.java" />
+        <option value="$PROJECT_DIR$/src/frontEnd/myVisitor.java" />
+        <option value="$PROJECT_DIR$/src/frontEnd/visitor/myVisitor.java" />
+        <option value="$PROJECT_DIR$/src/frontEnd/semanticCheck/SemanticError.java" />
       </list>
     </option>
   </component>
@@ -234,6 +239,42 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wacc_10" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wacc_10" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="symbolTable" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wacc_10" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wacc_10" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="frontEnd" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -543,7 +584,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="24" width="1855" height="1032" extended-state="1" />
+    <frame x="65" y="24" width="1855" height="1032" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -592,6 +633,23 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Assignments.java" />
+    <entry file="file://$PROJECT_DIR$/src/Type.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Variable.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -600,7 +658,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/frontEnd/SemanticError.java">
+    <entry file="file://$PROJECT_DIR$/src/frontEnd/semanticCheck/SemanticError.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
           <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
@@ -608,7 +666,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/frontEnd/Expr.java">
+    <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/Expr.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="18">
           <caret line="1" column="13" selection-start-line="1" selection-start-column="13" selection-end-line="1" selection-end-column="13" />
@@ -616,11 +674,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/SymbolTable/SymbolTable.java">
+    <entry file="file://$PROJECT_DIR$/src/symbolTable/SymbolTable.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="36">
           <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -631,7 +691,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/frontEnd/myVisitor.java">
+    <entry file="file://$PROJECT_DIR$/src/frontEnd/visitor/myVisitor.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="54">
           <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
@@ -666,7 +726,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/frontEnd/SemanticError.java">
+    <entry file="file://$PROJECT_DIR$/src/frontEnd/semanticCheck/SemanticError.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
           <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
@@ -674,73 +734,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/frontEnd/Expr.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="1" column="13" selection-start-line="1" selection-start-column="13" selection-end-line="1" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/SymbolTable/SymbolTable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/README">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/frontEnd/myVisitor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Assignments.java" />
-    <entry file="file://$PROJECT_DIR$/src/Type.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Variable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/frontEnd/SemanticError.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/frontEnd/Expr.java">
+    <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/Expr.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="54">
           <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
@@ -748,11 +742,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/SymbolTable/SymbolTable.java">
+    <entry file="file://$PROJECT_DIR$/src/symbolTable/SymbolTable.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="36">
           <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -764,7 +760,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/frontEnd/Expr.java">
+    <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/Expr.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="54">
           <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
@@ -773,11 +769,13 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Id.java" />
-    <entry file="file://$PROJECT_DIR$/src/SymbolTable/SymbolTable.java">
+    <entry file="file://$PROJECT_DIR$/src/symbolTable/SymbolTable.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="36">
           <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -806,16 +804,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/antlr/BasicParserBaseVisitor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2466">
-          <caret line="138" column="7" selection-start-line="138" selection-start-column="7" selection-end-line="138" selection-end-column="7" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/lib/antlr-4.4-complete.jar!/org/antlr/v4/runtime/tree/ParseTreeVisitor.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
@@ -832,46 +820,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/antlr/BasicParserVisitor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="2" column="7" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/antlr/BasicParser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-28524">
-          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/antlr/BasicLexer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="36">
           <caret line="2" column="7" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/antlr/BasicLexer.tokens">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/antlr/BasicParser.tokens">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -892,24 +844,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/SymbolTable/SymbolTableInterface.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="10" column="11" selection-start-line="10" selection-start-column="11" selection-end-line="10" selection-end-column="11" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/SymbolTable/SymbolTable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="21" column="5" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Variable.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="126">
@@ -918,7 +852,115 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/frontEnd/Variable.java">
+    <entry file="file://$PROJECT_DIR$/src/antlr/BasicParser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/antlr/BasicLexer.tokens">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/antlr/BasicParser.tokens">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/antlr/BasicParserBaseVisitor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="839">
+          <caret line="138" column="7" selection-start-line="138" selection-start-column="7" selection-end-line="138" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/antlr/BasicParserVisitor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-648">
+          <caret line="12" column="17" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/frontEnd/antlr/BasicLexer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/frontEnd/antlr/BasicParser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/frontEnd/antlr/BasicParserBaseVisitor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/frontEnd/antlr/BasicParserVisitor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/frontEnd/antlr/BasicLexer.tokens">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/frontEnd/antlr/BasicParser.tokens">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/symbolTable/SymbolTableInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="74">
+          <caret line="11" column="16" selection-start-line="11" selection-start-column="16" selection-end-line="11" selection-end-column="16" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/frontEnd/visitor/myVisitor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-198">
+          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/frontEnd/semanticCheck/SemanticError.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="36">
           <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
@@ -926,15 +968,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/frontEnd/TypeInterface.java">
+    <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/Expr.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="5" column="17" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
+        <state relative-caret-position="36">
+          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/frontEnd/Type.java">
+    <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/Type.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="17" column="16" selection-start-line="17" selection-start-column="16" selection-end-line="17" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/TypeInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="2" column="17" selection-start-line="2" selection-start-column="17" selection-end-line="2" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/Variable.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="72">
           <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
@@ -942,37 +1000,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/frontEnd/SemanticError.java">
+    <entry file="file://$PROJECT_DIR$/src/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+        <state relative-caret-position="702">
+          <caret line="49" column="13" selection-start-line="49" selection-start-column="13" selection-end-line="49" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/frontEnd/myVisitor.java">
+    <entry file="file://$PROJECT_DIR$/src/symbolTable/SymbolTable.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+        <state relative-caret-position="306">
+          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/frontEnd/Expr.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="650">
-          <caret line="50" column="48" selection-start-line="50" selection-start-column="48" selection-end-line="50" selection-end-column="48" />
-          <folding />
         </state>
       </provider>
     </entry>

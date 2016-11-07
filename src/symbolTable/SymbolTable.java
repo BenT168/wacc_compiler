@@ -1,6 +1,8 @@
-package SymbolTable;
+package symbolTable;
 
-import com.sun.org.apache.xpath.internal.operations.Variable;
+import frontEnd.semanticCheck.SemanticError;
+import frontEnd.tree.Type;
+import frontEnd.tree.Variable;
 
 import java.util.ArrayList;
 import java.util.List;
