@@ -1,7 +1,11 @@
+package SymbolTable;
+
+import com.sun.org.apache.xpath.internal.operations.Variable;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class SymbolTable implements SymbolTableInterface{
+public class SymbolTable implements SymbolTableInterface {
 
     private List<Variable> variableList;
     private SemanticError semanticError = new SemanticError();

@@ -1,8 +1,9 @@
+package SymbolTable;
+
+import com.sun.org.apache.xpath.internal.operations.Variable;
+
 import java.util.List;
 
-/**
- * Created by aa14415 on 04/11/16.
- */
 public interface SymbolTableInterface {
 
 

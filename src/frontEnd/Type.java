@@ -1,6 +1,8 @@
+package frontEnd;
+
 import antlr.BasicParser;
 
-public class Type implements TypeInterface{
+public class Type implements TypeInterface {
 
     private BasicParser bp;
     private String type;

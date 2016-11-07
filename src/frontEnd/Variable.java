@@ -1,10 +1,11 @@
+package frontEnd;
 
 public class Variable {
 
     /*A Variable must have a name and a type
      */
-    private String name;
-    private Type type;
+    public String name;
+    public Type type;
 
     /* An initialised Variable should have a value
           - this should match the type

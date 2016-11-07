@@ -1,5 +1,9 @@
+package frontEnd;
+
+import SymbolTable.SymbolTable;
 import antlr.BasicParser;
 import antlr.BasicParserBaseVisitor;
+import frontEnd.SemanticError;
 import org.antlr.v4.runtime.misc.NotNull;
 
 
