@@ -2,7 +2,7 @@ package frontEnd.tree.Type;
 
 import frontEnd.semanticCheck.SemanticError;
 
-public class Variable {
+public class Variable<T> extends Identifier {
 
     /*A Variable must have a name and a type
      */
@@ -10,12 +10,14 @@ public class Variable {
     public Type type;
 
     /* An initialised Variable should have a value
-          - this should match the type
-         */
+          - this should match the type */
+    /*
     private int intValue;
     private char charValue;
     private String stringValue;
     private boolean boolValue;
+    */
+    private T value;
 
     //Unitialised Variable
     public Variable(String name, Type type) {
@@ -31,8 +33,7 @@ public class Variable {
       }
     }
 
-   /* GETTERS
-    */
+   //GETTERS
 
     public String getName() {
         return name;
@@ -41,7 +42,7 @@ public class Variable {
     public Type getType() {
         return type;
     }
-
+    /*
     public int getIntValue() {
         return intValue;
     }
@@ -57,9 +58,14 @@ public class Variable {
     public boolean getBoolValue() {
         return boolValue;
     }
-
-    /*SETTERS
     */
+
+    public T getValue() {
+        return value;
+    }
+
+    //SETTERS
+    /*
     public void setIntValue(int intValue) {
         variableTypeCheck("int");
         this.intValue = intValue;
@@ -78,5 +84,10 @@ public class Variable {
     public void setBoolValue(boolean boolValue) {
         variableTypeCheck("bool");
         this.boolValue = boolValue;
+    }
+    */
+
+    public void setValue(T value) {
+        this.value = value;
     }
 }

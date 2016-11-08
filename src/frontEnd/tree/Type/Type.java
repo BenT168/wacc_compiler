@@ -1,8 +1,9 @@
 package frontEnd.tree.Type;
 
 import frontEnd.antlr.BasicParser;
+import frontEnd.tree.Identifier;
 
-public class Type {
+public class Type extends Identifier {
 
     private BasicParser bp;
     private String type;
@@ -16,7 +17,7 @@ public class Type {
         type.compareTo("string") == 0) {
             this.type = type;
         } else {
-            System.out.println("Error: " + type + " is not a valid type.");
+            System.err.println("Error: " + type + " is not a valid type.");
             System.exit(-1);
         }
     }
@@ -45,3 +46,4 @@ public class Type {
         return false;
     }
 }
+

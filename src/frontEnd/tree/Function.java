@@ -1,11 +1,10 @@
-import frontEnd.tree.Identifier;
+package frontEnd.tree;
+
 import frontEnd.tree.Type.Type;
 import symbolTable.SymbolTable;
 
-import java.lang.reflect.Parameter;
-
 public class Function extends Identifier {
-  private Type returnType;
-  private Parameter parameters[];
-  private SymbolTable symtab;
+    private Type returnType;
+    private Parameter parameters[];
+    private SymbolTable symtab;
 }

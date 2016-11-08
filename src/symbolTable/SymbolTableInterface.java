@@ -3,10 +3,7 @@ package symbolTable;
 import frontEnd.tree.Type.Variable;
 import frontEnd.tree.Type.Type;
 
-import java.util.List;
-
 public interface SymbolTableInterface {
-
 
     /*Add a variable to list*/
     void add(Variable variable);
@@ -14,35 +11,22 @@ public interface SymbolTableInterface {
     /*For testing purposes to see if variables are added to list*/
     void printList();
 
-
     /*Use lookupInt when value of variable in list is an int*/
-    int lookUpInt(String varName);
-
+    //int lookUpInt(String varName);
 
     /*Use lookupBool when value of variable in list is a boolean*/
-    boolean lookUpBool(String varName);
-
+    //boolean lookUpBool(String varName);
 
     /*Use lookupString when value of variable in list is a string*/
-    String lookUpString(String varName);
-
+    //String lookUpString(String varName);
 
     /*Use lookupChar when value of variable in list is a char*/
-    char lookUpChar(String varName);
-
+    //char lookUpChar(String varName);
 
     /*Use lookUpType to check type of name in list if it exits*/
-    Type lookUpType(String name);
-
-    /*Setter for parentAymbolTable */
-    void setParentSymbolTable(SymbolTable parentSymbolTable);
+    Variable lookUp(String name);
 
     /*Removes all items from symbol table. */
     void clear();
-
-
-    /* Returns a clone of the current symbol table.
-     * Useful for child scopes. */
-    List<Variable> clone();
 
 }
