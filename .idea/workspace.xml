@@ -2,27 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="74924932-13b5-4181-a219-7e9ee32e6170" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/frontEnd/tree/Expr/BoolLeaf.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/frontEnd/tree/Expr/CharLeaf.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/frontEnd/tree/Expr/Expr.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/frontEnd/tree/Expr/IntLeaf.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/frontEnd/tree/Expr/PairLeaf.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/frontEnd/tree/Expr/StrLeaf.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/frontEnd/tree/Type/Array.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/frontEnd/tree/Array.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/frontEnd/tree/Expr.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/frontEnd/tree/TypeInterface.java" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/frontEnd/tree/Class.java" afterPath="$PROJECT_DIR$/src/frontEnd/tree/Type/Class.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/frontEnd/tree/Scalar.java" afterPath="$PROJECT_DIR$/src/frontEnd/tree/Type/Scalar.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/frontEnd/tree/Type.java" afterPath="$PROJECT_DIR$/src/frontEnd/tree/Type/Type.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/frontEnd/tree/Variable.java" afterPath="$PROJECT_DIR$/src/frontEnd/tree/Type/Variable.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/frontEnd/tree/Function.java" afterPath="$PROJECT_DIR$/src/frontEnd/tree/Function.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/frontEnd/tree/Identifier.java" afterPath="$PROJECT_DIR$/src/frontEnd/tree/Identifier.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/frontEnd/tree/Parameter.java" afterPath="$PROJECT_DIR$/src/frontEnd/tree/Parameter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/frontEnd/visitor/myVisitor.java" afterPath="$PROJECT_DIR$/src/frontEnd/visitor/myVisitor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/symbolTable/SymbolTable.java" afterPath="$PROJECT_DIR$/src/symbolTable/SymbolTable.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/symbolTable/SymbolTableInterface.java" afterPath="$PROJECT_DIR$/src/symbolTable/SymbolTableInterface.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/antlr_4_4_complete.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="" />
     </list>
     <ignored path="wacc_10.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -43,16 +31,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="IntLeaf.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/Expr/IntLeaf.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Variable.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/Type/Variable.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -61,6 +39,19 @@
               <folding>
                 <element signature="e#975#976#0" expanded="true" />
                 <element signature="e#1002#1003#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BoolLeaf.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/Expr/BoolLeaf.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="19" column="18" selection-start-line="19" selection-start-column="18" selection-end-line="19" selection-end-column="18" />
+              <folding>
+                <element signature="e#329#330#0" expanded="true" />
+                <element signature="e#356#357#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -86,7 +77,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Array.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Array.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/Type/Array.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="252">
@@ -138,29 +129,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Type.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/Type/Type.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="72">
-              <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
-              <folding>
-                <element signature="e#618#619#0" expanded="true" />
-                <element signature="e#645#646#0" expanded="true" />
-                <element signature="e#1016#1017#0" expanded="true" />
-                <element signature="e#1044#1045#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Class" />
-      </list>
-    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -173,41 +142,7 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/SymbolTable/SymbolTableInterface.java" />
-        <option value="$PROJECT_DIR$/src/SymbolTable/SymbolTable.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/Expr.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/TypeInterface.java" />
-        <option value="$PROJECT_DIR$/src/Variable.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/Type.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/SemanticError.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/tree/TypeInterface.java" />
-        <option value="$PROJECT_DIR$/src/symbolTable/SymbolTableInterface.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/myVisitor.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/semanticCheck/SemanticError.java" />
-        <option value="$PROJECT_DIR$/src/symbolTable/SymbolTable.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/visitor/myVisitor.java" />
-        <option value="$PROJECT_DIR$/src/Main.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/tree/Array.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/tree/Class.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/tree/Scalar.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/tree/Function.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/tree/Parameter.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/tree/Package.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/tree/Identifier.java" />
-        <option value="$PROJECT_DIR$/src/type/BOOL.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/tree/Expr/PairLeaf.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/tree/Expr/CharLeaf.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/tree/Expr.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/tree/Expr/IntLeaf.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/tree/Expr/StrLeaf.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/tree/Expr/Expr.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/tree/Expr/BoolLeaf.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/tree/Type/Array.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/tree/Type.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/tree/Type/Class.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/tree/Type/Type.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/tree/Type/Variable.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/tree/Type/Scalar.java" />
+        <option value="$PROJECT_DIR$/.idea/workspace.xml" />
       </list>
     </option>
   </component>
@@ -427,31 +362,7 @@
       <pane id="PackagesPane" />
     </panes>
   </component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/frontEnd" />
-    </key>
-    <key name="CreateClassDialog.RecentsKey">
-      <recent name="type" />
-      <recent name="frontEnd.tree" />
-    </key>
-  </component>
-  <component name="RunManager" selected="Application.Main">
-    <configuration default="false" name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <option name="MAIN_CLASS_NAME" value="Main" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="wacc_10" />
-      <envs />
-      <method />
-    </configuration>
+  <component name="RunManager">
     <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
       <module name="" />
       <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
@@ -696,14 +607,6 @@
       <listeners />
       <method />
     </configuration>
-    <list size="1">
-      <item index="0" class="java.lang.String" itemvalue="Application.Main" />
-    </list>
-    <recent_temporary>
-      <list size="1">
-        <item index="0" class="java.lang.String" itemvalue="Application.Main" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
@@ -720,7 +623,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="64" y="24" width="1847" height="1031" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -733,7 +636,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25069484" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25069484" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -768,16 +671,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/symbolTable/SymbolTable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Type.java" />
     <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/Expr.java" />
     <entry file="file://$PROJECT_DIR$/src/Id.java" />
@@ -991,21 +884,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/Expr/BoolLeaf.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="19" column="18" selection-start-line="19" selection-start-column="18" selection-end-line="19" selection-end-column="18" />
-          <folding>
-            <element signature="e#164#165#0" expanded="true" />
-            <element signature="e#201#202#0" expanded="true" />
-            <element signature="e#252#253#0" expanded="true" />
-            <element signature="e#287#288#0" expanded="true" />
-            <element signature="e#329#330#0" expanded="true" />
-            <element signature="e#356#357#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/Expr/CharLeaf.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
@@ -1110,6 +988,25 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="252">
           <caret line="16" column="5" selection-start-line="16" selection-start-column="5" selection-end-line="16" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/Expr/BoolLeaf.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="19" column="18" selection-start-line="19" selection-start-column="18" selection-end-line="19" selection-end-column="18" />
+          <folding>
+            <element signature="e#329#330#0" expanded="true" />
+            <element signature="e#356#357#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="9" column="58" selection-start-line="9" selection-start-column="58" selection-end-line="9" selection-end-column="58" />
           <folding />
         </state>
       </provider>
