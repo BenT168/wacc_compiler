@@ -1,7 +1,6 @@
 package symbolTable;
 
 import frontEnd.semanticCheck.SemanticError;
-import frontEnd.tree.Type;
 import frontEnd.tree.Variable;
 
 import java.util.ArrayList;
@@ -11,15 +10,23 @@ public class SymbolTable implements SymbolTableInterface {
 
     private List<Variable> variableList;
     private SemanticError semanticError = new SemanticError();
-    private SymbolTable parentSymbolTable;
+    private SymbolTable parentSymtab;
 
     //Tells us whether we are in exit block in visitor class (0 if no, 1 if yes)
     int exitCount;
 
-
+    //Use this constructor only for top-level symbol table (has no parent)
     public SymbolTable() {
         variableList = new ArrayList<>();
-        parentSymbolTable = null;
+        parentSymtab = null;
+        exitCount = 0;
+    }
+
+    /* Use this constructor to initialise any child symbol table.
+     * Pass parent as argument. */
+    public SymbolTable(SymbolTable parentSymtab) {
+        variableList = new ArrayList<>();
+        this.parentSymtab = parentSymtab;
         exitCount = 0;
     }
 
@@ -32,7 +39,7 @@ public class SymbolTable implements SymbolTableInterface {
     //Check if Variable is in List, if not return; if so, throw semantic error
     private void checkInList(Variable variable) {
         for(Variable v : variableList) {
-            if(variable.getName().compareTo(v.getName()) == 0) {
+            if (!(lookUp(variable.getName()) == null)) {
                 //Variable in list so has already been initialised
                 semanticError.semanticErrorCase(variable.getName(), "add");
             }
@@ -46,24 +53,11 @@ public class SymbolTable implements SymbolTableInterface {
         for(Variable v : variableList) {
             System.out.println("NAME: " + v.getName());
             System.out.println("TYPE: " + v.getType().getType());
-            switch(v.getType().getType()) {
-                case "char" :
-                    System.out.println("VALUE: " + v.getCharValue());
-                    break;
-                case "string" :
-                    System.out.println("VALUE: " + v.getStringValue());
-                    break;
-                case "bool" :
-                    System.out.println("VALUE: " + v.getBoolValue());
-                    break;
-                case "int" :
-                    System.out.println("VALUE: " + v.getIntValue());
-                    break;
-            }
+            System.out.println("VALUE: " + v.getValue());
         }
     }
 
-
+/*
    //Use lookupInt when value of variable in list is an int
    public int lookUpInt(String varName) {
        int result = 0;
@@ -138,41 +132,23 @@ public class SymbolTable implements SymbolTableInterface {
             semanticError.semanticErrorCase(varName, "notInitialised");
         }
         return result;
-    }
+    } */
 
     //Use lookUpType to check type of name in list if it exits
-    public Type lookUpType(String name) {
-        Type type = new Type("int");
+    public Variable lookUp(String name) {
         boolean varFound = false;
         for(Variable v : variableList) {
             if(v.getName().compareTo(name) == 0) {
-                type = v.getType();
-                varFound = true;
+                return v;
             }
         }
-        //check if varname has been found
-        if(!varFound) {
-            semanticError.semanticErrorCase(name, "notInitialised");
-        }
-        return type;
-    }
-
-    public void setParentSymbolTable(SymbolTable parentSymbolTable) {
-        this.parentSymbolTable = parentSymbolTable;
+        //Need to generate error elsewhere otherwise this can't be used for recursive lookup
+        //semanticError.semanticErrorCase(name, "notInitialised");
+        return null;
     }
 
     //Removes all items from symbol table.
     public void clear() {
         variableList.clear();
-    }
-
-    /* Returns a clone of the current symbol table.
-     * Useful for child scopes. */
-    public List<Variable> clone() {
-        List<Variable> listClone = new ArrayList<>();
-        for (Variable v : variableList) {
-            listClone.add(v);
-        }
-        return listClone;
     }
 }

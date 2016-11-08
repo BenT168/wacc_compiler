@@ -2,7 +2,7 @@ package frontEnd.tree;
 
 import frontEnd.antlr.BasicParser;
 
-public class Type implements TypeInterface {
+public class Type extends Identifier implements TypeInterface {
 
     private BasicParser bp;
     private String type;
@@ -16,7 +16,7 @@ public class Type implements TypeInterface {
         type.compareTo("string") == 0) {
             this.type = type;
         } else {
-            System.out.println("Error: " + type + " is not a valid type.");
+            System.err.println("Error: " + type + " is not a valid type.");
             System.exit(-1);
         }
     }
@@ -40,5 +40,4 @@ public class Type implements TypeInterface {
     public boolean isString() {
         return type.compareTo("string") == 0;
     }
-
 }
