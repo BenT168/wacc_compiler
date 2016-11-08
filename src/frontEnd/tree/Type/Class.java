@@ -24,4 +24,14 @@ public class Class extends Type {
     public SymbolTable getSymtab() {
         return symtab;
     }
+
+    @Override
+    public void check() {
+        return null;
+    }
+
+    @Override
+    public void setFormals(Object param, int i) {
+        return null;
+    }
 }

@@ -1,9 +1,15 @@
 package frontEnd.tree.Type;
 
 public class Scalar extends Type {
+
     private static final int min = 0;
     private static final int max = 0;
     private int value;
+
+    public Scalar(int min, int max) {
+        this.min = min;
+        this.max = max;
+    }
 
     public Scalar(String type, int value) {
         super(type);
@@ -27,3 +33,6 @@ public class Scalar extends Type {
         this.value = value;
     }
 }
+
+
+

@@ -1,7 +1,6 @@
 package frontEnd.tree.Type;
 
 import frontEnd.antlr.BasicParser;
-import frontEnd.tree.Identifier;
 
 public class Type extends Identifier {
 

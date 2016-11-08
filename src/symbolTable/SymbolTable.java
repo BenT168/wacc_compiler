@@ -1,9 +1,11 @@
 package symbolTable;
 
 import frontEnd.semanticCheck.SemanticError;
+import frontEnd.tree.Type.Identifier;
 import frontEnd.tree.Type.Variable;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.List;
 
 public class SymbolTable implements SymbolTableInterface {
@@ -14,6 +16,7 @@ public class SymbolTable implements SymbolTableInterface {
 
     //Tells us whether we are in exit block in visitor class (0 if no, 1 if yes)
     private int exitCount;
+    public SymbolTable encSymbolTable;
 
     //Use this constructor only for top-level symbol table (has no parent)
     public SymbolTable() {
@@ -57,82 +60,6 @@ public class SymbolTable implements SymbolTableInterface {
         }
     }
 
-/*
-   //Use lookupInt when value of variable in list is an int
-   public int lookUpInt(String varName) {
-       int result = 0;
-       boolean varFound = false;
-       for(Variable v : variableList) {
-           if (v.getName().compareTo(varName) == 0) {
-               result = v.getIntValue();
-               varFound = true;
-           }
-       }
-       System.out.println(varFound);
-
-       //check if varname has been found
-       if(!varFound) {
-           if(exitCount == 1) {
-               semanticError.semanticErrorCase(varName, "exit");
-           }
-           semanticError.semanticErrorCase(varName, "notInitialised");
-       }
-       return result;
-   }
-
-    //Use lookupBool when value of variable in list is a boolean
-    public boolean lookUpBool(String varName) {
-        boolean result = false;
-        boolean varFound = false;
-        for(Variable v : variableList) {
-            if (v.getName().compareTo(varName) == 0) {
-                result = v.getBoolValue();
-                varFound = true;
-            }
-        }
-
-        //check if varname has been found
-        if(!varFound) {
-            semanticError.semanticErrorCase(varName, "notInitialised");
-        }
-        return result;
-    }
-
-    //Use lookupString when value of variable in list is a string
-    public String lookUpString(String varName) {
-        String result = "";
-        boolean varFound = false;
-        for(Variable v : variableList) {
-            if (v.getName().compareTo(varName) == 0) {
-                result = v.getStringValue();
-                varFound = true;
-            }
-        }
-
-        //check if varname has been found
-        if(!varFound) {
-            semanticError.semanticErrorCase(varName, "notInitialised");
-        }
-        return result;
-    }
-
-    //Use lookupChar when value of variable in list is a char
-    public char lookUpChar(String varName) {
-        char result = '0';
-        boolean varFound = false;
-        for(Variable v : variableList) {
-            if (v.getName().compareTo(varName) == 0) {
-                result = v.getCharValue();
-                varFound = true;
-            }
-        }
-
-        //check if varname has been found
-        if(!varFound) {
-            semanticError.semanticErrorCase(varName, "notInitialised");
-        }
-        return result;
-    } */
 
     //Use lookUpType to check type of name in list if it exits
     public Variable lookUp(String name) {
@@ -151,4 +78,53 @@ public class SymbolTable implements SymbolTableInterface {
     public void clear() {
         variableList.clear();
     }
+
+    public Identifier lookUpAll(String varName) {
+    }
+
+    public SymbolTable getEncSymbolTable() {
+        return encSymbolTable;
+    }
 }
+
+/* new */
+
+public class SymbolTable {
+
+    private SymbolTable encSymbolTable;
+    private Dictionary<String, Identifier> dict;
+
+    public SymbolTable(SymbolTable st) {
+        dict = null ;
+        encSymbolTable = st;
+    }
+
+    public void add(String name, Identifier id) {
+        dict.put(name, id);
+    }
+
+    public Identifier lookUp(String name) {
+        return dict.get(name);
+    }
+
+    public Identifier lookUpAll(String name) {
+        SymbolTable s = this;
+        while(s != null) {
+            Identifier t = s.lookUp(name);
+            if(t != null) {
+                return t;
+            }
+            s = s.encSymbolTable;
+        }
+        return null;
+    }
+
+    public SymbolTable getEncSymbolTable() {
+        return encSymbolTable;
+    }
+
+    public Dictionary<String, Identifier> getDict() {
+        return dict;
+    }
+}
+
