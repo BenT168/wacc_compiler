@@ -61,11 +61,11 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
                 String value = visitExpr(ctx.expr());
                 if(!isParsable(value)) {
                     symbolTable.exitCount() = 1;
-                    Type type = symbolTable.lookUpType(value);
+                    Type type = symbolTable.lookUp(value).getType();
                     if(!type.isInt()) {
                         semanticError.semanticErrorCase(value, "exit");
                     }
-                    exitValue = symbolTable.lookUpInt(value);
+                    exitValue = (int) symbolTable.lookUp(value).getValue();
                 } else {
                     exitValue = Integer.parseInt(value);
                 }
@@ -86,9 +86,8 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
         // Check first two letters of stat and match
         switch(ctx.getText().substring(0,5)) {
             case "begin" :
-                SymbolTable newScope = new SymbolTable();
                 SymbolTable tmp = symbolTable;
-                newScope.setParentSymbolTable(tmp);
+                SymbolTable newScope = new SymbolTable(tmp);
                 symbolTable = newScope;
             case "print" : //TODO
                 break;
@@ -99,8 +98,7 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
         System.out.println(ctx.getText().length());
         System.out.println(ctx.getText());
 
-        /* Check if current token is a type
-         */
+        // Check if current token is a type
         Boolean isString = false;
         Boolean isBool   = ctx.getText().substring(0,4).compareTo("bool")   == 0;
         Boolean isInt    = ctx.getText().substring(0,3).compareTo("int")    == 0;
@@ -133,7 +131,7 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
             if (isParsable(value)) {
                 int intValue;
                 intValue = Integer.parseInt(value);
-                variable.setIntValue(intValue);
+                variable.setValue(intValue);
 
                 // Check if boolean
             } else if (value.compareTo("true") == 0 || value.compareTo("false") == 0) {
@@ -141,19 +139,19 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
                 if (value.compareTo("false") == 0) {
                     boolValue = false;
                 }
-                variable.setBoolValue(boolValue);
+                variable.setValue(boolValue);
 
                 //Check if char
             } else if(value.length() == 3) { //Chars are of form 'x'
                 char test = "'".charAt(0);
                 if(value.charAt(0) == test && value.charAt(2) == test) {
                     char charValue = value.charAt(1);
-                    variable.setCharValue(charValue);
+                    variable.setValue(charValue);
                 }
 
                 //Otherwise it is a String
             } else {
-                variable.setStringValue(value);
+                variable.setValue(value);
             }
 
             //Add variable to Assignments
