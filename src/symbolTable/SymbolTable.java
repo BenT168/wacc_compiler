@@ -13,7 +13,7 @@ public class SymbolTable implements SymbolTableInterface {
     private SymbolTable parentSymtab;
 
     //Tells us whether we are in exit block in visitor class (0 if no, 1 if yes)
-    int exitCount;
+    private int exitCount;
 
     //Use this constructor only for top-level symbol table (has no parent)
     public SymbolTable() {
