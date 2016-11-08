@@ -1,8 +1,8 @@
-package frontEnd.tree;
+package frontEnd.tree.Type;
 
 import frontEnd.antlr.BasicParser;
 
-public class Type implements TypeInterface {
+public class Type {
 
     private BasicParser bp;
     private String type;
@@ -41,4 +41,7 @@ public class Type implements TypeInterface {
         return type.compareTo("string") == 0;
     }
 
+    public boolean isCompatible(Type ext) {
+        return false;
+    }
 }

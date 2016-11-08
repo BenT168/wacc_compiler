@@ -1,7 +1,7 @@
 package symbolTable;
 
-import frontEnd.tree.Variable;
-import frontEnd.tree.Type;
+import frontEnd.tree.Type.Variable;
+import frontEnd.tree.Type.Type;
 
 import java.util.List;
 

@@ -1,4 +1,5 @@
-import frontEnd.tree.Type;
+package frontEnd.tree.Type;
+
 import symbolTable.SymbolTable;
 
 public class Class extends Type {

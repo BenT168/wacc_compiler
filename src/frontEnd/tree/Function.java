@@ -1,5 +1,5 @@
 import frontEnd.tree.Identifier;
-import frontEnd.tree.Type;
+import frontEnd.tree.Type.Type;
 import symbolTable.SymbolTable;
 
 import java.lang.reflect.Parameter;

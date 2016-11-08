@@ -1,8 +1,8 @@
 package symbolTable;
 
 import frontEnd.semanticCheck.SemanticError;
-import frontEnd.tree.Type;
-import frontEnd.tree.Variable;
+import frontEnd.tree.Type.Type;
+import frontEnd.tree.Type.Variable;
 
 import java.util.ArrayList;
 import java.util.List;

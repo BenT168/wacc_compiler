@@ -1,4 +1,4 @@
-package frontEnd.tree;
+package frontEnd.tree.Type;
 
 import frontEnd.semanticCheck.SemanticError;
 
