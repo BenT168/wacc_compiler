@@ -1,3 +1,4 @@
-public class abstract Identifier {
+package frontEnd.tree;
 
+public abstract class Identifier {
 }

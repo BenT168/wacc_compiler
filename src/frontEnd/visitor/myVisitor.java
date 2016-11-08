@@ -60,7 +60,7 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
             case "exit" :
                 String value = visitExpr(ctx.expr());
                 if(!isParsable(value)) {
-                    symbolTable.exitCount() = 1;
+                    symbolTable.setExitCount(1);
                     Type type = symbolTable.lookUpType(value);
                     if(!type.isInt()) {
                         semanticError.semanticErrorCase(value, "exit");

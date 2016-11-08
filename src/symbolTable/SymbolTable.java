@@ -14,7 +14,7 @@ public class SymbolTable implements SymbolTableInterface {
     private SymbolTable parentSymbolTable;
 
     //Tells us whether we are in exit block in visitor class (0 if no, 1 if yes)
-    int exitCount;
+    private int exitCount;
 
 
     public SymbolTable() {
@@ -174,5 +174,9 @@ public class SymbolTable implements SymbolTableInterface {
             listClone.add(v);
         }
         return listClone;
+    }
+
+    public void setExitCount(int exitCount) {
+        this.exitCount = exitCount;
     }
 }
