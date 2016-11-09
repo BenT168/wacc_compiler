@@ -27,7 +27,7 @@ ORD : 'ord' ;
 CHR : 'chr' ;
 NOT : '!' ;
 INC : '+' ;
-DEC : '@' ;
+DEC : '-' ;
 
 
 //integer-sign

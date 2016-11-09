@@ -32,13 +32,12 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
         ST.add("char", new Scalar(0, 255));
         ST.add("bool", new Scalar(0, 1));
 
-        System.out.println(ctx.start.getLine());
+        //System.out.println(ctx.start.getLine());
 
         return visitChildren(ctx);
     }
 
-
-
+    //....................................STAT........................................
     /*PRINT expr*/
     @Override
     public String visitPrint(@NotNull BasicParser.PrintContext ctx) {
@@ -84,19 +83,6 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
     public String visitAssign(@NotNull BasicParser.AssignContext ctx) {
         return visitChildren(ctx);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //    //@Override

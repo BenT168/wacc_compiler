@@ -73,7 +73,6 @@ NEQ=12
 MULTI=3
 PAIR=29
 'len'=15
-'-'=22
 ')'=31
 'end'=36
 'begin'=35

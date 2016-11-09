@@ -1,7 +1,6 @@
 package symbolTable;
 
 import frontEnd.tree.Identifier;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,6 +43,10 @@ public class SymbolTable {
 
     public boolean containsRecursive(String ident) {
         return true;
+    }
+
+    public void setEncSymbolTable(SymbolTable encSymbolTable) {
+        this.encSymbolTable = encSymbolTable;
     }
 }
 
