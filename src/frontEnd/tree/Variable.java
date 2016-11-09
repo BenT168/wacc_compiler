@@ -1,12 +1,14 @@
-package frontEnd.tree.Type;
+package frontEnd.tree;
+
+import frontEnd.tree.Type.BaseType;
 
 public class Variable<T> extends Identifier {
 
-    public Type type;
+    public BaseType type;
 
     //Unitialised Variable
     public Variable(Identifier Id) {
-        this.type = (Type) Id;
+        this.type = (BaseType) Id;
     }
 
 //    // Checks that valueType (actual type) is the same as expected type
@@ -17,13 +19,8 @@ public class Variable<T> extends Identifier {
 //      }
 //    }
 
-    public Type getType() {
+    public BaseType getType() {
         return type;
     }
 
-
-    @Override
-    public void check() {
-
-    }
 }

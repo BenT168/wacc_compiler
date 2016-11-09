@@ -1,13 +1,15 @@
-import frontEnd.tree.Type.Type;
+package frontEnd.tree;
+
+import frontEnd.tree.Type.BaseType;
 import symbolTable.SymbolTable;
 
-public class Class extends Type {
+public class Class extends BaseType {
 
     private Class superclass;
     private SymbolTable symtab;
-    private Type type;
+    private BaseType type;
 
-    public Class(Type type, SymbolTable symtab) {
+    public Class(BaseType type, SymbolTable symtab) {
         this.type = type;
         this.symtab = symtab;
         this.superclass = null;
@@ -31,7 +33,7 @@ public class Class extends Type {
     }
 
     @Override
-    public boolean isCompatible(Type type) {
+    public boolean isCompatible(BaseType type) {
         return false;
     }
 

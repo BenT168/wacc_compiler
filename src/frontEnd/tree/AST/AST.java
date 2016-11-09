@@ -1,8 +1,8 @@
 package frontEnd.tree.AST;
 
 import frontEnd.semanticCheck.SemanticError;
-import frontEnd.tree.Type.Type;
-import frontEnd.tree.Type.Variable;
+import frontEnd.tree.Type.BaseType;
+import frontEnd.tree.Variable;
 import org.antlr.v4.runtime.ParserRuleContext;
 import symbolTable.SymbolTable;
 
@@ -15,7 +15,7 @@ public abstract class AST {
 
     public abstract boolean check(SymbolTable symbolTable, ParserRuleContext ctx);
 
-    public boolean assignCompat(Type type, Type exprType) {
+    public boolean assignCompat(BaseType type, BaseType exprType) {
         return type.equals(exprType);
     }
 }

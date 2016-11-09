@@ -1,10 +1,13 @@
-package frontEnd.tree.Type;
+package frontEnd.tree.Function;
 
+import frontEnd.tree.Identifier;
+import frontEnd.tree.Parameter.Parameter;
+import frontEnd.tree.Type.BaseType;
 import symbolTable.SymbolTable;
 
 public class Function extends Identifier {
 
-    private Type returnType;
+    private BaseType returnType;
     private Parameter formals[];
     private SymbolTable symbolTable;
     private Identifier id;

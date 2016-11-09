@@ -1,15 +1,15 @@
 package frontEnd.tree.Expr;
 
-import frontEnd.tree.Type.Type;
+import frontEnd.tree.Type.BaseType;
 import frontEnd.ErrorHandling.IntOverflowException;
 import org.antlr.v4.runtime.ParserRuleContext;
 import symbolTable.SymbolTable;
 
-public class IntLeaf extends Expr {
+public class IntLiter extends Expr {
 
     private int value;
 
-    public IntLeaf(String val){
+    public IntLiter(String val){
         this.value = val;
     }
 
@@ -23,8 +23,8 @@ public class IntLeaf extends Expr {
     }
 
     @Override
-    public Type getType(){
-        return Type.INT;
+    public BaseType getType(){
+        return BaseType.INT;
     }
 
 }

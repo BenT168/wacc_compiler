@@ -1,6 +1,6 @@
 package symbolTable;
 
-import frontEnd.tree.Type.Identifier;
+import frontEnd.tree.Identifier;
 import java.util.Dictionary;
 
 public class SymbolTable {

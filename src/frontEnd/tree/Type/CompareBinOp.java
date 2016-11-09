@@ -7,16 +7,16 @@ public class CompareBinOp extends BinaryOp {
 
     @Override
     public boolean check(Expr lhs, Expr rhs){
-        if (lhs.getType().equals(Type.INT)) {
-            return rhs.getType().equals(Type.INT);
-        } else if (lhs.getType().equals(Type.CHAR)) {
-            return rhs.getType().equals(Type.CHAR);
+        if (lhs.getType().equals(BaseType.INT)) {
+            return rhs.getType().equals(BaseType.INT);
+        } else if (lhs.getType().equals(BaseType.CHAR)) {
+            return rhs.getType().equals(BaseType.CHAR);
         }
         return false;
     }
 
     @Override
-    public Type getType() {
-        return Type.BOOL;
+    public BaseType getType() {
+        return BaseType.BOOL;
     }
 }

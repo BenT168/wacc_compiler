@@ -6,11 +6,11 @@ public class ArithBinOp extends BinaryOp{
 
     @Override
     public boolean check(Expr lhs, Expr rhs){
-        return lhs.getType().equals(rhs.getType()) && rhs.getType().equals(Type.INT);
+        return lhs.getType().equals(rhs.getType()) && rhs.getType().equals(BaseType.INT);
     }
 
     @Override
-    public Type getType() {
-        return Type.INT;
+    public BaseType getType() {
+        return BaseType.INT;
     }
 }

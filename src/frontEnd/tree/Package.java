@@ -1,6 +1,5 @@
 package frontEnd.tree;
 
-import frontEnd.tree.Type.Identifier;
 import symbolTable.SymbolTable;
 
 public class Package extends Identifier {

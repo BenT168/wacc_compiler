@@ -1,6 +1,8 @@
-package frontEnd.tree.Type;
+package frontEnd.tree.Parameter;
 
-public class Scalar extends Type {
+import frontEnd.tree.Type.BaseType;
+
+public class Scalar extends BaseType {
 
     private int min = 0;
     private int max = 0;
@@ -33,7 +35,7 @@ public class Scalar extends Type {
     }
 
     @Override
-    public boolean isCompatible(Type type) {
+    public boolean isCompatible(BaseType type) {
         return false;
     }
 

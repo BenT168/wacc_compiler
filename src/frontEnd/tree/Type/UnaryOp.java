@@ -5,7 +5,7 @@ import frontEnd.tree.Expr.Expr;
 public abstract class UnaryOp {
 
     public abstract boolean check(Expr expr);
-    public abstract Type getType();
+    public abstract BaseType getType();
 
     public static UnaryOp evalUnOp(String oper){
         switch (oper) {
@@ -33,12 +33,12 @@ public abstract class UnaryOp {
 
         @Override
         public boolean check(Expr expr) {
-            return expr.getType().equals(Type.BOOL);
+            return expr.getType().equals(BaseType.BOOL);
         }
 
         @Override
-        public Type getType(){
-            return  Type.BOOL;
+        public BaseType getType(){
+            return  BaseType.BOOL;
         }
 
     } ;
@@ -51,12 +51,12 @@ public abstract class UnaryOp {
 
         @Override
         public boolean check(Expr expr) {
-            return expr.getType().equals(Type.INT);
+            return expr.getType().equals(BaseType.INT);
         }
 
         @Override
-        public Type getType(){
-            return  Type.INT;
+        public BaseType getType(){
+            return  BaseType.INT;
         }
 
     } ;
@@ -70,12 +70,12 @@ public abstract class UnaryOp {
 
         @Override
         public boolean check(Expr expr) {
-            return expr.getType() instanceof Array;
+            return expr.getType() instanceof ArrayType;
         }
 
         @Override
-        public Type getType(){
-            return  Type.INT;
+        public BaseType getType(){
+            return  BaseType.INT;
         }
 
     } ;
@@ -89,12 +89,12 @@ public abstract class UnaryOp {
 
         @Override
         public boolean check(Expr expr) {
-            return expr.getType().equals(Type.CHAR);
+            return expr.getType().equals(BaseType.CHAR);
         }
 
         @Override
-        public Type getType(){
-            return  Type.INT;
+        public BaseType getType(){
+            return  BaseType.INT;
         }
 
     } ;
@@ -107,12 +107,12 @@ public abstract class UnaryOp {
 
         @Override
         public boolean check(Expr expr) {
-            return expr.getType().equals(Type.INT);
+            return expr.getType().equals(BaseType.INT);
         }
 
         @Override
-        public Type getType(){
-            return  Type.CHAR;
+        public BaseType getType(){
+            return  BaseType.CHAR;
         }
 
     } ;

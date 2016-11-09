@@ -1,16 +1,15 @@
-package frontEnd.tree.Type;
+package frontEnd.tree;
 
-import frontEnd.tree.Type.Type;
+import frontEnd.tree.Type.BaseType;
 
 public abstract class Identifier {
 
-    protected String name;
+    protected BaseType id;
 
-    public String getName() {
-        return name;
+    public BaseType getType() {
+        return id;
     }
 
-    public abstract void check();
 
    /* public Character[] getFormals() {
         Character[] formals;

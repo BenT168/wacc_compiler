@@ -1,17 +1,17 @@
 package frontEnd.tree.Expr;
 
-import frontEnd.tree.Type.Pair;
-import frontEnd.tree.Type.Type;
+import frontEnd.tree.Type.PairType;
+import frontEnd.tree.Type.BaseType;
 import org.antlr.v4.runtime.ParserRuleContext;
 import symbolTable.SymbolTable;
 
-public class PairLeaf extends Expr {
+public class PairLiter extends Expr {
 
-    private Type fst;
-    private Type snd;
+    private BaseType fst;
+    private BaseType snd;
     private String ident;
 
-    public UnaryOperExpr(String ident, Type fst, Type snd){
+    public PairLiter(String ident, BaseType fst, BaseType snd){
         this.fst = fst;
         this.snd = snd;
         this.ident = ident;
@@ -23,8 +23,8 @@ public class PairLeaf extends Expr {
     }
 
     @Override
-    public Type getType(){
-        return new Pair(fst, snd);
+    public BaseType getType(){
+        return new PairType(fst, snd);
     }
 
     public String getIdent(){

@@ -1,8 +1,11 @@
-package frontEnd.tree.AST;
+package frontEnd.tree.Function;
 
+import frontEnd.tree.AST.AST;
 import frontEnd.tree.Expr.Expr;
-import frontEnd.tree.Type.Identifier;
-import frontEnd.tree.Type.Type;
+import frontEnd.tree.Identifier;
+import frontEnd.tree.Type.BaseType;
+import org.antlr.v4.runtime.ParserRuleContext;
+import symbolTable.SymbolTable;
 
 import java.util.List;
 
@@ -12,9 +15,8 @@ public class FunctionCallAST extends AST {
     private List<Expr> actuals;
     private Function function;
 
-
     @Override
-    public void check() {
+    public boolean check(SymbolTable symbolTable, ParserRuleContext ctx) {
         Identifier id = ST.lookUpAll(funcName);
         if(id == null) {
             semanticError.semanticErrorCase(funcName, "unknownFunction");
@@ -25,14 +27,15 @@ public class FunctionCallAST extends AST {
         } else {
             for(int i = 0; i < actuals.size(); i++) {
                 actuals.get(i).check();
-                Type actualType = actuals.get(i).getType();
-                Type formalType = ((Function) id).getFormals()[i].getType();
+                BaseType actualType = actuals.get(i).getType();
+                BaseType formalType = ((Function) id).getFormals()[i].getType();
                 if(!(assignCompat(formalType,actualType))) {
                     semanticError.semanticErrorCase("", "functionCallType");
                 }
             }
             function = (Function) id;
         }
-
+        return true;
     }
+
 }

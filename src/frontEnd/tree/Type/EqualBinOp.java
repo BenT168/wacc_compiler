@@ -10,7 +10,7 @@ public class EqualBinOp extends BinaryOp {
     }
 
     @Override
-    public Type getType() {
-        return Type.BOOL;
+    public BaseType getType() {
+        return BaseType.BOOL;
     }
 }

@@ -1,10 +1,12 @@
 package frontEnd.tree.Type;
 
-public abstract class Type extends Identifier {
+import frontEnd.tree.Identifier;
+
+public abstract class BaseType extends Identifier {
 
     //private final String type;
 
-    public abstract boolean isCompatible(Type type);
+    public abstract boolean isCompatible(BaseType type);
     public abstract String toString();
 
 //    public Type(String type) {
@@ -17,11 +19,7 @@ public abstract class Type extends Identifier {
 //        }
 //    }
 
-    public static final Type BOOL = new Type() {
-        @Override
-        public void check() {
-
-        }
+    public static final BaseType BOOL = new BaseType() {
 
         @Override
         public String toString() {
@@ -29,17 +27,13 @@ public abstract class Type extends Identifier {
         }
 
         @Override
-        public boolean isCompatible(Type type) {
+        public boolean isCompatible(BaseType type) {
             return type == BOOL;
         }
 
     } ;
 
-    public static final Type INT = new Type() {
-        @Override
-        public void check() {
-            //TODO
-        }
+    public static final BaseType INT = new BaseType() {
 
         @Override
         public String toString() {
@@ -47,17 +41,13 @@ public abstract class Type extends Identifier {
         }
 
         @Override
-        public boolean isCompatible(Type type) {
+        public boolean isCompatible(BaseType type) {
             return type == INT;
         }
 
     } ;
 
-    public static final Type CHAR = new Type() {
-        @Override
-        public void check() {
-            //TODO
-        }
+    public static final BaseType CHAR = new BaseType() {
 
         @Override
         public String toString() {
@@ -65,17 +55,13 @@ public abstract class Type extends Identifier {
         }
 
         @Override
-        public boolean isCompatible(Type type) {
+        public boolean isCompatible(BaseType type) {
             return type == CHAR;
         }
 
     } ;
 
-    public static final Type NULL = new Type() {
-        @Override
-        public void check() {
-            //TODO
-        }
+    public static final BaseType NULL = new BaseType() {
 
         @Override
         public String toString() {
@@ -83,7 +69,7 @@ public abstract class Type extends Identifier {
         }
 
         @Override
-        public boolean isCompatible(Type type) {
+        public boolean isCompatible(BaseType type) {
             return true;
         }
 

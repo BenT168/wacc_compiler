@@ -1,8 +1,10 @@
 package frontEnd.tree.AST;
 
-import frontEnd.tree.Type.Identifier;
-import frontEnd.tree.Type.Type;
-import frontEnd.tree.Type.Variable;
+import frontEnd.tree.Identifier;
+import frontEnd.tree.Type.BaseType;
+import frontEnd.tree.Variable;
+import org.antlr.v4.runtime.ParserRuleContext;
+import symbolTable.SymbolTable;
 
 public class VariableDeclAST extends AST {
 
@@ -16,13 +18,13 @@ public class VariableDeclAST extends AST {
     }
 
     @Override
-    public void check() {
+    public boolean check(SymbolTable symbolTable, ParserRuleContext ctx) {
         Identifier varFromAll = ST.lookUpAll(typeName);
         Identifier var = ST.lookUp(varName);
 
         if(varFromAll == null) {
             semanticError.semanticErrorCase(typeName, "unknownType");
-        } else if(! (varFromAll instanceof Type)) {
+        } else if(! (varFromAll instanceof BaseType)) {
             semanticError.semanticErrorCase(typeName, "notAType");
         } else if(var == null) {
             semanticError.semanticErrorCase(varName, "alreadyDeclared");
@@ -30,5 +32,7 @@ public class VariableDeclAST extends AST {
             variable = new Variable(varFromAll);
             ST.add(varName, variable);
         }
+
+        return true;
     }
 }

@@ -2,18 +2,16 @@ package frontEnd.tree.Expr;
 
 import frontEnd.tree.AST.AstLHSNode;
 import frontEnd.ErrorHandling.UndeclaredIdentifierException;
-import frontEnd.tree.Type.Type;
+import frontEnd.tree.Type.BaseType;
 import org.antlr.v4.runtime.ParserRuleContext;
 import symbolTable.SymbolTable;
-
-import java.lang.reflect.UndeclaredThrowableException;
 
 public class Ident extends Expr implements AstLHSNode {
 
     private String ident;
-    private Type type;
+    private BaseType type;
 
-    public Ident(Type type, String ident){
+    public Ident(BaseType type, String ident){
         this.ident = ident;
         this.type = type;
     }
@@ -27,7 +25,7 @@ public class Ident extends Expr implements AstLHSNode {
     }
 
     @Override
-    public Type getType(){
+    public BaseType getType(){
         return type;
     }
 

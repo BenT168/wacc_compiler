@@ -5,7 +5,7 @@ import frontEnd.tree.Expr.Expr;
 public abstract class BinaryOp {
 
     public abstract boolean check(Expr lhs, Expr rhs);
-    public abstract Type getType();
+    public abstract BaseType getType();
 
     private static final BinaryOp MUL = new ArithBinOp();
     private static final BinaryOp DIV = new ArithBinOp();

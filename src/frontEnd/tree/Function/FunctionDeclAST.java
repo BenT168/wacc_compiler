@@ -1,14 +1,13 @@
-package frontEnd.tree.AST;
+package frontEnd.tree.Function;
 
-import frontEnd.tree.Type.Identifier;
-import frontEnd.tree.Type.Type;
-import frontEnd.tree.Type.Parameter;
+import frontEnd.tree.AST.AST;
+import frontEnd.tree.Identifier;
+import frontEnd.tree.Type.BaseType;
+import frontEnd.tree.Parameter.Parameter;
+import org.antlr.v4.runtime.ParserRuleContext;
 import symbolTable.SymbolTable;
 
 import java.util.List;
-
-package AST;
-
 
 public class FunctionDeclAST extends AST {
 
@@ -23,7 +22,7 @@ public class FunctionDeclAST extends AST {
 
         if(idfromAll == null) {
             semanticError.semanticErrorCase(returnTypeName, "unknownType");
-        } else if( !(idfromAll instanceof Type)) {
+        } else if( !(idfromAll instanceof BaseType)) {
             semanticError.semanticErrorCase(returnTypeName, "notAType");
         } else if(id != null) {
             semanticError.semanticErrorCase(funcName, "alreadyDeclared");
@@ -33,18 +32,21 @@ public class FunctionDeclAST extends AST {
         }
     }
 
+
     @Override
-    public void check() {
+    public boolean check(SymbolTable symbolTable, ParserRuleContext ctx) {
         checkFunctionNameAndReturnType();
-        ST = new SymbolTable(ST);
-        function.setSymbolTable(ST);
+        function.setSymbolTable(symbolTable);
 
 
         int i = 0;
         for(Parameter p : params) {
-            p.check();
+            p.check(symbolTable, ctx);
             function.setFormals(p.getParam(), i);
         }
-        ST = ST.getEncSymbolTable();
+        symbolTable = symbolTable.getEncSymbolTable();
+
+        return true;
     }
+
 }

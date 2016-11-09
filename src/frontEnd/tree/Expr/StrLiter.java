@@ -1,15 +1,15 @@
 package frontEnd.tree.Expr;
 
-import frontEnd.tree.Type.Type;
+import frontEnd.tree.Type.BaseType;
 import org.antlr.v4.runtime.ParserRuleContext;
 import symbolTable.SymbolTable;
 
-public class CharLeaf extends Expr {
+public class StrLiter extends Expr {
 
-    private String strChar;
+    private String str;
 
-    public CharLeaf(String strChar) {
-        this.strChar = strChar;
+    public StrLiter(String str) {
+        this.str = str;
     }
 
     @Override
@@ -18,9 +18,7 @@ public class CharLeaf extends Expr {
     }
 
     @Override
-    public Type getType(){
-        return Type.CHAR;
+    public BaseType getType() {
+        return BaseType.STRING;
     }
-
-
 }

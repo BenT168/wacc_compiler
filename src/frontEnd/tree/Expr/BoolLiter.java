@@ -1,14 +1,14 @@
 package frontEnd.tree.Expr;
 
-import frontEnd.tree.Type.Type;
+import frontEnd.tree.Type.BaseType;
 import org.antlr.v4.runtime.ParserRuleContext;
 import symbolTable.SymbolTable;
 
-public class BoolLeaf extends Expr {
+public class BoolLiter extends Expr {
 
     private String strVal;
 
-    public BoolLeaf(String boolStr) {
+    public BoolLiter(String boolStr) {
         this.strVal = boolStr;
     }
 
@@ -18,8 +18,8 @@ public class BoolLeaf extends Expr {
     }
 
     @Override
-    public Type getType(){
-        return Type.BOOL;
+    public BaseType getType(){
+        return BaseType.BOOL;
     }
 
 }

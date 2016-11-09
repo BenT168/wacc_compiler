@@ -1,8 +1,10 @@
 package frontEnd.tree.AST;
 
 import frontEnd.tree.Expr.Expr;
-import frontEnd.tree.Type.Identifier;
-import frontEnd.tree.Type.Variable;
+import frontEnd.tree.Identifier;
+import frontEnd.tree.Variable;
+import org.antlr.v4.runtime.ParserRuleContext;
+import symbolTable.SymbolTable;
 
 
 public class AssignmentAST extends AST {
@@ -10,9 +12,10 @@ public class AssignmentAST extends AST {
     private Expr expr;
 
     @Override
-    public void check() {
-        Identifier id = ST.lookUpAll(varName);
-        expr.check();
+    public boolean check(SymbolTable symbolTable, ParserRuleContext ctx) {
+
+        Identifier id = symbolTable.lookUpAll(varName);
+        expr.check(symbolTable, ctx);
         if(id == null) {
             semanticError.semanticErrorCase(varName, "unknownVariable");
         } else if(!(id instanceof Variable)) {
@@ -22,6 +25,7 @@ public class AssignmentAST extends AST {
         } else {
             variable = (Variable) id;
         }
-
+        return false;
     }
+
 }

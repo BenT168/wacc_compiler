@@ -7,11 +7,11 @@ public class BoolBinOp extends BinaryOp {
 
     @Override
     public boolean check(Expr lhs, Expr rhs){
-        return lhs.getType().equals(Type.BOOL) && rhs.getType().equals(Type.BOOL);
+        return lhs.getType().equals(BaseType.BOOL) && rhs.getType().equals(BaseType.BOOL);
     }
 
     @Override
-    public Type getType() {
-        return Type.BOOL;
+    public BaseType getType() {
+        return BaseType.BOOL;
     }
 }

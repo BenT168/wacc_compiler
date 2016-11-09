@@ -3,9 +3,7 @@ package frontEnd.visitor;
 import frontEnd.semanticCheck.SemanticError;
 import frontEnd.antlr.BasicParser;
 import frontEnd.antlr.BasicParserBaseVisitor;
-import frontEnd.tree.Type.Scalar;
-import frontEnd.tree.Type.Type;
-import frontEnd.tree.Type.Variable;
+import frontEnd.tree.Parameter.Scalar;
 import org.antlr.v4.runtime.misc.NotNull;
 import symbolTable.SymbolTable;
 
