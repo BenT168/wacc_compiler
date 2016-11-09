@@ -2,9 +2,7 @@ package frontEnd.visitor;
 
 import antlr.BasicParser;
 import antlr.BasicParserBaseVisitor;
-import frontEnd.ErrorHandling.InvalidTypeException;
 import frontEnd.semanticCheck.SemanticError;
-import frontEnd.tree.Identifier;
 import frontEnd.tree.Parameter.Scalar;
 import frontEnd.tree.Type.ArrayType;
 import frontEnd.tree.Type.BaseType;
@@ -64,7 +62,7 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
     public String visitAssignLHS(@NotNull BasicParser.AssignLHSContext ctx) {
         BaseType type;
         try {
-            type = ((Variable) ST.lookUpAll(visit(ctx.IDENTITY()))).getType();
+            type = ((Variable) ST.lookUpAll(visit(ctx.ident()))).getType();
        } catch(NullPointerException n) {
            //Check arrayElem
        }
@@ -93,7 +91,7 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
                 throw new ArrayIndexOutOfBoundsException();
             }
         }
-        return ctx.IDENTITY().getText();
+        return ctx.ident().getText();
     }
 
     @Override
@@ -136,7 +134,7 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
         String RHStype = visitAssignRHS(ctx.assignRHS());
         if (LHStype.equals(RHStype)) {
             // replace identity in the symbol table
-            ST.replace(ctx.IDENTITY().getText(), ctx.IDENTITY());
+            //ST.replace(ctx.ident().text(), ctx.ident());
         } else {
             // error: type mismatch
             semanticError.semanticType(LHStype, RHStype);
@@ -149,7 +147,7 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
     public String visitDeclare(@NotNull BasicParser.DeclareContext ctx) {
         System.out.println(ctx.type().getText());
         String type = visit(ctx.type());
-        String name = ctx.IDENTITY().getText();
+        String name = ctx.ident().getText();
         String rhsExpr = visit(ctx.assignRHS());
 
         if(!isArray(type) && !isPair(type)) {
@@ -250,7 +248,7 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
 
         } else if (ctx.expr(0).charLiter() != null && ctx.expr(1).charLiter() != null) {
 
-        } else if (ctx.expr(0).STRING_LITER() != null && ctx.expr(1).STRING_LITER() != null) {
+        } else if (ctx.expr(0).stringLiter() != null && ctx.expr(1).stringLiter() != null) {
 
         } else {
             //types not equal
@@ -271,7 +269,7 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
     @Override
     public String visitExpr(@NotNull BasicParser.ExprContext ctx) {
         try{
-            ctx.MULTI();
+            ctx.MUL();
             typeShouldBeInt(ctx);
         } catch (NullPointerException n) {
             //Check DIV

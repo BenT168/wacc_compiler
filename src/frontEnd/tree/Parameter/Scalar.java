@@ -2,18 +2,18 @@ package frontEnd.tree.Parameter;
 
 import frontEnd.tree.Type.BaseType;
 
-public class Scalar<T> extends BaseType {
+public class Scalar extends BaseType {
 
     private int min = 0;
     private int max = 0;
-    private T value;
+    private int value;
 
     public Scalar(int min, int max) {
         this.min = min;
         this.max = max;
     }
 
-    public Scalar(T value, int min, int max) {
+    public Scalar(int value, int min, int max) {
         this.min = min;
         this.max = max;
         if (isAcceptableValue(value)) {
@@ -24,16 +24,15 @@ public class Scalar<T> extends BaseType {
         }
     }
 
-    private boolean isAcceptableValue(T value) {
-        int numericalValue = (int) value;
-        return numericalValue <= min && numericalValue >= max;
+    private boolean isAcceptableValue(int value) {
+        return value <= min && value >= max;
     }
 
-    public T getValue() {
+    public int getValue() {
         return value;
     }
 
-    public void setValue(T value) {
+    public void setValue(int value) {
         this.value = value;
     }
 
