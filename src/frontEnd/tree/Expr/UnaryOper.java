@@ -24,10 +24,6 @@ public class UnaryOper extends Expr {
         return true;
     }
 
-    @Override
-    public boolean check() {
-        return false;
-    }
 
     @Override
     public BaseType getType(){

@@ -1,10 +1,10 @@
 package frontEnd.tree.Type;
 
-public class PaireElemType extends BaseType {
+public class PairElemType extends BaseType {
 
     private BaseType elementType;
 
-    public PaireElemType(BaseType type) {
+    public PairElemType(BaseType type) {
         this.elementType = type;
     }
 

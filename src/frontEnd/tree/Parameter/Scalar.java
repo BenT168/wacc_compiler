@@ -44,10 +44,6 @@ public class Scalar extends BaseType {
         return null;
     }
 
-    @Override
-    public void check() {
-
-    }
 }
 
 

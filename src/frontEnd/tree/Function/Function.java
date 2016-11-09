@@ -28,10 +28,6 @@ public class Function extends Identifier {
         return formals;
     }
 
-    @Override
-    public void check() {
-
-    }
 }
 
 

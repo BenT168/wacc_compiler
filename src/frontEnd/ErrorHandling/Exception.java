@@ -1,33 +1,14 @@
 package frontEnd.ErrorHandling;
 
-import frontEnd.tree.Stat.StatContext;
+import antlr.BasicParser;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 
-import antlr.WACCParser.StatContext;
-
-import javax.xml.transform.ErrorListener;
-import javax.xml.transform.TransformerException;
 
 @SuppressWarnings("serial")
 public class Exception extends RuntimeException {
 	
-	public static final ErrorListener ERROR_LISTENER = new ErrorListener() {
-		@Override
-		public void warning(TransformerException e) throws TransformerException {
-
-		}
-
-		@Override
-		public void error(TransformerException e) throws TransformerException {
-
-		}
-
-		@Override
-		public void fatalError(TransformerException e) throws TransformerException {
-
-		}
-	};
+	public static final ErrorListener ERROR_LISTENER = new ErrorListener();
 	
 	private ParserRuleContext ctx;
 	private String message;
@@ -111,7 +92,7 @@ public class Exception extends RuntimeException {
 			int MAX_DEPTH = 15;
 			ParserRuleContext current = ctx;
 			int i = 0;
-			while(!(ctx instanceof StatContext) && i++ < MAX_DEPTH) {
+			while(!(ctx instanceof BasicParser.StatContext) && i++ < MAX_DEPTH) {
 				current = ctx.getParent();
 				if (current == null)
 					throw new Exception("Could not find a Stat parent");

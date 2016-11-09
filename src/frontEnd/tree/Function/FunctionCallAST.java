@@ -26,7 +26,7 @@ public class FunctionCallAST extends AST {
             semanticError.semanticErrorCase(funcName, "paramNumber");
         } else {
             for(int i = 0; i < actuals.size(); i++) {
-                actuals.get(i).check();
+                actuals.get(i).check(symbolTable, ctx);
                 BaseType actualType = actuals.get(i).getType();
                 BaseType formalType = ((Function) id).getFormals()[i].getType();
                 if(!(assignCompat(formalType,actualType))) {

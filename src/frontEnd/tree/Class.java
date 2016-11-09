@@ -27,11 +27,7 @@ public class Class extends BaseType {
     public SymbolTable getSymtab() {
         return symtab;
     }
-
-    @Override
-    public void check() {
-    }
-
+    
     @Override
     public boolean isCompatible(BaseType type) {
         return false;

@@ -40,5 +40,9 @@ public class SymbolTable {
     public Dictionary<String, Identifier> getDict() {
         return dict;
     }
+
+    public boolean containsRecursive(String ident) {
+        return true;
+    }
 }
 

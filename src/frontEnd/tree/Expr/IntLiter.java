@@ -9,7 +9,7 @@ public class IntLiter extends Expr {
 
     private int value;
 
-    public IntLiter(String val){
+    public IntLiter(int val){
         this.value = val;
     }
 
@@ -17,7 +17,7 @@ public class IntLiter extends Expr {
     public boolean check(SymbolTable symtble, ParserRuleContext ctx){
         long integer = Long.valueOf(value);
 	if (integer < (Math.pow(2, 31)) || integer > (Math.pow(2, 31) + 1)) {
-		throw new IntOverflowException("The aboslute value, " + value + " is too huge.");
+		throw new IntOverflowException("The aboslute value, " + value + " is too huge.", ctx);
 	}
 	return true; 
     }

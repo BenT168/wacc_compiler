@@ -61,6 +61,20 @@ public abstract class BaseType extends Identifier {
 
     } ;
 
+    public static final BaseType STRING = new BaseType() {
+
+        @Override
+        public String toString() {
+            return "string";
+        }
+
+        @Override
+        public boolean isCompatible(BaseType type) {
+            return type == STRING;
+        }
+
+    } ;
+
     public static final BaseType NULL = new BaseType() {
 
         @Override
