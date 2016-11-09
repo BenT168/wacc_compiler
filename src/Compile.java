@@ -41,7 +41,7 @@ public class Compile {
             BasicParser parser = new BasicParser(tokens);
             ParseTree tree = parser.program();
 
-            System.out.println(tree.toStringTree(parser));
+            //System.out.println(tree.toStringTree(parser));
 
             /*Check if there are any Syntatic errors
              */
