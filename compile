@@ -3,21 +3,19 @@
 # You are free to change the language used for this script,
 # but do *not* change its name.
 
-
-
 #----------------------------------MAIN-----------------------------------------
 
-def main
-  if ARGV.empty?
-    puts "Error: No Arguments given. One argument needed."
-     exit -1
-  end
-  if ARGV[1]
-    puts "Error: Too many arguments. Only One argument needed."
-    exit -1
-  else
-  Java::Main(ARGV)
-  end
-end
+classPath = ["bin", "lib/antlr-4.4-complete.jar", "lib/xstream-1.4.7.jar"."lib/common-c1i-1.2.jar"].join(":")
 
-main
+className = "Compile"
+#checks that the first argument is a file, if so the java program is running in normal mode
+
+if(ARGV.length == 1 && FileTest.file ? (ARGV[0]))
+    system("java -cp #[classPath] #[className] -f #[ARGv[0]]")
+else
+    #if flags are present, they are passed as they are to the javaprogram
+    system("java -cp #[classPath] #[className] #[ARGv.join("")]")
+end
+exit($?.exitstatus)
+
+
