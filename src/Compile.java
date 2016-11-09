@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class Compile {
 
-    public static void Main(String[] args) throws ParseCancellationException{
+    public static void main(String[] args) throws ParseCancellationException{
 
         /* Check if Argument is given, throw error if not the right number
          */
