@@ -2,35 +2,38 @@ package frontEnd.tree.Parameter;
 
 import frontEnd.tree.Type.BaseType;
 
-public class Scalar extends BaseType {
+public class Scalar<T> extends BaseType {
 
     private int min = 0;
     private int max = 0;
-    private int value;
+    private T value;
 
     public Scalar(int min, int max) {
         this.min = min;
         this.max = max;
     }
 
-    public Scalar(int value) {
+    public Scalar(T value, int min, int max) {
+        this.min = min;
+        this.max = max;
         if (isAcceptableValue(value)) {
             this.value = value;
         } else {
-            System.err.println("Error: The value " + value + " is not within the int range.");
+            System.err.println("Error: The value " + value + " is not within the range.");
             System.exit(-1);
         }
     }
 
-    public boolean isAcceptableValue(int value) {
-        return value <= min && value >= max;
+    private boolean isAcceptableValue(T value) {
+        int numericalValue = (int) value;
+        return numericalValue <= min && numericalValue >= max;
     }
 
-    public int getValue() {
+    public T getValue() {
         return value;
     }
 
-    public void setValue(int value) {
+    public void setValue(T value) {
         this.value = value;
     }
 

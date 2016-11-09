@@ -8,7 +8,7 @@ public class Variable extends Identifier {
     private String expr;
 
 
-    //Unitialised Variable
+    //Uninitialised Variable
     public Variable(BaseType type, String expr) {
         this.type = type;
         this.expr = expr;

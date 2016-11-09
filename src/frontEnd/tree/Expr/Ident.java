@@ -18,7 +18,7 @@ public class Ident extends Expr implements AstLHSNode {
 
     @Override
     public boolean check(SymbolTable symtble, ParserRuleContext ctx){
-        if(!symtble.containsRecursive(ident)){
+        if(!symtble.containsAll(ident)){
             throw new UndeclaredIdentifierException(ident + " hasn't been defined", ctx);
         }
         return true;

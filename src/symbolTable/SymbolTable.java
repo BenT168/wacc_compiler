@@ -9,12 +9,17 @@ public class SymbolTable {
     private SymbolTable encSymbolTable;
     private Map<String, Identifier> dict = new HashMap<>();
 
+    /* Pass parent as argument. Pass null if top-level Symtab */
     public SymbolTable(SymbolTable st) {
         encSymbolTable = st;
     }
 
     public void add(String name, Identifier id) {
         dict.put(name, id);
+    }
+
+    public void replace(String name, Identifier id) {
+        dict.replace(name, id);
     }
 
     public Identifier lookUp(String name) {
@@ -41,12 +46,11 @@ public class SymbolTable {
         return dict;
     }
 
-    public boolean containsRecursive(String ident) {
-        return true;
+    public boolean contains(String ident) {
+        return !(lookUp(ident) == null);
     }
 
-    public void setEncSymbolTable(SymbolTable encSymbolTable) {
-        this.encSymbolTable = encSymbolTable;
+    public boolean containsAll(String ident) {
+        return !(lookUpAll(ident) == null);
     }
 }
-

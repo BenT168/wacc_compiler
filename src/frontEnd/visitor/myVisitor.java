@@ -9,9 +9,6 @@ import frontEnd.tree.Variable;
 import org.antlr.v4.runtime.misc.NotNull;
 import symbolTable.SymbolTable;
 
-import java.lang.reflect.Type;
-
-
 public class myVisitor extends BasicParserBaseVisitor<String> {
 
     /* For Storing Variables and its information
@@ -78,9 +75,34 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
         return visitChildren(ctx);
     }
 
-    /* type IDENTITY EQUALS assignRHS  */
+    /* type IDENTITY EQUALS assignRHS */
+    @Override
+    public String visitDeclare(@NotNull BasicParser.DeclareContext ctx) {
+        // check whether type is the same as assignRHS's one
+        String LHStype = ctx.type().getText();
+        String RHStype = visitAssignRHS(ctx.assignRHS());
+        if (LHStype.equals(RHStype)) {
+            // add identity to symbol table
+            ST.add(ctx.IDENTITY().getText(), ctx.IDENTITY());
+        } else {
+            // error: type mismatch
+            semanticError.semanticType(LHStype, RHStype);
+        }
+        return visitChildren(ctx);
+    }
+
+    /* assignLHS EQUALS assignRHS  */
     @Override
     public String visitAssign(@NotNull BasicParser.AssignContext ctx) {
+        String LHStype = visitAssignLHS(ctx.assignLHS());
+        String RHStype = visitAssignRHS(ctx.assignRHS());
+        if (LHStype.equals(RHStype)) {
+            // replace identity in the symbol table
+            ST.replace(ctx.IDENTITY().getText(), ctx.IDENTITY());
+        } else {
+            // error: type mismatch
+            semanticError.semanticType(LHStype, RHStype);
+        }
         return visitChildren(ctx);
     }
 
@@ -256,10 +278,5 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
 //    public void checkVariablesAreAdded() {
 //        symbolTable.printList();
 //    }
-
-
-
-
-
 
 }
