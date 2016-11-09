@@ -1,8 +1,8 @@
 package frontEnd.visitor;
 
-import frontEnd.semanticCheck.SemanticError;
 import frontEnd.antlr.BasicParser;
 import frontEnd.antlr.BasicParserBaseVisitor;
+import frontEnd.semanticCheck.SemanticError;
 import frontEnd.tree.Parameter.Scalar;
 import org.antlr.v4.runtime.misc.NotNull;
 import symbolTable.SymbolTable;
@@ -12,7 +12,7 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
 
     /* For Storing Variables and its information
      */
-    private SymbolTable TopSymbolTable = new SymbolTable(null);
+    private SymbolTable TopSymbolTable = new SymbolTable();
     private SymbolTable ST = TopSymbolTable;
 
     /* For calling semantic error     */
@@ -28,28 +28,13 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
         ST.add("char", new Scalar(0, 255));
         ST.add("bool", new Scalar(0, 1));
 
-        System.out.println(ctx.start.getLine());
+        //System.out.println(ctx.start.getLine());
 
         return visitChildren(ctx);
     }
 
 
     //..................................STAT.......................................
-    @Override
-    public String visitStat(@NotNull BasicParser.StatContext ctx) {
-        int numberOfStats = ctx.stat().size();
-
-        // Go through multiple stats
-        if(numberOfStats == 0) {
-            visitOneStat(ctx);
-        }
-        return visitChildren(ctx);
-    }
-
-    public String visitOneStat(@NotNull BasicParser.StatContext ctx) {
-        visit(ctx);
-        return visitChildren(ctx);
-    }
 
 
     /*PRINT expr*/

@@ -1,16 +1,18 @@
 package symbolTable;
 
 import frontEnd.tree.Identifier;
-import java.util.Dictionary;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SymbolTable {
 
     private SymbolTable encSymbolTable;
-    private Dictionary<String, Identifier> dict;
+    private Map<String, Identifier> dict = new HashMap<>();
 
-    public SymbolTable(SymbolTable st) {
-        dict = null ;
-        encSymbolTable = st;
+    public SymbolTable() {
+        //dict = null ;
+        //encSymbolTable = st;
     }
 
     public void add(String name, Identifier id) {
@@ -37,12 +39,16 @@ public class SymbolTable {
         return encSymbolTable;
     }
 
-    public Dictionary<String, Identifier> getDict() {
+    public Map<String, Identifier> getDict() {
         return dict;
     }
 
     public boolean containsRecursive(String ident) {
         return true;
+    }
+
+    public void setEncSymbolTable(SymbolTable encSymbolTable) {
+        this.encSymbolTable = encSymbolTable;
     }
 }
 

@@ -15,12 +15,12 @@ public class Compile {
 
         /* Check if Argument is given, throw error if not the right number
          */
-        if(args.length != 1) {
+        if(args.length != 2) {
             System.out.println("Error: One Argument Should be given.");
             System.exit(-1);
         }
 
-        File file = new File(args[0]);
+        File file = new File(args[1]);
 
         /* Check if file exists
          */
@@ -39,7 +39,7 @@ public class Compile {
             BasicParser parser = new BasicParser(tokens);
             ParseTree tree = parser.program();
 
-            System.out.println(tree.toStringTree(parser));
+            //System.out.println(tree.toStringTree(parser));
 
             /*Check if there are any Syntatic errors
              */
