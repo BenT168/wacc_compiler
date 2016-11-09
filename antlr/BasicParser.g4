@@ -55,7 +55,7 @@ pairType : PAIR OPEN_PARENTHESES pairElemType COMMA pairElemType CLOSE_PARENTHES
 
 pairElemType : baseType | arrayType | PAIR ;
 
-expr: expr ( MULTI | DIV | MOD | ) expr
+expr: expr ( MULTI | DIV | MOD ) expr
 | expr ( PLUS | MINUS ) expr
 | expr (  LT | GT | LTE | GTE | EQ | AND | NEQ | OR ) expr
 | intLiter
@@ -71,7 +71,7 @@ expr: expr ( MULTI | DIV | MOD | ) expr
 
 intLiter :  intSign? INTEGER ;
 
-intSign : POS | NEG ;
+intSign : PLUS | MINUS ;
 
 unaryOper : LEN | ORD | CHR | NOT ;
 
