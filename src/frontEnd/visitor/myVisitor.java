@@ -1,7 +1,7 @@
 package frontEnd.visitor;
 
-import frontEnd.antlr.BasicParser;
-import frontEnd.antlr.BasicParserBaseVisitor;
+import antlr.BasicParser;
+import antlr.BasicParserBaseVisitor;
 import frontEnd.semanticCheck.SemanticError;
 import frontEnd.tree.Parameter.Scalar;
 import org.antlr.v4.runtime.misc.NotNull;
@@ -12,7 +12,7 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
 
     /* For Storing Variables and its information
      */
-    private SymbolTable TopSymbolTable = new SymbolTable();
+    private SymbolTable TopSymbolTable = new SymbolTable(null);
     private SymbolTable ST = TopSymbolTable;
 
     /* For calling semantic error     */

@@ -1,10 +1,12 @@
-import frontEnd.antlr.BasicLexer;
-import frontEnd.antlr.BasicParser;
+import antlr.BasicLexer;
+import antlr.BasicParser;
 import frontEnd.visitor.myVisitor;
-import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
+import org.antlr.v4.runtime.tree.ParseTree;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -39,7 +41,7 @@ public class Compile {
             BasicParser parser = new BasicParser(tokens);
             ParseTree tree = parser.program();
 
-            //System.out.println(tree.toStringTree(parser));
+            System.out.println(tree.toStringTree(parser));
 
             /*Check if there are any Syntatic errors
              */

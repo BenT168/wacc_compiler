@@ -163,12 +163,6 @@ public interface BasicParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitRead(@NotNull BasicParser.ReadContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link BasicParser#binaryOper}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitBinaryOper(@NotNull BasicParser.BinaryOperContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link BasicParser#boolLiter}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

@@ -2,7 +2,106 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9933104c-973b-4a54-afbc-9ff83059a3fe" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/frontEnd/TypeCheckVisitor.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$BinaryOperContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicLexer.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicLexer.tokens" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser$ArgListContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser$ArrayElemContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser$ArrayLiterContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser$ArrayTypeContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser$AssignLHSContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser$AssignRHSContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser$BaseTypeContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser$BinaryOperContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser$BoolLiterContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser$CharLiterContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser$CommentContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser$ExprContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser$FuncContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser$IntLiterContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser$IntSignContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser$PairElemContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser$PairElemTypeContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser$PairLiterContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser$PairTypeContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser$ParamContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser$ParamListContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser$ProgramContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser$StatContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser$TypeContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser$UnaryOperContext.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParser.tokens" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParserBaseVisitor.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/antlr/BasicParserVisitor.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/frontEnd/antlr/BasicLexer.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/frontEnd/antlr/BasicLexer.tokens" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/frontEnd/antlr/BasicParser.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/frontEnd/antlr/BasicParser.tokens" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/frontEnd/antlr/BasicParserBaseVisitor.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/frontEnd/antlr/BasicParserVisitor.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicLexer.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicLexer.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$ArgListContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$ArgListContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$ArrayElemContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$ArrayElemContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$ArrayLiterContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$ArrayLiterContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$ArrayTypeContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$ArrayTypeContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$BaseTypeContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$BaseTypeContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$BinaryOperContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$BinaryOperContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$BoolLiterContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$BoolLiterContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$CharLiterContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$CharLiterContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$CommentContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$CommentContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$ExprContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$ExprContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$IntLiterContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$IntLiterContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$IntSignContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$IntSignContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$PairElemContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$PairElemContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$PairElemTypeContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$PairElemTypeContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$PairLiterContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$PairLiterContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$PairTypeContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$PairTypeContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$TypeContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$TypeContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser$UnaryOperContext.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser$UnaryOperContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParser.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParser.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParserBaseVisitor.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParserBaseVisitor.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/antlr/BasicParserVisitor.class" afterPath="$PROJECT_DIR$/bin/antlr/BasicParserVisitor.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/frontEnd/visitor/myVisitor.class" afterPath="$PROJECT_DIR$/bin/frontEnd/visitor/myVisitor.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/symbolTable/SymbolTable.class" afterPath="$PROJECT_DIR$/bin/symbolTable/SymbolTable.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/Compile.class" afterPath="$PROJECT_DIR$/out/production/wacc_10/Compile.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicLexer.class" afterPath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicLexer.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$ArgListContext.class" afterPath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$ArgListContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$ArrayElemContext.class" afterPath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$ArrayElemContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$ArrayLiterContext.class" afterPath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$ArrayLiterContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$ArrayTypeContext.class" afterPath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$ArrayTypeContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$BaseTypeContext.class" afterPath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$BaseTypeContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$BoolLiterContext.class" afterPath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$BoolLiterContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$CharLiterContext.class" afterPath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$CharLiterContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$CommentContext.class" afterPath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$CommentContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$ExprContext.class" afterPath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$ExprContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$IntLiterContext.class" afterPath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$IntLiterContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$IntSignContext.class" afterPath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$IntSignContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$PairElemContext.class" afterPath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$PairElemContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$PairElemTypeContext.class" afterPath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$PairElemTypeContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$PairLiterContext.class" afterPath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$PairLiterContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$PairTypeContext.class" afterPath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$PairTypeContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$TypeContext.class" afterPath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$TypeContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$UnaryOperContext.class" afterPath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser$UnaryOperContext.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser.class" afterPath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParserBaseVisitor.class" afterPath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParserBaseVisitor.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParserVisitor.class" afterPath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParserVisitor.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/visitor/myVisitor.class" afterPath="$PROJECT_DIR$/out/production/wacc_10/frontEnd/visitor/myVisitor.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/symbolTable/SymbolTable.class" afterPath="$PROJECT_DIR$/out/production/wacc_10/symbolTable/SymbolTable.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/antlr/BasicLexer.g4" afterPath="$PROJECT_DIR$/antlr/BasicLexer.g4" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/antlr/BasicParser.g4" afterPath="$PROJECT_DIR$/antlr/BasicParser.g4" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicLexer.tokens" afterPath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicLexer.tokens" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser.tokens" afterPath="$PROJECT_DIR$/out/production/wacc_10/antlr/BasicParser.tokens" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Compile.java" afterPath="$PROJECT_DIR$/src/Compile.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/antlr/BasicLexer.java" afterPath="$PROJECT_DIR$/src/antlr/BasicLexer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/antlr/BasicLexer.tokens" afterPath="$PROJECT_DIR$/src/antlr/BasicLexer.tokens" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/antlr/BasicParser.java" afterPath="$PROJECT_DIR$/src/antlr/BasicParser.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/antlr/BasicParser.tokens" afterPath="$PROJECT_DIR$/src/antlr/BasicParser.tokens" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/antlr/BasicParserBaseVisitor.java" afterPath="$PROJECT_DIR$/src/antlr/BasicParserBaseVisitor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/antlr/BasicParserVisitor.java" afterPath="$PROJECT_DIR$/src/antlr/BasicParserVisitor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/frontEnd/visitor/myVisitor.java" afterPath="$PROJECT_DIR$/src/frontEnd/visitor/myVisitor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/symbolTable/SymbolTable.java" afterPath="$PROJECT_DIR$/src/symbolTable/SymbolTable.java" />
     </list>
     <ignored path="wacc_10.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -23,31 +122,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="AST.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/AST/AST.java">
+      <file leaf-file-name="BasicParser.g4" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/antlr/BasicParser.g4">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="15" column="45" selection-start-line="15" selection-start-column="45" selection-end-line="15" selection-end-column="45" />
+            <state relative-caret-position="570">
+              <caret line="75" column="35" selection-start-line="75" selection-start-column="35" selection-end-line="75" selection-end-column="35" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AstLHSNode.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/AST/AstLHSNode.java">
+      <file leaf-file-name="Compile.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Compile.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="36">
-              <caret line="2" column="17" selection-start-line="2" selection-start-column="17" selection-end-line="2" selection-end-column="17" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="VariableDeclAST.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/AST/VariableDeclAST.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="144">
-              <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+            <state relative-caret-position="324">
+              <caret line="52" column="9" selection-start-line="52" selection-start-column="9" selection-end-line="52" selection-end-column="9" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -55,22 +144,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BinaryOper.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/Expr/BinaryOper.java">
+      <file leaf-file-name="BasicLexer.g4" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/antlr/BasicLexer.g4">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+            <state relative-caret-position="414">
+              <caret line="29" column="8" selection-start-line="29" selection-start-column="8" selection-end-line="29" selection-end-column="8" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BoolLiter.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/Expr/BoolLiter.java">
+      <file leaf-file-name="myVisitor.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/frontEnd/visitor/myVisitor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="72">
-              <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
-              <folding />
+            <state relative-caret-position="-18">
+              <caret line="25" column="48" selection-start-line="25" selection-start-column="48" selection-end-line="25" selection-end-column="48" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -107,12 +198,26 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="IntLiter.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="IntLiter.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/frontEnd/tree/Expr/IntLiter.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="414">
               <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SymbolTable.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/symbolTable/SymbolTable.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="216">
+              <caret line="12" column="37" selection-start-line="12" selection-start-column="37" selection-end-line="12" selection-end-column="37" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#917#918#0" expanded="true" />
+                <element signature="e#944#945#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -148,7 +253,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/frontEnd/tree/Expr/BinaryOperExpr.java" />
         <option value="$PROJECT_DIR$/src/frontEnd/InvalidTypeException.java" />
         <option value="$PROJECT_DIR$/src/frontEnd/tree/Type/Parameter.java" />
         <option value="$PROJECT_DIR$/src/frontEnd/tree/Type/Type.java" />
@@ -159,7 +263,6 @@
         <option value="$PROJECT_DIR$/src/frontEnd/tree/Type/Class.java" />
         <option value="$PROJECT_DIR$/src/frontEnd/tree/Type/Function.java" />
         <option value="$PROJECT_DIR$/src/frontEnd/tree/Type/Array.java" />
-        <option value="$PROJECT_DIR$/antlr/BasicParser.g4" />
         <option value="$PROJECT_DIR$/src/frontEnd/tree/StatContext.java" />
         <option value="$PROJECT_DIR$/src/frontEnd/tree/Stat/StatContext.java" />
         <option value="$PROJECT_DIR$/src/frontEnd/tree/Type/ArrayType.java" />
@@ -194,11 +297,13 @@
         <option value="$PROJECT_DIR$/src/Compiler.java" />
         <option value="$PROJECT_DIR$/src/Compiler/Nothing.java" />
         <option value="$PROJECT_DIR$/compile" />
-        <option value="$PROJECT_DIR$/src/symbolTable/SymbolTable.java" />
-        <option value="$PROJECT_DIR$/src/frontEnd/visitor/myVisitor.java" />
-        <option value="$PROJECT_DIR$/src/Compile.java" />
         <option value="$PROJECT_DIR$/src/frontEnd/TypeCheckVisitor.java" />
         <option value="$PROJECT_DIR$/src/frontEnd/tree/Expr/IntLiter.java" />
+        <option value="$PROJECT_DIR$/src/symbolTable/SymbolTable.java" />
+        <option value="$PROJECT_DIR$/antlr/BasicLexer.g4" />
+        <option value="$PROJECT_DIR$/antlr/BasicParser.g4" />
+        <option value="$PROJECT_DIR$/src/Compile.java" />
+        <option value="$PROJECT_DIR$/src/frontEnd/visitor/myVisitor.java" />
       </list>
     </option>
   </component>
@@ -277,98 +382,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="frontEnd" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wacc_10" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wacc_10" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="frontEnd" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="tree" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wacc_10" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wacc_10" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="frontEnd" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="tree" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Expr" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wacc_10" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wacc_10" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="frontEnd" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="tree" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AST" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wacc_10" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wacc_10" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="antlr" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -398,7 +411,7 @@
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" value="Compile" />
       <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="./compile $USER_HOME$/wacc_examples/valid/basic/skip/comment.wacc" />
+      <option name="PROGRAM_PARAMETERS" value="./compile $USER_HOME$/wacc_examples/valid/function/nested_functions/fibonacciFullRec.wacc" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
@@ -676,7 +689,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1" y="24" width="1922" height="1153" extended-state="7" />
+    <frame x="-1" y="24" width="1922" height="1153" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -686,7 +699,7 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3294347" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3294347" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -725,22 +738,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/antlr/BasicParser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/antlr/BasicParser.tokens">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/antlr/BasicParserBaseVisitor.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="320">
@@ -965,41 +962,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/frontEnd/visitor/myVisitor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="51" column="0" selection-start-line="51" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
-          <folding>
-            <element signature="e#1407#1408#0" expanded="true" />
-            <element signature="e#1448#1449#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/symbolTable/SymbolTable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="663">
-          <caret line="41" column="14" selection-start-line="41" selection-start-column="14" selection-end-line="41" selection-end-column="14" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#371#372#0" expanded="true" />
-            <element signature="e#405#406#0" expanded="true" />
-            <element signature="e#905#906#0" expanded="true" />
-            <element signature="e#932#933#0" expanded="true" />
-            <element signature="e#1078#1079#0" expanded="true" />
-            <element signature="e#1130#1131#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Compile.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="217">
-          <caret line="41" column="14" selection-start-line="41" selection-start-column="14" selection-end-line="41" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/frontEnd/TypeCheckVisitor.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1163,6 +1125,54 @@
         <state relative-caret-position="414">
           <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/symbolTable/SymbolTable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="12" column="37" selection-start-line="12" selection-start-column="37" selection-end-line="12" selection-end-column="37" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#917#918#0" expanded="true" />
+            <element signature="e#944#945#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/antlr/BasicLexer.g4">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="29" column="8" selection-start-line="29" selection-start-column="8" selection-end-line="29" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/antlr/BasicParser.g4">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="570">
+          <caret line="75" column="35" selection-start-line="75" selection-start-column="35" selection-end-line="75" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Compile.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="52" column="9" selection-start-line="52" selection-start-column="9" selection-end-line="52" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/frontEnd/visitor/myVisitor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-18">
+          <caret line="25" column="48" selection-start-line="25" selection-start-column="48" selection-end-line="25" selection-end-column="48" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

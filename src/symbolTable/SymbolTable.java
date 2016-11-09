@@ -10,9 +10,9 @@ public class SymbolTable {
     private SymbolTable encSymbolTable;
     private Map<String, Identifier> dict = new HashMap<>();
 
-    public SymbolTable() {
+    public SymbolTable(SymbolTable st) {
         //dict = null ;
-        //encSymbolTable = st;
+        encSymbolTable = st;
     }
 
     public void add(String name, Identifier id) {

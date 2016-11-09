@@ -3,7 +3,7 @@ lexer grammar BasicLexer;
 
 //binary-operators
 PLUS: '+' ;
-MINUS: '@' ;
+MINUS: '-' ;
 MULTI: '*' ;
 DIV : '/' ;
 MOD : '%' ;
@@ -27,7 +27,7 @@ ORD : 'ord' ;
 CHR : 'chr' ;
 NOT : '!' ;
 INC : '+' ;
-DEC : '@' ;
+DEC : '-' ;
 
 
 //integer-sign
