@@ -7,7 +7,7 @@ options {
 
 program: BEGIN (func)* stat END EOF ;
 
-func : type IDENTITY OPEN_PARENTHESES (paramList)? CLOSE_PARENTHESES IS stat END ;
+func : type ident OPEN_PARENTHESES (paramList)? CLOSE_PARENTHESES IS stat END ;
 
 paramList : param (COMMA param)* ;
 
@@ -52,21 +52,15 @@ pairType : PAIR OPEN_PARENTHESES pairElemType COMMA pairElemType CLOSE_PARENTHES
 
 pairElemType : baseType | arrayType | PAIR ;
 
-expr: expr ( MUL | DIV | MOD ) expr
+expr : ( NOT | MINUS | LEN | ORD | CHR ) expr
+| expr ( MUL | DIV | MOD ) expr
 | expr ( PLUS | MINUS ) expr
 | expr ( LT | GT | LTE | GTE ) expr
 | expr ( EQ | NEQ ) expr
 | expr AND expr
 | expr OR expr
-| (NOT | MINUS | LEN | ORD | CHR ) expr
-| intLiter
-| boolLiter
-| charLiter
-| stringLiter
-| pairLiter
-| ident
-| arrayElem
 | OPEN_PARENTHESES expr CLOSE_PARENTHESES
+| (intLiter | boolLiter | charLiter | stringLiter | pairLiter | ident | arrayElem )
 ;
 
 intLiter :  (PLUS | MINUS) INTEGER | INTEGER ;
@@ -85,5 +79,3 @@ pairLiter : NULL ;
 
 ident : IDENTITY;
 
-// EOF indicates that the program must consume to the end of the input.
-comment : COMMENT;
