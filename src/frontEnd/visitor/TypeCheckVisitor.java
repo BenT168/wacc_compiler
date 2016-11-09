@@ -72,15 +72,43 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<TypeCode> {
 
     @Override
     public TypeCode visitStat(@NotNull BasicParser.StatContext ctx) {
-        TypeCode t;
-        if (ctx.assignLHS() != null) {
-            t = visitAssignLHS(ctx.assignLHS());
-        } else {
-            // throw error "Unrecognized statement context"
-            System.out.println(ctx.getText());
+
+        if (ctx.SKIP() != null) {
             return null;
-        }
-        return t;
+        } else if (ctx.type() != null && ctx.IDENTITY() != null && ctx.EQUALS
+                () != null && ctx.assignRHS() != null) {
+
+            TypeCode t1 = visitType(ctx.type());
+            typeEnv.insert(ctx.IDENTITY().getText(), t1);
+            TypeCode t2 = visitAssignRHS(ctx.assignRHS());
+
+            if (t1 != t2) {
+                // Type mismatch error
+            }
+
+        } else if (ctx.assignLHS() != null && ctx.EQUALS() != null && ctx
+                .assignRHS() != null) {
+
+            TypeCode t1 = visitAssignLHS(ctx.assignLHS());
+            TypeCode t2 = visitAssignRHS(ctx.assignRHS());
+
+            if (t1 != t2) {
+                // Type mismatch error
+            }
+
+        } else if (ctx.READ() != null && ctx.assignLHS() != null) {
+            TypeCode t = visitAssignLHS(ctx.assignLHS());
+
+            if (!(t == TypeCode.CHAR || t == TypeCode.INT)) {
+                // Type mismatch, read can only handle integers and characters
+            }
+        } else if (ctx.FREE() != null && ctx.expr() != null) {
+            TypeCode t = visitExpr(ctx.expr());
+
+            if (!(t == TypeCode.PAIR || t == TypeCode.ARRAY)) {
+                // Error
+            }
+        } else if (ctx)
     }
 
     @Override
