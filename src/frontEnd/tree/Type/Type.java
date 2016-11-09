@@ -1,19 +1,20 @@
 package frontEnd.tree.Type;
 
-import frontEnd.antlr.BasicParser;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class Type extends Identifier {
+import antlr.WACCParser.TypeContext;
 
-    private BasicParser bp;
-    private String type;
-    private boolean isArray = false;
-    private int arrayDepth = 0;
-    private boolean isPair = false;
+public abstract class Type extends Identifier {
 
+    private final String type;
+
+    public abstract boolean isCompatible(Type type);
+    public abstract String toString();
 
     public Type(String type) {
         if(type.compareTo("bool") == 0 || type.compareTo("int") == 0 || type.compareTo("char") == 0 ||
-        type.compareTo("string") == 0) {
+                type.compareTo("string") == 0) {
             this.type = type;
         } else {
             System.err.println("Error: " + type + " is not a valid type.");
@@ -21,28 +22,56 @@ public class Type extends Identifier {
         }
     }
 
-    public String getType() {
-        return type;
-    }
+    public static final Type BOOL = new Type() {
+        @Override
+        public String toString() {
+            return "bool";
+        }
 
-    public boolean isInt() {
-        return type.compareTo("int") == 0;
-    }
+        @Override
+        public boolean isCompatible(Type type) {
+            return type == BOOL;
+        }
 
-    public boolean isBool() {
-        return type.compareTo("bool") == 0;
-    }
+    } ;
 
-    public boolean isChar() {
-        return type.compareTo("char") == 0;
-    }
+    public static final Type INT = new Type() {
+        @Override
+        public String toString() {
+            return "int";
+        }
 
-    public boolean isString() {
-        return type.compareTo("string") == 0;
-    }
+        @Override
+        public boolean isCompatible(Type type) {
+            return type == INT;
+        }
 
-    public boolean isCompatible(Type ext) {
-        return false;
-    }
+    } ;
+
+    public static final Type CHAR = new Type() {
+        @Override
+        public String toString() {
+            return "char";
+        }
+
+        @Override
+        public boolean isCompatible(Type type) {
+            return type == CHAR;
+        }
+
+    } ;
+
+    public static final Type NULL = new Type() {
+        @Override
+        public String toString() {
+            return "null";
+        }
+
+        @Override
+        public boolean isCompatible(Type type) {
+            return true;
+        }
+
+    } ;
 }
 

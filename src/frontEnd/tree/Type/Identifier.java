@@ -4,17 +4,15 @@ import frontEnd.tree.Type.Type;
 
 public abstract class Identifier {
 
+    public Type getType();
+    public abstract void check();
 
-    public Type getType() {
-        return type;
-    }
-
-    public Character[] getFormals() {
+   /* public Character[] getFormals() {
         Character[] formals;
         return formals;
     }
 
-    public abstract void check();
+    */
 
-    public abstract void setFormals(Object param, int i);
+   // public abstract void setFormals(Object param, int i);
 }

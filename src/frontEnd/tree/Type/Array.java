@@ -2,7 +2,6 @@ package frontEnd.tree.Type;
 
 public class Array extends Type {
 	private Type elementType;
-	private int elements;
 
 	public Array(Type baseType) {
 		this.elementType = baseType;
@@ -10,11 +9,14 @@ public class Array extends Type {
 
 	public boolean isCompatible(Type ext) {
 		if (!(ext instanceof Array)) {
-			if (!elementType.isCompatible(ext)) {
-				return false;
-			}
-			return true;
+			return elementType.isCompatible(ext);
 		}
+		if (!(elementType.equals(Type.NULL))){
+			Array other =(Array) ext;
+			return elementType.isCompatible(other.getElementType());
+		}
+
+		return true;
 
 	}
 
@@ -22,15 +24,8 @@ public class Array extends Type {
 		return elementType;
 	}
 
-	public void setElementType(Type elementType) {
-		this.elementType = elementType;
-	}
-
-	public int getElements() {
-		return elements;
-	}
-
-	public void setElements(int elements) {
-		this.elements = elements;
+	@Override
+	public String toString() {
+		return "array-" + elementType.toString();
 	}
 }

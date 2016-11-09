@@ -85,6 +85,10 @@ public class SymbolTable implements SymbolTableInterface {
     public SymbolTable getEncSymbolTable() {
         return encSymbolTable;
     }
+
+    public boolean containsRecursive(String ident) {
+        return false;
+    }
 }
 
 /* new */

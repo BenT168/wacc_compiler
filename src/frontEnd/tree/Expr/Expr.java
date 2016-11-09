@@ -2,15 +2,14 @@ package frontEnd.tree.Expr;
 
 import frontEnd.tree.AST.AST;
 import frontEnd.tree.Type.Type;
+import org.antlr.v4.runtime.ParserRuleContext;
+import symbolTable.SymbolTable;
 
-public class Expr extends AST {
+public abstract class Expr extends AST {
 
-    private Type type;
-
-    public abstract boolean check(Type ext);
+    public abstract boolean check(SymbolTable, ParserRuleContext);
 
     public abstract Type getType();
-    }
 
 }
 
