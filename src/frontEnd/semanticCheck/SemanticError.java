@@ -6,26 +6,37 @@ public class SemanticError {
         switch(errorType) {
             case "notInitialised" :
                 System.out.println("Semantic error: " + name + " has not been initialised.");
+                break;
             case "exit" :
                 System.out.println("Semantic Error: exit is not executed with the right type");
+                break;
             case "add" :
                 System.out.println("Semantic error: " + name + " has already been initialised.");
+                break;
             case "unknownType" :
                 System.out.println("Semantic Error: unknown type " + name);
+                break;
             case "notAType"  :
                 System.out.println("Semantic Error:" + name + "is not a Type");
+                break;
             case "alreadyDeclared" :
                 System.out.println("Semantic Error:" + name + "is already declared");
+                break;
             case "unknownVar" :
                 System.out.println("Semantic Error: unknown variable " + name);
+                break;
             case "notAVar" :
                 System.out.println("Semantic Error:" + name + "is not a Variable");
+                break;
             case "notAFunction" :
                 System.out.println("Semantic Error:" + name + "is not a Function");
+                break;
             case "unknownFuntion" :
                 System.out.println("Semantic Error: unknown function " + name);
+                break;
             case "paramNumber" :
                 System.out.println("Semantic Error: Wrong Number of Parameters");
+                break;
             case "functionCallType" :
                 System.out.println("Semantic Error: Type of Function parameter is incompatible with " +
                         "declaration");
