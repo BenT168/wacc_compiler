@@ -12,7 +12,7 @@ public abstract class UnaryOp {
             case "!":
                 return NOT;
             case "-":
-                return NEG;
+                return MINUS;
             case "len":
                 return LEN;
             case "ord":
@@ -43,7 +43,7 @@ public abstract class UnaryOp {
 
     } ;
 
-    public static final UnaryOp NEG = new UnaryOp() {
+    public static final UnaryOp MINUS = new UnaryOp() {
         @Override
         public String toString() {
             return "NEG";

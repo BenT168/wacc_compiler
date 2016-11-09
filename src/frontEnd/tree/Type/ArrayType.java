@@ -3,6 +3,7 @@ package frontEnd.tree.Type;
 public class ArrayType extends BaseType {
 
 	private BaseType elementType;
+	private String[] exprs;
 
 	public ArrayType(BaseType baseType) {
 		this.elementType = baseType;
