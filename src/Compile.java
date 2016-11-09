@@ -9,9 +9,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class Main {
+public class Compile {
 
-    public static void main(String[] args) throws ParseCancellationException{
+    public static void Main(String[] args) throws ParseCancellationException{
 
         /* Check if Argument is given, throw error if not the right number
          */
