@@ -4,9 +4,9 @@ lexer grammar BasicLexer;
 //binary-operators
 PLUS: '+' ;
 MINUS: '-' ;
-MULTI: '*' ;
-DIV : '/' ;
-MOD : '%' ;
+MUL: '*' ;
+DIV: '/' ;
+MOD: '%' ;
 EQUALS : '=' ;
 
 //relational-operators
@@ -26,13 +26,6 @@ LEN: 'len' ;
 ORD : 'ord' ;
 CHR : 'chr' ;
 NOT : '!' ;
-INC : '+' ;
-DEC : '-' ;
-
-
-//integer-sign
-POS : '+' ;
-NEG : '-' ;
 
 //bools
 TRUE : 'true';
