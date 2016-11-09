@@ -51,42 +51,23 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<TypeCode> {
     }
 
     @Override
-    public TypeCode visitIntLiter(@NotNull BasicParser.IntLiterContext ctx) {
-        return TypeCode.INT;
+    public TypeCode visitProgram(@NotNull BasicParser.ProgramContext ctx) {
+        return super.visitProgram(ctx);
     }
 
     @Override
-    public TypeCode visitCharLiter(@NotNull BasicParser.CharLiterContext ctx) {
-        return TypeCode.CHAR;
+    public TypeCode visitFunc(@NotNull BasicParser.FuncContext ctx) {
+        return super.visitFunc(ctx);
     }
 
     @Override
-    public TypeCode visitExpr(@NotNull BasicParser.ExprContext ctx) {
-        TypeCode t;
-        if (ctx.intLiter() != null) {
-            t = visitIntLiter(ctx.intLiter());
-        } else if (ctx.charLiter() != null) {
-            t = visitCharLiter(ctx.charLiter());
-        } else if (ctx.boolLiter() != null) {
-            t = visitBoolLiter(ctx.boolLiter());
-        } else if (ctx.STRING_LITER() != null){
-            t = visitTerminal(ctx.STRING_LITER());
-        } else if (ctx.pairLiter() != null) {
-            t = visitPairLiter(ctx.pairLiter());
-        } else if (ctx.IDENTITY() != null) {
-            t = visitTerminal(ctx.IDENTITY());
-        } else if (ctx.arrayElem() != null) {
-            t = visitArrayElem(ctx.arrayElem());
-        } else if (ctx.unaryOper() != null) {
-            t = visitUnaryOper(ctx.unaryOper());
-        } else if (ctx.binaryOper() != null) {
-            t = visitBinaryOper(ctx.binaryOper());
-        } else {
-            //throw error "Unrecognized expression context"
-            System.out.println(ctx.getText());
-            return null;
-        }
-        return t;
+    public TypeCode visitParamList(@NotNull BasicParser.ParamListContext ctx) {
+        return super.visitParamList(ctx);
+    }
+
+    @Override
+    public TypeCode visitParam(@NotNull BasicParser.ParamContext ctx) {
+        return super.visitParam(ctx);
     }
 
     @Override
@@ -123,6 +104,80 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<TypeCode> {
     }
 
     @Override
+    public TypeCode visitAssignRHS(@NotNull BasicParser.AssignRHSContext ctx) {
+        return super.visitAssignRHS(ctx);
+    }
+
+    @Override
+    public TypeCode visitArgList(@NotNull BasicParser.ArgListContext ctx) {
+        return super.visitArgList(ctx);
+    }
+
+    @Override
+    public TypeCode visitPairElem(@NotNull BasicParser.PairElemContext ctx) {
+        return super.visitPairElem(ctx);
+    }
+
+    @Override
+    public TypeCode visitType(@NotNull BasicParser.TypeContext ctx) {
+        return super.visitType(ctx);
+    }
+
+    @Override
+    public TypeCode visitBaseType(@NotNull BasicParser.BaseTypeContext ctx) {
+        return super.visitBaseType(ctx);
+    }
+
+    @Override
+    public TypeCode visitArrayType(@NotNull BasicParser.ArrayTypeContext ctx) {
+        return super.visitArrayType(ctx);
+    }
+
+    @Override
+    public TypeCode visitPairType(@NotNull BasicParser.PairTypeContext ctx) {
+        return super.visitPairType(ctx);
+    }
+
+    @Override
+    public TypeCode visitPairElemType(@NotNull BasicParser.PairElemTypeContext ctx) {
+        return super.visitPairElemType(ctx);
+    }
+
+    @Override
+    public TypeCode visitExpr(@NotNull BasicParser.ExprContext ctx) {
+        TypeCode t;
+        if (ctx.intLiter() != null) {
+            t = visitIntLiter(ctx.intLiter());
+        } else if (ctx.charLiter() != null) {
+            t = visitCharLiter(ctx.charLiter());
+        } else if (ctx.boolLiter() != null) {
+            t = visitBoolLiter(ctx.boolLiter());
+        } else if (ctx.STRING_LITER() != null){
+            t = visitTerminal(ctx.STRING_LITER());
+        } else if (ctx.pairLiter() != null) {
+            t = visitPairLiter(ctx.pairLiter());
+        } else if (ctx.IDENTITY() != null) {
+            t = visitTerminal(ctx.IDENTITY());
+        } else if (ctx.arrayElem() != null) {
+            t = visitArrayElem(ctx.arrayElem());
+        } else if (ctx.unaryOper() != null) {
+            t = visitUnaryOper(ctx.unaryOper());
+        } else if (ctx.binaryOper() != null) {
+            t = visitBinaryOper(ctx.binaryOper());
+        } else {
+            //throw error "Unrecognized expression context"
+            System.out.println(ctx.getText());
+            return null;
+        }
+        return t;
+    }
+
+    @Override
+    public TypeCode visitUnaryOper(@NotNull BasicParser.UnaryOperContext ctx) {
+        return super.visitUnaryOper(ctx);
+    }
+
+    @Override
     public TypeCode visitBinaryOper(@NotNull BasicParser.BinaryOperContext ctx) {
         if (ctx.getChildCount() != 2) {
             // We should throw an exception here for invalid child count
@@ -136,5 +191,45 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<TypeCode> {
             return null;
         }
         return TypeCode.INT;
+    }
+
+    @Override
+    public TypeCode visitArrayElem(@NotNull BasicParser.ArrayElemContext ctx) {
+        return super.visitArrayElem(ctx);
+    }
+
+    @Override
+    public TypeCode visitIntSign(@NotNull BasicParser.IntSignContext ctx) {
+        return super.visitIntSign(ctx);
+    }
+
+    @Override
+    public TypeCode visitBoolLiter(@NotNull BasicParser.BoolLiterContext ctx) {
+        return super.visitBoolLiter(ctx);
+    }
+
+    @Override
+    public TypeCode visitCharLiter(@NotNull BasicParser.CharLiterContext ctx) {
+        return TypeCode.CHAR;
+    }
+
+    @Override
+    public TypeCode visitIntLiter(@NotNull BasicParser.IntLiterContext ctx) {
+        return TypeCode.INT;
+    }
+
+    @Override
+    public TypeCode visitArrayLiter(@NotNull BasicParser.ArrayLiterContext ctx) {
+        return super.visitArrayLiter(ctx);
+    }
+
+    @Override
+    public TypeCode visitPairLiter(@NotNull BasicParser.PairLiterContext ctx) {
+        return super.visitPairLiter(ctx);
+    }
+
+    @Override
+    public TypeCode visitComment(@NotNull BasicParser.CommentContext ctx) {
+        return super.visitComment(ctx);
     }
 }
