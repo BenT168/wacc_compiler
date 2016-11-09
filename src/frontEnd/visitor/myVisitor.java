@@ -224,6 +224,11 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
     }
 
     @Override
+    public String visitIntLiter(@NotNull BasicParser.IntLiterContext ctx) {
+        return super.visitIntLiter(ctx);
+    }
+
+    @Override
     public String visitType(@NotNull BasicParser.TypeContext ctx) {
         //System.out.println("type " + ctx.getText());
         return ctx.getText();
