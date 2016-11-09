@@ -1,7 +1,6 @@
 package symbolTable;
 
 import frontEnd.tree.Variable;
-import frontEnd.tree.Type;
 
 public interface SymbolTableInterface {
 
