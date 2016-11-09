@@ -1,6 +1,7 @@
 package frontEnd.tree.Type;
 
 public class Array extends Type {
+
 	private Type elementType;
 
 	public Array(Type baseType) {
@@ -27,5 +28,10 @@ public class Array extends Type {
 	@Override
 	public String toString() {
 		return "array-" + elementType.toString();
+	}
+
+	@Override
+	public void check() {
+
 	}
 }

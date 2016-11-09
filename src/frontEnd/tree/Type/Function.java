@@ -24,6 +24,11 @@ public class Function extends Identifier {
     public Parameter[] getFormals() {
         return formals;
     }
+
+    @Override
+    public void check() {
+
+    }
 }
 
 

@@ -1,28 +1,28 @@
 package frontEnd.tree.Type;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import antlr.WACCParser.TypeContext;
-
 public abstract class Type extends Identifier {
 
-    private final String type;
+    //private final String type;
 
     public abstract boolean isCompatible(Type type);
     public abstract String toString();
 
-    public Type(String type) {
-        if(type.compareTo("bool") == 0 || type.compareTo("int") == 0 || type.compareTo("char") == 0 ||
-                type.compareTo("string") == 0) {
-            this.type = type;
-        } else {
-            System.err.println("Error: " + type + " is not a valid type.");
-            System.exit(-1);
-        }
-    }
+//    public Type(String type) {
+//        if(type.compareTo("bool") == 0 || type.compareTo("int") == 0 || type.compareTo("char") == 0 ||
+//                type.compareTo("string") == 0) {
+//            this.type = type;
+//        } else {
+//            System.err.println("Error: " + type + " is not a valid type.");
+//            System.exit(-1);
+//        }
+//    }
 
     public static final Type BOOL = new Type() {
+        @Override
+        public void check() {
+
+        }
+
         @Override
         public String toString() {
             return "bool";
@@ -37,6 +37,11 @@ public abstract class Type extends Identifier {
 
     public static final Type INT = new Type() {
         @Override
+        public void check() {
+            //TODO
+        }
+
+        @Override
         public String toString() {
             return "int";
         }
@@ -50,6 +55,11 @@ public abstract class Type extends Identifier {
 
     public static final Type CHAR = new Type() {
         @Override
+        public void check() {
+            //TODO
+        }
+
+        @Override
         public String toString() {
             return "char";
         }
@@ -62,6 +72,11 @@ public abstract class Type extends Identifier {
     } ;
 
     public static final Type NULL = new Type() {
+        @Override
+        public void check() {
+            //TODO
+        }
+
         @Override
         public String toString() {
             return "null";

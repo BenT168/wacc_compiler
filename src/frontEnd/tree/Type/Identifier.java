@@ -4,7 +4,12 @@ import frontEnd.tree.Type.Type;
 
 public abstract class Identifier {
 
-    public Type getType();
+    protected String name;
+
+    public String getName() {
+        return name;
+    }
+
     public abstract void check();
 
    /* public Character[] getFormals() {

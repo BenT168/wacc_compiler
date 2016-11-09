@@ -2,8 +2,8 @@ package frontEnd.tree.Type;
 
 public class Scalar extends Type {
 
-    private static final int min = 0;
-    private static final int max = 0;
+    private int min = 0;
+    private int max = 0;
     private int value;
 
     public Scalar(int min, int max) {
@@ -11,8 +11,7 @@ public class Scalar extends Type {
         this.max = max;
     }
 
-    public Scalar(String type, int value) {
-        super(type);
+    public Scalar(int value) {
         if (isAcceptableValue(value)) {
             this.value = value;
         } else {
@@ -32,7 +31,21 @@ public class Scalar extends Type {
     public void setValue(int value) {
         this.value = value;
     }
-}
 
+    @Override
+    public boolean isCompatible(Type type) {
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return null;
+    }
+
+    @Override
+    public void check() {
+
+    }
+}
 
 

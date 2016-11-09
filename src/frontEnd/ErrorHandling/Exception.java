@@ -5,10 +5,28 @@ import org.antlr.v4.runtime.Token;
 
 import antlr.WACCParser.StatContext;
 
+import javax.xml.transform.ErrorListener;
+import javax.xml.transform.TransformerException;
+
 @SuppressWarnings("serial")
 public class Exception extends RuntimeException {
 	
-	public static final ErrorListener ERROR_LISTENER = new ErrorListener();
+	public static final ErrorListener ERROR_LISTENER = new ErrorListener() {
+		@Override
+		public void warning(TransformerException e) throws TransformerException {
+
+		}
+
+		@Override
+		public void error(TransformerException e) throws TransformerException {
+
+		}
+
+		@Override
+		public void fatalError(TransformerException e) throws TransformerException {
+
+		}
+	};
 	
 	private ParserRuleContext ctx;
 	private String message;
@@ -19,13 +37,13 @@ public class Exception extends RuntimeException {
 		ERROR_LISTENER.record(this);
 	}
 	
-	public WACCException(String message) {
+	public Exception(String message) {
 		this.message = message;
 		this.ctx = null;
 		ERROR_LISTENER.record(this);
 	}
 	
-	public WACCException() {
+	public Exception() {
 		this.message = "Semantic Error found.";
 		this.ctx = null;
 		ERROR_LISTENER.record(this);

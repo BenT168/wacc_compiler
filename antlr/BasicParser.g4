@@ -14,19 +14,19 @@ paramList : param (COMMA param)* ;
 param : type IDENTITY ;
 
 
-stat : SKIP
-| type IDENTITY EQUALS assignRHS
-| assignLHS EQUALS assignRHS
-| READ assignLHS
-| FREE expr
-| RETURN expr
-| EXIT expr
-| PRINT expr
-| PRINTLN expr
-| IF expr THEN stat ELSE stat ENDIF
-| WHILE expr DO stat DONE
-| BEGIN stat END
-| stat SEMI_COLON stat
+stat : SKIP  # skip
+| type IDENTITY EQUALS assignRHS  # declare
+| assignLHS EQUALS assignRHS  # assign
+| READ assignLHS  # read
+| FREE expr  # free
+| RETURN expr  # return
+| EXIT expr  # exit
+| PRINT expr  # print
+| PRINTLN expr  # println
+| IF expr THEN stat ELSE stat ENDIF  # ifElse
+| WHILE expr DO stat DONE  # while
+| BEGIN stat END  # begin
+| stat SEMI_COLON stat  # multipleStat
 ;
 
 assignLHS : IDENTITY | arrayElem | pairElem ;
@@ -55,7 +55,9 @@ pairType : PAIR OPEN_PARENTHESES pairElemType COMMA pairElemType CLOSE_PARENTHES
 
 pairElemType : baseType | arrayType | PAIR ;
 
-expr: expr binaryOper expr
+expr: expr ( MULTI | DIV | MOD) expr
+| expr ( PLUS | MINUS ) expr
+| expr (  LT | GT | LTE | GTE | EQ | AND | NEQ | OR ) expr
 | intLiter
 | boolLiter
 | charLiter

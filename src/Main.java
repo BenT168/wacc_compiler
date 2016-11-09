@@ -1,3 +1,4 @@
+import frontEnd.antlr.BasicLexer;
 import frontEnd.antlr.BasicParser;
 import frontEnd.visitor.myVisitor;
 import org.antlr.v4.runtime.*;
@@ -33,7 +34,7 @@ public class Main {
         try {
             fis = new FileInputStream(file);
             CharStream input = new ANTLRInputStream(fis);
-            BasicParser lexer = new BasicParser(input);
+            BasicLexer lexer = new BasicLexer(input);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             BasicParser parser = new BasicParser(tokens);
             ParseTree tree = parser.program();
@@ -49,13 +50,10 @@ public class Main {
 
             myVisitor visitor = new myVisitor();
 
-            String answer = visitor.visit(tree);
+            visitor.visit(tree);
             //System.out.println(answer);
 
-            visitor.checkVariablesAreAdded();
-
-
-            //TODO: Check if semantic error and exit with code 200
+            //visitor.checkVariablesAreAdded();
 
             fis.close();
 

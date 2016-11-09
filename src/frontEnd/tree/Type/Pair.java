@@ -1,5 +1,6 @@
 package frontEnd.tree.Type;
 
+import frontEnd.ErrorHandling.*;
 public class Pair extends Type {
 
     private Type fst;
@@ -36,14 +37,20 @@ public class Pair extends Type {
     }
 
     private boolean checkType(Type fst, Type snd) {
-        boolean compatible = fst == Type.NULL|| fst.isCompatible((snd));
+        boolean compatible = fst == Type.NULL || fst.isCompatible((snd));
         if(!compatible){
-            new IncompatibleTypeException("The types " + fst.toString() + " and " + snd.toString() + " are not compatible.");
+            throw new IncompatibleTypesException("The types " + fst.toString() + " and " + snd.toString() + " are not compatible.");
         }
+        return compatible;
     }
 
     @Override
     public String toString() {
         return "pair(" + fst.toString() + ", " + snd.toString() + ")";
+    }
+
+    @Override
+    public void check() {
+
     }
 }

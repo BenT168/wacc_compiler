@@ -2,17 +2,18 @@ import frontEnd.tree.Type.Type;
 import symbolTable.SymbolTable;
 
 public class Class extends Type {
+
     private Class superclass;
     private SymbolTable symtab;
+    private Type type;
 
-    public Class(String type, SymbolTable symtab) {
-        super(type);
+    public Class(Type type, SymbolTable symtab) {
+        this.type = type;
         this.symtab = symtab;
         this.superclass = null;
     }
 
     public Class(String type, SymbolTable symtab, Class superclass) {
-        super(type);
         this.symtab = symtab;
         this.superclass = superclass;
     }
@@ -27,11 +28,15 @@ public class Class extends Type {
 
     @Override
     public void check() {
-        return null;
     }
 
     @Override
-    public void setFormals(Object param, int i) {
+    public boolean isCompatible(Type type) {
+        return false;
+    }
+
+    @Override
+    public String toString() {
         return null;
     }
 }
