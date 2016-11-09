@@ -13,8 +13,9 @@ RM	:= rm -rf
 MKDIR	:= mkdir -p
 JAVA	:= java
 JAVAC	:= javac
+LIBS	:= lib/xstream-1.4.7.jar:lib/antlr-4.4-complete.jar:lib/commons-1.2.jar
 
-JFLAGS	:= -sourcepath $(SOURCE_DIR) -d $(OUTPUT_DIR) -cp lib/antlr-4.4-complete.jar 
+JFLAGS	:= -sourcepath $(SOURCE_DIR) -d $(OUTPUT_DIR) -cp $(LIBS)
 
 # the make rules
 
