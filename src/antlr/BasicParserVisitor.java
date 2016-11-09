@@ -49,11 +49,11 @@ public interface BasicParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAssignLHS(@NotNull BasicParser.AssignLHSContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link BasicParser#unaryOper}.
+	 * Visit a parse tree produced by {@link BasicParser#ident}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitUnaryOper(@NotNull BasicParser.UnaryOperContext ctx);
+	T visitIdent(@NotNull BasicParser.IdentContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code skip}
 	 * labeled alternative in {@link BasicParser#stat}.
@@ -124,6 +124,12 @@ public interface BasicParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExpr(@NotNull BasicParser.ExprContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link BasicParser#stringLiter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStringLiter(@NotNull BasicParser.StringLiterContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code free}
 	 * labeled alternative in {@link BasicParser#stat}.
 	 * @param ctx the parse tree
@@ -144,12 +150,6 @@ public interface BasicParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPairElem(@NotNull BasicParser.PairElemContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link BasicParser#intSign}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIntSign(@NotNull BasicParser.IntSignContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link BasicParser#arrayType}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -162,12 +162,6 @@ public interface BasicParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitRead(@NotNull BasicParser.ReadContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link BasicParser#binaryOper}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitBinaryOper(@NotNull BasicParser.BinaryOperContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link BasicParser#boolLiter}.
 	 * @param ctx the parse tree
@@ -219,12 +213,6 @@ public interface BasicParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitMultipleStat(@NotNull BasicParser.MultipleStatContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link BasicParser#comment}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitComment(@NotNull BasicParser.CommentContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code begin}
 	 * labeled alternative in {@link BasicParser#stat}.

@@ -1,22 +1,11 @@
 package frontEnd.tree;
 
-import frontEnd.tree.Type.BaseType;
-
 public abstract class Identifier {
 
-    protected BaseType id;
+    String name;
 
-    public BaseType getType() {
-        return id;
+    public String getName() {
+        return name;
     }
 
-
-   /* public Character[] getFormals() {
-        Character[] formals;
-        return formals;
-    }
-
-    */
-
-   // public abstract void setFormals(Object param, int i);
 }

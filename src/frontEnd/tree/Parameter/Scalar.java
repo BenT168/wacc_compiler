@@ -13,16 +13,18 @@ public class Scalar extends BaseType {
         this.max = max;
     }
 
-    public Scalar(int value) {
+    public Scalar(int value, int min, int max) {
+        this.min = min;
+        this.max = max;
         if (isAcceptableValue(value)) {
             this.value = value;
         } else {
-            System.err.println("Error: The value " + value + " is not within the int range.");
+            System.err.println("Error: The value " + value + " is not within the range.");
             System.exit(-1);
         }
     }
 
-    public boolean isAcceptableValue(int value) {
+    private boolean isAcceptableValue(int value) {
         return value <= min && value >= max;
     }
 

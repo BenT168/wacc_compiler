@@ -10,13 +10,13 @@ public abstract class BinaryOp {
     private static final BinaryOp MUL = new ArithBinOp();
     private static final BinaryOp DIV = new ArithBinOp();
     private static final BinaryOp MOD = new ArithBinOp();
-    private static final BinaryOp ADD = new ArithBinOp();
-    private static final BinaryOp SUB = new ArithBinOp();
+    private static final BinaryOp PLUS = new ArithBinOp();
+    private static final BinaryOp MINUS = new ArithBinOp();
 
-    private static final BinaryOp GRT = new CompareBinOp();
-    private static final BinaryOp GRT_EQ = new CompareBinOp();
-    private static final BinaryOp LESS = new CompareBinOp();
-    private static final BinaryOp LESS_EQ = new CompareBinOp();
+    private static final BinaryOp GT = new CompareBinOp();
+    private static final BinaryOp GTE = new CompareBinOp();
+    private static final BinaryOp LT = new CompareBinOp();
+    private static final BinaryOp LTE = new CompareBinOp();
 
     private static final BinaryOp EQ = new EqualBinOp();
     private static final BinaryOp NEQ = new EqualBinOp();
@@ -33,17 +33,17 @@ public abstract class BinaryOp {
             case "%":
                 return MOD;
             case "+":
-                return ADD;
+                return PLUS;
             case "-":
-                return SUB;
+                return MINUS;
             case ">":
-                return GRT;
+                return GT;
             case ">=":
-                return GRT_EQ;
+                return GTE;
             case "<":
-                return LESS;
+                return LT;
             case "<=":
-                return LESS_EQ;
+                return LTE;
             case "==":
                 return EQ;
             case "!=":

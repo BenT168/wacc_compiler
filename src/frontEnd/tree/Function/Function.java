@@ -10,10 +10,9 @@ public class Function extends Identifier {
     private BaseType returnType;
     private Parameter formals[];
     private SymbolTable symbolTable;
-    private Identifier id;
 
-    public Function(Identifier Id) {
-        this.id = Id;
+    public Function(BaseType returnType) {
+        this.returnType = returnType;
     }
 
     public void setSymbolTable(SymbolTable symbolTable) {

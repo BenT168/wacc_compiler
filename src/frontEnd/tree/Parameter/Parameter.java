@@ -7,16 +7,14 @@ import symbolTable.SymbolTable;
 
 public class Parameter extends Identifier {
 
-    private Parameter parameter;
+    private BaseType type;
 
-
-    public Parameter getParam() {
-        return parameter;
+    public Parameter(BaseType type) {
+        this.type = type;
     }
 
-    @Override
     public BaseType getType() {
-        return null;
+        return type;
     }
 
     public void check(SymbolTable symbolTable, ParserRuleContext ctx) {

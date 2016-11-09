@@ -1,20 +1,25 @@
 package symbolTable;
 
 import frontEnd.tree.Identifier;
-import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SymbolTable {
 
     private SymbolTable encSymbolTable;
-    private Dictionary<String, Identifier> dict;
+    private Map<String, Identifier> dict = new HashMap<>();
 
+    /* Pass parent as argument. Pass null if top-level Symtab */
     public SymbolTable(SymbolTable st) {
-        dict = null ;
         encSymbolTable = st;
     }
 
     public void add(String name, Identifier id) {
         dict.put(name, id);
+    }
+
+    public void replace(String name, Identifier id) {
+        dict.replace(name, id);
     }
 
     public Identifier lookUp(String name) {
@@ -37,12 +42,15 @@ public class SymbolTable {
         return encSymbolTable;
     }
 
-    public Dictionary<String, Identifier> getDict() {
+    public Map<String, Identifier> getDict() {
         return dict;
     }
 
-    public boolean containsRecursive(String ident) {
-        return true;
+    public boolean contains(String ident) {
+        return !(lookUp(ident) == null);
+    }
+
+    public boolean containsAll(String ident) {
+        return !(lookUpAll(ident) == null);
     }
 }
-

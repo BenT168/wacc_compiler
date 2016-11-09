@@ -2,6 +2,7 @@ package frontEnd.tree.Function;
 
 import frontEnd.tree.AST.AST;
 import frontEnd.tree.Identifier;
+import frontEnd.tree.Parameter.ParamAST;
 import frontEnd.tree.Type.BaseType;
 import frontEnd.tree.Parameter.Parameter;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -13,7 +14,7 @@ public class FunctionDeclAST extends AST {
 
     private String returnTypeName;
     private String funcName;
-    private List<Parameter> params;
+    private List<ParamAST> params;
     private Function function;
 
     private void checkFunctionNameAndReturnType() {
@@ -27,7 +28,8 @@ public class FunctionDeclAST extends AST {
         } else if(id != null) {
             semanticError.semanticErrorCase(funcName, "alreadyDeclared");
         } else {
-            function = new Function(idfromAll);
+            function = new Function((BaseType) idfromAll);
+            function.setSymbolTable(ST);
             ST.add(funcName, function);
         }
     }
@@ -38,13 +40,12 @@ public class FunctionDeclAST extends AST {
         checkFunctionNameAndReturnType();
         function.setSymbolTable(symbolTable);
 
-
         int i = 0;
-        for(Parameter p : params) {
+        for(ParamAST p : params) {
             p.check(symbolTable, ctx);
             function.setFormals(p.getParam(), i);
         }
-        symbolTable = symbolTable.getEncSymbolTable();
+        ST = symbolTable.getEncSymbolTable();
 
         return true;
     }

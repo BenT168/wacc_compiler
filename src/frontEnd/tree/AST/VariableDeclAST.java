@@ -29,7 +29,7 @@ public class VariableDeclAST extends AST {
         } else if(var == null) {
             semanticError.semanticErrorCase(varName, "alreadyDeclared");
         } else {
-            variable = new Variable(varFromAll);
+            variable = new Variable(((BaseType) varFromAll), null);
             ST.add(varName, variable);
         }
 

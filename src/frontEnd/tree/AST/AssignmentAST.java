@@ -20,7 +20,7 @@ public class AssignmentAST extends AST {
             semanticError.semanticErrorCase(varName, "unknownVariable");
         } else if(!(id instanceof Variable)) {
             semanticError.semanticErrorCase(varName, "notAVar");
-        } else if(! assignCompat(id.getType(), expr.getType())) {
+        } else if(! assignCompat(((Variable) id).getType(), expr.getType())) {
 
         } else {
             variable = (Variable) id;
