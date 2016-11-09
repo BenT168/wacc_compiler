@@ -1,11 +1,15 @@
 package frontEnd.visitor;
 
+import antlr.BasicParser;
+import antlr.BasicParserBaseVisitor;
 import frontEnd.semanticCheck.SemanticError;
-import frontEnd.antlr.BasicParser;
-import frontEnd.antlr.BasicParserBaseVisitor;
 import frontEnd.tree.Parameter.Scalar;
+import frontEnd.tree.Type.BaseType;
+import frontEnd.tree.Variable;
 import org.antlr.v4.runtime.misc.NotNull;
 import symbolTable.SymbolTable;
+
+import java.lang.reflect.Type;
 
 
 public class myVisitor extends BasicParserBaseVisitor<String> {
@@ -34,36 +38,58 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
     }
 
 
-    //..................................STAT.......................................
-    @Override
-    public String visitStat(@NotNull BasicParser.StatContext ctx) {
-        int numberOfStats = ctx.stat().size();
-
-        // Go through multiple stats
-        if(numberOfStats == 0) {
-            visitOneStat(ctx);
-        }
-        return visitChildren(ctx);
-    }
-
-    public String visitOneStat(@NotNull BasicParser.StatContext ctx) {
-        visit(ctx);
-        return visitChildren(ctx);
-    }
-
 
     /*PRINT expr*/
-    public String visitPrint(@NotNull antlr.BasicParser.PrintContext ctx) {
+    @Override
+    public String visitPrint(@NotNull BasicParser.PrintContext ctx) {
         String printExpr = visit(ctx.expr());
         System.out.print(printExpr);
-
         return visitChildren(ctx);
     }
 
-
+    /*PRINTLN expr*/
+    @Override
     public String visitPrintln(@NotNull antlr.BasicParser.PrintlnContext ctx) {
+        String printLnExpr = visit(ctx.expr());
+        System.out.println(printLnExpr);
         return visitChildren(ctx);
     }
+
+    /*EXIT expr */
+    @Override
+    public String visitExit(@NotNull BasicParser.ExitContext ctx) {
+        int exitValue = 0;
+        String value = visitExpr(ctx.expr());
+        //Check if a letter
+        if(!isParsable(value)) {
+            //Look up to see if letter is a variable in symbolTable
+            BaseType type = ((Variable) ST.lookUp(value)).getType();
+            if(type != BaseType.INT) {
+                //If variable type is not an int, throw an error
+                semanticError.semanticErrorCase(value, "exit");
+            } else {
+                String stringval = ((Variable) ST.lookUp(value)).getExpr();
+                exitValue = Integer.parseInt(stringval);
+            }
+
+        } else {
+            exitValue = Integer.parseInt(value);
+        }
+        System.exit(exitValue);
+        return visitChildren(ctx);
+    }
+
+    /* type IDENTITY EQUALS assignRHS  */
+    @Override
+    public String visitAssign(@NotNull BasicParser.AssignContext ctx) {
+        return visitChildren(ctx);
+    }
+
+
+
+
+
+
 
 
 
