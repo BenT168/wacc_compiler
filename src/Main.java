@@ -1,5 +1,6 @@
 import antlr.BasicLexer;
 import antlr.BasicParser;
+import frontEnd.visitor.TypeCheckVisitor;
 import frontEnd.visitor.myVisitor;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
@@ -50,7 +51,7 @@ public class Main {
                 System.exit(100);
             }
 
-            myVisitor visitor = new myVisitor();
+            TypeCheckVisitor visitor = new TypeCheckVisitor();
 
             visitor.visit(tree);
             //System.out.println(answer);

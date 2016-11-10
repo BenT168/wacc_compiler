@@ -17,4 +17,9 @@ public final class BaseType extends Type {
         // Base type is non-reducible.
         return this;
     }
+
+    @Override
+    public String toString() {
+        return baseTypeCode.toString();
+    }
 }

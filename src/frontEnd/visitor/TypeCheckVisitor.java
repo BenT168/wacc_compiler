@@ -2,11 +2,14 @@ package frontEnd.visitor;
 
 import antlr.BasicParser;
 import antlr.BasicParserBaseVisitor;
+import frontEnd.ErrorHandling.Exception;
+import frontEnd.ErrorHandling.IncompatibleTypesException;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
 
@@ -14,10 +17,10 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     private static class TypeEnv {
 
         // Identifiers are strings
-        private LinkedList<HashMap<String, Type>> symTabScopes = new
-                LinkedList<>();
+        private LinkedList<HashMap<String, Type>> vTableScopes = new LinkedList<>();
+        private HashMap<String, Type> fTable = new HashMap<>();
 
-        Type lookup(String key) {
+        private Type lookup(String key, LinkedList<HashMap<String, Type>> symTabScopes) {
             Type res;
             for (HashMap<String, Type> scope: symTabScopes) {
                 res = scope.get(key);
@@ -25,24 +28,34 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
                     return res;
                 }
             }
-            // throw identifier not found exception here
+            // TODO: throw error, identifier unbound in current scope or any enclosing scopes
             return null;
         }
 
-        void insert(String key, Type value) {
+        // Function symbol table insert method
+        private void fTableInsert(String key, Type value) {
+            if (fTable.containsKey(key)) {
+                // TODO: Throw error, function already bound
+            }
+            fTable.put(key, value);
+        }
+
+        // Variable symbol table insert method
+        private void vTableInsert(String key, Type value) {
             // We cannot insert an identifier twice. This is a semantic error
             // in the program.
-            symTabScopes.getFirst().putIfAbsent(key, value);
+            if (vTableScopes.getFirst().containsKey(key)) {
+                // TODO: Throw error, variable already defined
+            }
+            vTableScopes.getFirst().put(key, value);
         }
 
-        void enterScope() {
-            symTabScopes.addFirst(new HashMap<>());
+        private void enterScope() {
+            vTableScopes.addFirst(new HashMap<>());
         }
 
-        // TODO: We might need persistent scopes, so consider making symbol
-        // TODO: table a persistent data structure.
-        void removeScope() {
-            symTabScopes.removeFirst();
+        private void removeScope() {
+            vTableScopes.removeFirst();
         }
     }
 
@@ -54,12 +67,60 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
 
     @Override
     public Type visitProgram(@NotNull BasicParser.ProgramContext ctx) {
-        return super.visitProgram(ctx);
+
+        // We use two passes: one for added the function identifiers to the symbol table, another for evaluating the
+        // function bodies.
+
+        for (BasicParser.FuncContext funcCtx: ctx.func()) {
+            String i = funcCtx.ident().IDENTITY().getText();
+
+            if (typeEnv.fTable.containsKey(i)) {
+                // TODO: Throw error, function already bound
+            }
+
+            Type t = visitType(funcCtx.type());
+            typeEnv.fTableInsert(i, t);
+        }
+
+        for (BasicParser.FuncContext funcCtx: ctx.func()) {
+            typeEnv.enterScope();
+            visitFunc(funcCtx);
+            typeEnv.removeScope();
+        }
+
+        // Evaluate "main function" body
+        typeEnv.enterScope();
+        Type t = visit(ctx.stat());
+        typeEnv.removeScope();
+        return t;
     }
 
+    // Function identifiers and types should already be added to ftable by time we call this method.
     @Override
     public Type visitFunc(@NotNull BasicParser.FuncContext ctx) {
-        return super.visitFunc(ctx);
+
+        // Function return type
+        Type t0 = visitType(ctx.type());
+
+        for (BasicParser.ParamContext ctxParam: ctx.paramList().param()) {
+            String i = ctxParam.ident().IDENTITY().getText();
+            Type t = visitParam(ctxParam);
+
+            if (!(typeEnv.lookup(i, typeEnv.vTableScopes) == null)) {
+                // TODO: throw error, identifier already bound
+            }
+
+            typeEnv.vTableInsert(i, t);
+        }
+
+        typeEnv.enterScope();
+        Type t1 = visit(ctx.stat());
+        typeEnv.removeScope();
+
+        if (!(t0.equals(t1))) {
+            // TODO: throw error, type mismatch between expected function return type and actual body return type
+        }
+        return t0;
     }
 
     @Override
@@ -70,7 +131,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     @Override
     public Type visitParam(@NotNull BasicParser.ParamContext ctx) {
         Type t = visitType(ctx.type());
-        typeEnv.insert(ctx.ident().IDENTITY().getText(), t);
+        typeEnv.fTableInsert(ctx.ident().IDENTITY().getText(), t);
         return t;
     }
 
@@ -82,11 +143,11 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     @Override
     public Type visitDeclare(@NotNull BasicParser.DeclareContext ctx) {
         Type t1 = visitType(ctx.type());
-        typeEnv.insert(ctx.ident().IDENTITY().getText(), t1);
+        typeEnv.vTableInsert(ctx.ident().IDENTITY().getText(), t1);
         Type t2 = visitAssignRHS(ctx.assignRHS());
 
         if (!(t1.equals(t2))) {
-            // TODO: error
+            throw new IncompatibleTypesException("Incomptible types, expected: " + t1.toString() + "actual: " + t2.toString());
         }
         return null;
     }
@@ -127,21 +188,8 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
 
     @Override
     public Type visitReturn(@NotNull BasicParser.ReturnContext ctx) {
-        ParserRuleContext tmpCtx = ctx;
-        while (ctx.getParent() != null && !(ctx.getParent() instanceof
-                BasicParser.FuncContext)) {
-            tmpCtx = ctx.getParent();
-        }
-        if (tmpCtx == null) {
-            // TODO: error, return statement unbound by function
-        }
-        Type t1 = visitExpr(ctx.expr());
-        Type t2 = visitFunc((BasicParser.FuncContext) tmpCtx);
-        if (!(t1.equals(t2))) {
-            // TODO: Mismatch between return statement type and function return
-            // TODO: type
-        }
-        return null;
+        // Knows nothing about enclosing function and hence leaves type checking to enclosing function visitor method
+        return visitExpr(ctx.expr());
     }
 
     @Override
@@ -172,11 +220,11 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
         if (((BaseType) t).getTypeCode() != BaseTypeCode.BOOL) {
             // TODO: error
         }
-        // Visit branches in conditional. If Statment conditional only has 2
+        // Visit branches in conditional. If Statement conditional only has 2
         // branches
         for (int i = 0; i < 2; i++) {
             typeEnv.enterScope();
-            visit(ctx.stat(i));
+            visit(ctx.stat(-1));
             typeEnv.removeScope();
         }
         return null;
@@ -207,9 +255,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
 
     @Override
     public Type visitMultipleStat(@NotNull BasicParser.MultipleStatContext ctx) {
-        for (BasicParser.StatContext statCtx: ctx.stat()) {
-            visit(statCtx);
-        }
+        ctx.stat().forEach(this::visit);
         return null;
     }
 
@@ -217,7 +263,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     public Type visitAssignLHS(@NotNull BasicParser.AssignLHSContext ctx) {
         Type t;
         if (ctx.ident() != null) {
-            t = typeEnv.lookup(ctx.ident().IDENTITY().getText());
+            t = typeEnv.lookup(ctx.ident().IDENTITY().getText(), typeEnv.vTableScopes);
         } else if (ctx.arrayElem() != null) {
             // TODO
             return null;
@@ -257,7 +303,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
         } else if (ctx.baseType().INT() != null) {
             return new BaseType(BaseTypeCode.INT);
         } else if (ctx.arrayType() != null) {
-            return new ArrayType(null);
+            return new ArrayType(new BaseType(null));
         } else if (ctx.pairType() != null) {
             return new PairType(null, null);
         } else {
@@ -291,14 +337,14 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
         return super.visitExpr(ctx);
     }
 
-    @Override
-    public Type visitIdent(@NotNull BasicParser.IdentContext ctx) {
-        return typeEnv.lookup(ctx.IDENTITY().getText());
+    // We redefine the identifier visit method
+    public Type visitIdent(@NotNull BasicParser.IdentContext ctx, LinkedList<HashMap<String, Type>> symTabScopes) {
+        return typeEnv.lookup(ctx.IDENTITY().getText(), symTabScopes);
     }
 
     @Override
     public Type visitArrayElem(@NotNull BasicParser.ArrayElemContext ctx) {
-        Type t1 = visitIdent(ctx.ident());
+        Type t1 = visitIdent(ctx.ident(), typeEnv.vTableScopes);
         // Array element's type is determined by the type of the first
         // expression.
         Type t2 = visitExpr(ctx.expr(0));

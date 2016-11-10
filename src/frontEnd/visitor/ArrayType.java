@@ -22,4 +22,9 @@ public class ArrayType extends Type {
         // that we do not enter an infinite loop
         return this.type.reduce();
     }
+
+    @Override
+    public String toString() {
+        return "ARRAY " + type.toString();
+    }
 }

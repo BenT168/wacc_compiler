@@ -14,4 +14,9 @@ public class PairType extends Type {
         // Not allowed nested pairs
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "PAIR";
+    }
 }
