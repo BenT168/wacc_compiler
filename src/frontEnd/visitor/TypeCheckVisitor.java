@@ -319,7 +319,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
                 exprCtxs = ctx.argList().expr();
 
             // TODO: Could cause null pointer exception
-            if (types.size() != exprCtxs.size()){
+            if ((types.size()-1) != exprCtxs.size()){
                 System.err.println("Invalid number of arguments in call declaration:\nExpecting: " + types.size() + "\nActual: " + exprCtxs.size());
                 System.exit(200);
             }
