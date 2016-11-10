@@ -35,7 +35,6 @@ assemble
 *.vrb
 *.nav
 *.toc
-*.iml
 
 #ignore windows executables
 *.exe

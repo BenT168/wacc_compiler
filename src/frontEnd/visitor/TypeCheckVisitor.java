@@ -1,8 +1,10 @@
 package frontEnd.visitor;
 
-import frontEnd.antlr.BasicParser;
-import frontEnd.antlr.BasicParserBaseVisitor;
+import antlr.BasicParser;
+import antlr.BasicParserBaseVisitor;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.NotNull;
+import org.antlr.v4.runtime.misc.Pair;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -71,53 +73,72 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<TypeCode> {
     }
 
     @Override
-    public TypeCode visitStat(@NotNull BasicParser.StatContext ctx) {
+    public TypeCode visitDeclare(@NotNull BasicParser.DeclareContext ctx) {
+        TypeCode t1 = visitType(ctx.type());
+        typeEnv.insert(ctx.ident().IDENTITY().getText(), t1);
+        TypeCode t2 = visitAssignRHS(ctx.assignRHS());
 
-        if (ctx.SKIP() != null) {
-            return null;
-        } else if (ctx.type() != null && ctx.IDENTITY() != null && ctx.EQUALS
-                () != null && ctx.assignRHS() != null) {
+        if (t1 != t2) {
+            // TODO: error
+        }
+        return null;
+    }
 
-            TypeCode t1 = visitType(ctx.type());
-            typeEnv.insert(ctx.IDENTITY().getText(), t1);
-            TypeCode t2 = visitAssignRHS(ctx.assignRHS());
+    @Override
+    public TypeCode visitAssign(@NotNull BasicParser.AssignContext ctx) {
+        TypeCode t1 = visitAssignLHS(ctx.assignLHS());
+        TypeCode t2 = visitAssignRHS(ctx.assignRHS());
 
-            if (t1 != t2) {
-                // Type mismatch error
-            }
+        if (t1 != t2) {
+            // TODO: error
+        }
+        return null;
+    }
 
-        } else if (ctx.assignLHS() != null && ctx.EQUALS() != null && ctx
-                .assignRHS() != null) {
+    @Override
+    public TypeCode visitRead(@NotNull BasicParser.ReadContext ctx) {
+        TypeCode t = visitAssignLHS(ctx.assignLHS());
 
-            TypeCode t1 = visitAssignLHS(ctx.assignLHS());
-            TypeCode t2 = visitAssignRHS(ctx.assignRHS());
+        if (!(t == TypeCode.CHAR || t == TypeCode.INT)) {
+            // TODO: error
+        }
+        return null;
+    }
 
-            if (t1 != t2) {
-                // Type mismatch error
-            }
+    @Override
+    public TypeCode visitFree(@NotNull BasicParser.FreeContext ctx) {
+        TypeCode t = visitExpr(ctx.expr());
 
-        } else if (ctx.READ() != null && ctx.assignLHS() != null) {
-            TypeCode t = visitAssignLHS(ctx.assignLHS());
+        if (!(t == TypeCode.PAIR || t == TypeCode.ARRAY)) {
+            // TODO: error
+        }
+        return null;
+    }
 
-            if (!(t == TypeCode.CHAR || t == TypeCode.INT)) {
-                // Type mismatch, read can only handle integers and characters
-            }
-        } else if (ctx.FREE() != null && ctx.expr() != null) {
-            TypeCode t = visitExpr(ctx.expr());
-
-            if (!(t == TypeCode.PAIR || t == TypeCode.ARRAY)) {
-                // Error
-            }
-        } else if (ctx)
+    @Override
+    public TypeCode visitReturn(@NotNull BasicParser.ReturnContext ctx) {
+        ParserRuleContext tmpCtx = ctx;
+        while (ctx.getParent() != null && !(ctx.getParent() instanceof
+                BasicParser.FuncContext)) {
+            tmpCtx = ctx.getParent();
+        }
+        if (tmpCtx == null) {
+            // TODO: error, return statement unbound by function
+        }
+        TypeCode t1 = visitExpr(ctx.expr());
+        TypeCode t2 = visitFunc((BasicParser.FuncContext) tmpCtx);
+        if (t1 != t2) {
+            // TODO: Mismatch between return statment type and function return
+            // TODO: type
+        }
+        return null;
     }
 
     @Override
     public TypeCode visitAssignLHS(@NotNull BasicParser.AssignLHSContext ctx) {
         TypeCode t;
-        if (ctx.IDENTITY() != null) {
-            // TODO: will 'ctx.IDENTITY.getText()' return the raw identifier
-            // TODO: string?
-            t = typeEnv.lookup(ctx.IDENTITY().getText());
+        if (ctx.ident() != null) {
+            t = typeEnv.lookup(ctx.ident().IDENTITY().getText());
         } else if (ctx.arrayElem() != null) {
             // TODO
             return null;
@@ -173,62 +194,12 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<TypeCode> {
 
     @Override
     public TypeCode visitExpr(@NotNull BasicParser.ExprContext ctx) {
-        TypeCode t;
-        if (ctx.intLiter() != null) {
-            t = visitIntLiter(ctx.intLiter());
-        } else if (ctx.charLiter() != null) {
-            t = visitCharLiter(ctx.charLiter());
-        } else if (ctx.boolLiter() != null) {
-            t = visitBoolLiter(ctx.boolLiter());
-        } else if (ctx.STRING_LITER() != null){
-            t = visitTerminal(ctx.STRING_LITER());
-        } else if (ctx.pairLiter() != null) {
-            t = visitPairLiter(ctx.pairLiter());
-        } else if (ctx.IDENTITY() != null) {
-            t = visitTerminal(ctx.IDENTITY());
-        } else if (ctx.arrayElem() != null) {
-            t = visitArrayElem(ctx.arrayElem());
-        } else if (ctx.unaryOper() != null) {
-            t = visitUnaryOper(ctx.unaryOper());
-        } else if (ctx.binaryOper() != null) {
-            t = visitBinaryOper(ctx.binaryOper());
-        } else {
-            //throw error "Unrecognized expression context"
-            System.out.println(ctx.getText());
-            return null;
-        }
-        return t;
-    }
-
-    @Override
-    public TypeCode visitUnaryOper(@NotNull BasicParser.UnaryOperContext ctx) {
-        return super.visitUnaryOper(ctx);
-    }
-
-    @Override
-    public TypeCode visitBinaryOper(@NotNull BasicParser.BinaryOperContext ctx) {
-        if (ctx.getChildCount() != 2) {
-            // We should throw an exception here for invalid child count
-            return null;
-        }
-        TypeCode t1 = ctx.getChild(0).accept(this);
-        TypeCode t2 = ctx.getChild(1).accept(this);
-
-        if (t1 != t2) {
-            // throw type mismatch exception
-            return null;
-        }
-        return TypeCode.INT;
+        return super.visitExpr(ctx);
     }
 
     @Override
     public TypeCode visitArrayElem(@NotNull BasicParser.ArrayElemContext ctx) {
         return super.visitArrayElem(ctx);
-    }
-
-    @Override
-    public TypeCode visitIntSign(@NotNull BasicParser.IntSignContext ctx) {
-        return super.visitIntSign(ctx);
     }
 
     @Override
@@ -254,10 +225,5 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<TypeCode> {
     @Override
     public TypeCode visitPairLiter(@NotNull BasicParser.PairLiterContext ctx) {
         return super.visitPairLiter(ctx);
-    }
-
-    @Override
-    public TypeCode visitComment(@NotNull BasicParser.CommentContext ctx) {
-        return super.visitComment(ctx);
     }
 }
