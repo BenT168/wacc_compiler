@@ -31,6 +31,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
                 }
             }
             // TODO: throw error, identifier unbound in current scope or any enclosing scopes
+            System.err.println("Variable identifier: " + key + " unbound in current scope or any enclosing scopes");
             System.exit(200);
             return null;
         }
@@ -47,6 +48,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
         private void fTableInsert(String key, Type value) {
             if (fTable.containsKey(key)) {
                 // TODO: Throw error, function already bound
+                System.err.println("Function identifier: " + key + " already in scope");
                 System.exit(200);
             }
             fTable.put(key, value);
@@ -57,7 +59,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
             // We cannot insert an identifier twice. This is a semantic error
             // in the program.
             if (vTableScopes.getFirst().containsKey(key)) {
-                // TODO: Throw error, variable already defined
+                System.err.println("Variable identifier: " + key + " already in scope");
                 System.exit(200);
             }
             vTableScopes.getFirst().put(key, value);
@@ -313,7 +315,14 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
                     // TODO: Refactor ftable 'Type' value to 'List<Type>': we need to know param types.
                 }
             }
+        } else if (ctx.getChildCount() == 1 && ctx.expr() != null) {
+            t = visitExpr(ctx.expr(0));
+        } else if (ctx.arrayLiter() != null) {
+            t = visitArrayLiter(ctx.arrayLiter());
+        } else if (ctx.pairElem() != null) {
+            t = visitPairElem(ctx.pairElem());
         } else {
+            System.err.println("Error in 'visitAssignRHS' method.");
             System.exit(200);
         }
         return t;
@@ -326,25 +335,28 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
 
     @Override
     public Type visitPairElem(@NotNull BasicParser.PairElemContext ctx) {
-        return super.visitPairElem(ctx);
+        Type t = visitExpr(ctx.expr());
+        if (!(t instanceof PairType)) {
+            System.err.println("In expression: " + ctx.getText() + "\nExpecting type: Pair" + "\nActual type: " + t.toString());
+        }
+        if (ctx.FST() != null) {
+            t = ((PairType) t).getType1();
+        } else {
+            t = ((PairType) t).getType2();
+        }
+        return t;
     }
 
     @Override
     public Type visitType(@NotNull BasicParser.TypeContext ctx) {
-        if (ctx.baseType().BOOL() != null) {
-            return new BaseType(BaseTypeCode.BOOL);
-        } else if (ctx.baseType().CHAR() != null) {
-            return new BaseType(BaseTypeCode.CHAR);
-        } else if (ctx.baseType().STRING() != null) {
-            return new BaseType(BaseTypeCode.STRING);
-        } else if (ctx.baseType().INT() != null) {
-            return new BaseType(BaseTypeCode.INT);
+        if (ctx.baseType() != null) {
+            return visitBaseType(ctx.baseType());
         } else if (ctx.arrayType() != null) {
-            return new ArrayType(new BaseType(null));
+            return visitArrayType(ctx.arrayType());
         } else if (ctx.pairType() != null) {
-            return new PairType(null, null);
+            return visitPairType(ctx.pairType());
         } else {
-            // TODO: throw error
+            System.err.println("Error in 'visitType' method");
             System.exit(200);
         }
         return null;
@@ -352,17 +364,29 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
 
     @Override
     public Type visitBaseType(@NotNull BasicParser.BaseTypeContext ctx) {
-        return super.visitBaseType(ctx);
+        if (ctx.BOOL() != null) {
+            return new BaseType(BaseTypeCode.BOOL);
+        } else if (ctx.CHAR() != null) {
+            return new BaseType(BaseTypeCode.CHAR);
+        } else if (ctx.INT() != null) {
+            return new BaseType(BaseTypeCode.INT);
+        } else if (ctx.STRING() != null) {
+            return new BaseType(BaseTypeCode.STRING);
+        } else {
+            System.err.println("Error in 'visitBaseType' method");
+            System.exit(200);
+        }
+        return null;
     }
 
     @Override
     public Type visitArrayType(@NotNull BasicParser.ArrayTypeContext ctx) {
-        return super.visitArrayType(ctx);
+        return new ArrayType(new BaseType(null));
     }
 
     @Override
     public Type visitPairType(@NotNull BasicParser.PairTypeContext ctx) {
-        return super.visitPairType(ctx);
+        return new PairType(null, null);
     }
 
     @Override
@@ -386,8 +410,11 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
         // Array element's type is determined by the type of the first
         // expression.
         Type t2 = visitExpr(ctx.expr(0));
-        if (t2.equals(new BaseType(BaseTypeCode.INT))) {
-            // Indexing error
+        Type temp = new BaseType(BaseTypeCode.INT);
+        // TODO: must check all indices
+        if (!(t2.equals(temp))) {
+            System.err.println("In expression: " + ctx.getText() + "\nExpecting type: " + temp.toString() +"\nActual type: " + t2.toString());
+            System.exit(200);
         }
         return t1;
     }
@@ -417,6 +444,13 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
         // The array literal's type is determined by the type of the first
         // expression.
         Type t = visitExpr(ctx.expr(0));
+        for (int i = 1; i < ctx.expr().size(); i++) {
+            Type temp = visitExpr(ctx.expr(i));
+            if (!(t.equals(temp))) {
+                System.err.printf("Conflicting types in array literal:\nAt index %d: %s\nAt index: %d: %s\n", (i-1), t.toString(), i, temp.toString());
+            }
+            t = temp;
+        }
         return new ArrayType(t);
     }
 
