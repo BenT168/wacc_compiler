@@ -27,4 +27,13 @@ public class ArrayType extends Type {
     public String toString() {
         return "ARRAY " + type.toString();
     }
+
+    @Override
+    public boolean equals(Type type) {
+        if(!(type instanceof  ArrayType))  {
+            return false;
+        }
+        return ((ArrayType)type).getBaseType().getTypeCode() == getBaseType().getTypeCode();
+    }
+
 }

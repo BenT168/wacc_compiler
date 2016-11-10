@@ -19,4 +19,12 @@ public class PairType extends Type {
     public String toString() {
         return "PAIR";
     }
+
+    @Override
+    public boolean equals(Type type) {
+        if(!(type instanceof PairType)) {
+            return false;
+        }
+        return type2.equals(type2);
+    }
 }
