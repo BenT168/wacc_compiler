@@ -1,35 +1,62 @@
 package symbolTable;
 
-import frontEnd.tree.Identifier;
+import frontEnd.tree.IdentifierAST;
+import frontEnd.tree.Type.BaseType;
 import java.util.HashMap;
 import java.util.Map;
 
 public class SymbolTable {
 
     private SymbolTable encSymbolTable;
-    private Map<String, Identifier> dict = new HashMap<>();
+    private Map<String, IdentifierAST> dict;
+    private Expectation expectation;
+    private boolean isTopSymbolTable;
 
     /* Pass parent as argument. Pass null if top-level Symtab */
-    public SymbolTable(SymbolTable st) {
-        encSymbolTable = st;
+    public SymbolTable(SymbolTable parent, BaseType expected) {
+        this.expectation = new Expectation(expected);
+        this.dict = new HashMap<>();
+	    this.encSymbolTable = parent;
+        this.isTopSymbolTable = false;
+
     }
 
-    public void add(String name, Identifier id) {
+     public SymbolTable(SymbolTable current) {
+        this.expectation = new Expectation();
+        this.dict = new HashMap<>();
+        this.encSymbolTable = current;
+        this.isTopSymbolTable = false;
+    }
+
+     public SymbolTable() {
+        this.expectation = new Expectation();
+        this.dict = new HashMap<>();
+        this.encSymbolTable = null;
+        this.isTopSymbolTable = true;
+
+    }
+
+    public void add(String name, IdentifierAST id) {
         dict.put(name, id);
     }
 
-    public void replace(String name, Identifier id) {
+    public void replace(String name, IdentifierAST id) {
         dict.replace(name, id);
     }
 
-    public Identifier lookUp(String name) {
+    public IdentifierAST lookUp(String name) {
+        if (!containsCurrent(name)) {
+        	return encSymbolTable.lookUp(name);
+	}
         return dict.get(name);
     }
 
-    public Identifier lookUpAll(String name) {
+
+
+    public IdentifierAST lookUpAll(String name) {
         SymbolTable s = this;
         while(s != null) {
-            Identifier t = s.lookUp(name);
+            IdentifierAST t = s.lookUp(name);
             if(t != null) {
                 return t;
             }
@@ -38,19 +65,38 @@ public class SymbolTable {
         return null;
     }
 
+    public void remove(String name) {
+        if (!containsCurrent(name)) {
+                encSymbolTable.remove(name);
+        }
+        dict.remove(name);
+    }
+
+
     public SymbolTable getEncSymbolTable() {
         return encSymbolTable;
     }
 
-    public Map<String, Identifier> getDict() {
+    public Map<String, IdentifierAST> getDict() {
         return dict;
     }
-
-    public boolean contains(String ident) {
-        return !(lookUp(ident) == null);
+    
+    public boolean containsRecursive(String ident) {
+	if(this.isTopSymbolTable){
+		return containsCurrent(ident);
+	}
+	return containsCurrent(ident) || encSymbolTable.containsRecursive(ident);
     }
 
     public boolean containsAll(String ident) {
         return !(lookUpAll(ident) == null);
+    }
+    
+    public boolean containsCurrent(String ident) {
+	return dict.containsKey(ident);
+    }
+    
+    public boolean checkType(BaseType returnType) {
+	return expectation.checkType(returnType);
     }
 }

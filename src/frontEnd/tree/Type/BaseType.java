@@ -1,8 +1,10 @@
 package frontEnd.tree.Type;
 
-import frontEnd.tree.Identifier;
+import frontEnd.tree.IdentifierAST;
+import org.antlr.v4.runtime.ParserRuleContext;
+import symbolTable.SymbolTable;
 
-public abstract class BaseType extends Identifier {
+public abstract class BaseType extends IdentifierAST {
 
     //private final String type;
 
@@ -22,6 +24,11 @@ public abstract class BaseType extends Identifier {
     public static final BaseType BOOL = new BaseType() {
 
         @Override
+        public boolean check(SymbolTable symbolTable, ParserRuleContext ctx) {
+            return true;
+        }
+
+        @Override
         public String toString() {
             return "bool";
         }
@@ -34,6 +41,11 @@ public abstract class BaseType extends Identifier {
     } ;
 
     public static final BaseType INT = new BaseType() {
+
+        @Override
+        public boolean check(SymbolTable symbolTable, ParserRuleContext ctx) {
+            return true;
+        }
 
         @Override
         public String toString() {
@@ -50,6 +62,11 @@ public abstract class BaseType extends Identifier {
     public static final BaseType CHAR = new BaseType() {
 
         @Override
+        public boolean check(SymbolTable symbolTable, ParserRuleContext ctx) {
+            return true;
+        }
+
+        @Override
         public String toString() {
             return "char";
         }
@@ -64,6 +81,11 @@ public abstract class BaseType extends Identifier {
     public static final BaseType STRING = new BaseType() {
 
         @Override
+        public boolean check(SymbolTable symbolTable, ParserRuleContext ctx) {
+            return true;
+        }
+
+        @Override
         public String toString() {
             return "string";
         }
@@ -76,6 +98,11 @@ public abstract class BaseType extends Identifier {
     } ;
 
     public static final BaseType NULL = new BaseType() {
+
+        @Override
+        public boolean check(SymbolTable symbolTable, ParserRuleContext ctx) {
+            return true;
+        }
 
         @Override
         public String toString() {

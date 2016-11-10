@@ -1,12 +1,12 @@
-package frontEnd.tree.AST;
+package frontEnd.tree;
 
 import frontEnd.semanticCheck.SemanticError;
+import frontEnd.tree.Function.Variable;
 import frontEnd.tree.Type.BaseType;
-import frontEnd.tree.Variable;
 import org.antlr.v4.runtime.ParserRuleContext;
 import symbolTable.SymbolTable;
 
-public abstract class AST {
+public abstract class IdentifierAST {
 
     protected String varName;
     protected Variable variable;
@@ -18,4 +18,5 @@ public abstract class AST {
     public boolean assignCompat(BaseType type, BaseType exprType) {
         return type.equals(exprType);
     }
+
 }

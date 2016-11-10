@@ -1,6 +1,6 @@
 package frontEnd.tree.Expr;
 
-import frontEnd.tree.AST.AssignLHS;
+import frontEnd.tree.Assignment.AssignLHS;
 import frontEnd.ErrorHandling.UndeclaredIdentifierException;
 import frontEnd.tree.Type.BaseType;
 import org.antlr.v4.runtime.ParserRuleContext;

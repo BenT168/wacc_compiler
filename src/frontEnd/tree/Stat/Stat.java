@@ -1,4 +1,4 @@
-package frontEnd.tree.Function;
+package frontEnd.tree.Stat;
 
 import frontEnd.tree.IdentifierAST;
 import frontEnd.tree.Parameter.Parameter;
@@ -6,13 +6,13 @@ import frontEnd.tree.Type.BaseType;
 import org.antlr.v4.runtime.ParserRuleContext;
 import symbolTable.SymbolTable;
 
-public class Function extends IdentifierAST {
+public class Stat extends IdentifierAST {
 
     private BaseType returnType;
     private Parameter formals[];
     private SymbolTable symbolTable;
 
-    public Function(BaseType returnType) {
+    public Stat(BaseType returnType) {
         this.returnType = returnType;
     }
 

@@ -1,16 +1,16 @@
-package frontEnd.tree.AST;
+package frontEnd.tree.Function;
 
-import frontEnd.tree.Identifier;
+import frontEnd.tree.Assignment.Assignment;
+import frontEnd.tree.IdentifierAST;
 import frontEnd.tree.Type.BaseType;
-import frontEnd.tree.Variable;
 import org.antlr.v4.runtime.ParserRuleContext;
 import symbolTable.SymbolTable;
 
-public class VariableDeclAST extends AST {
+public class VariableDec extends Assignment {
 
     private String typeName;
 
-    public VariableDeclAST(String typeName, String varname, Variable variable) {
+    public VariableDec(String typeName, String varname, Variable variable) {
         this.typeName = typeName;
         varName = varname;
         this.variable = variable;
@@ -19,8 +19,8 @@ public class VariableDeclAST extends AST {
 
     @Override
     public boolean check(SymbolTable symbolTable, ParserRuleContext ctx) {
-        Identifier varFromAll = ST.lookUpAll(typeName);
-        Identifier var = ST.lookUp(varName);
+        IdentifierAST varFromAll = ST.lookUpAll(typeName);
+        IdentifierAST var = ST.lookUp(varName);
 
         if(varFromAll == null) {
             semanticError.semanticErrorCase(typeName, "unknownType");

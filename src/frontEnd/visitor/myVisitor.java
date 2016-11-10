@@ -1,17 +1,17 @@
 package frontEnd.visitor;
 
-import antlr.BasicParser;
-import antlr.BasicParserBaseVisitor;
+import antlr.WACCParser;
+import antlr.WACCParserBaseVisitor;
 import frontEnd.semanticCheck.SemanticError;
 import frontEnd.tree.Parameter.Scalar;
 import frontEnd.tree.Type.ArrayType;
 import frontEnd.tree.Type.BaseType;
 import frontEnd.tree.Type.PairType;
-import frontEnd.tree.Variable;
+import frontEnd.tree.Function.Variable;
 import org.antlr.v4.runtime.misc.NotNull;
 import symbolTable.SymbolTable;
 
-public class myVisitor extends BasicParserBaseVisitor<String> {
+public class myVisitor extends WACCParserBaseVisitor<String> {
 
     /* For Storing Variables and its information
      */
@@ -26,7 +26,7 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
 
     //................................PROGRAM.........................................
     @Override
-    public String visitProgram(@NotNull BasicParser.ProgramContext ctx) {
+    public String visitProgram(@NotNull WACCParser.ProgramContext ctx) {
         ST.add("int", new Scalar(-2147483648, 2147483647));
         ST.add("char", new Scalar(0, 255));
         ST.add("bool", new Scalar(0, 1));
@@ -39,27 +39,27 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
     //....................................STAT........................................
     /*PRINT expr*/
     @Override
-    public String visitPrint(@NotNull BasicParser.PrintContext ctx) {
+    public String visitPrint(@NotNull WACCParser.PrintContext ctx) {
         visit(ctx.expr());
         return visitChildren(ctx);
     }
 
     /*PRINTLN expr*/
     @Override
-    public String visitPrintln(@NotNull antlr.BasicParser.PrintlnContext ctx) {
+    public String visitPrintln(@NotNull antlr.WACCParser.PrintlnContext ctx) {
         visit(ctx.expr());
         return visitChildren(ctx);
     }
 
     /*READ assignLHS */
     @Override
-    public String visitRead(@NotNull BasicParser.ReadContext ctx) {
+    public String visitRead(@NotNull WACCParser.ReadContext ctx) {
         visit(ctx.assignLHS());
         return visitChildren(ctx);
     }
 
     @Override
-    public String visitAssignLHS(@NotNull BasicParser.AssignLHSContext ctx) {
+    public String visitAssignLHS(@NotNull WACCParser.AssignLHSContext ctx) {
         BaseType type;
         try {
             type = ((Variable) ST.lookUpAll(visit(ctx.ident()))).getType();
@@ -83,7 +83,7 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
     }
 
     @Override
-    public String visitArrayElem(@NotNull BasicParser.ArrayElemContext ctx) {
+    public String visitArrayElem(@NotNull WACCParser.ArrayElemContext ctx) {
         for(int i = 0; i < ctx.expr().size(); i++) {
             if(!isParsable(ctx.expr(i).getText())) {
                 semanticError.semanticErrorCase(ctx.expr(i).getText(), "exit");
@@ -95,7 +95,7 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
     }
 
     @Override
-    public String visitPairElem(@NotNull BasicParser.PairElemContext ctx) {
+    public String visitPairElem(@NotNull WACCParser.PairElemContext ctx) {
         String pairExpr = "";
         try {
             pairExpr = ctx.FST().getText();
@@ -113,7 +113,7 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
 
     /*EXIT expr */
     @Override
-    public String visitExit(@NotNull BasicParser.ExitContext ctx) {
+    public String visitExit(@NotNull WACCParser.ExitContext ctx) {
         String value = visitExpr(ctx.expr());
         //Check if a letter
         if(!isParsable(value)) {
@@ -129,7 +129,7 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
 
     /* assignLHS EQUALS assignRHS  */
     @Override
-    public String visitAssign(@NotNull BasicParser.AssignContext ctx) {
+    public String visitAssign(@NotNull WACCParser.AssignContext ctx) {
         String LHStype = visitAssignLHS(ctx.assignLHS());
         String RHStype = visitAssignRHS(ctx.assignRHS());
         if (LHStype.equals(RHStype)) {
@@ -144,7 +144,7 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
 
     /* type IDENTITY EQUALS assignRHS */
     @Override
-    public String visitDeclare(@NotNull BasicParser.DeclareContext ctx) {
+    public String visitDeclare(@NotNull WACCParser.DeclareContext ctx) {
         System.out.println(ctx.type().getText());
         String type = visit(ctx.type());
         String name = ctx.ident().getText();
@@ -189,7 +189,7 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
     } */
 
     @Override
-    public String visitFree(@NotNull BasicParser.FreeContext ctx) {
+    public String visitFree(@NotNull WACCParser.FreeContext ctx) {
         frees++;
         String expr = visit(ctx.expr());
         BaseType type = ((Variable) ST.lookUp(expr)).getType();
@@ -206,18 +206,18 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
 
 
     @Override
-    public String visitBaseType(@NotNull BasicParser.BaseTypeContext ctx) {
+    public String visitBaseType(@NotNull WACCParser.BaseTypeContext ctx) {
         return visitChildren(ctx);
     }
 
     @Override
-    public String visitArrayType(@NotNull BasicParser.ArrayTypeContext ctx) {
+    public String visitArrayType(@NotNull WACCParser.ArrayTypeContext ctx) {
 
         return visitChildren(ctx);
     }
 
     @Override
-    public String visitPairType(@NotNull BasicParser.PairTypeContext ctx) {
+    public String visitPairType(@NotNull WACCParser.PairTypeContext ctx) {
         String typeOne = visit(ctx.pairElemType(0));
         String typeTwo = visit(ctx.pairElemType(1));
 //        pairTypes[0] = typeOne;
@@ -232,7 +232,7 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
         return visitChildren(ctx);
     }
 
-    private void typeShouldBeInt(@NotNull BasicParser.ExprContext ctx) {
+    private void typeShouldBeInt(@NotNull WACCParser.ExprContext ctx) {
         String ex1 = visit(ctx.expr(0));
         System.out.println(ex1);
         String ex2 = ctx.expr(1).getText();
@@ -241,7 +241,7 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
         }
     }
 
-    private void typeCanBeAny(@NotNull BasicParser.ExprContext ctx) {
+    private void typeCanBeAny(@NotNull WACCParser.ExprContext ctx) {
         if (ctx.expr(0).intLiter() != null && ctx.expr(1).intLiter() != null) {
             //do nothing
         } else if (ctx.expr(0).boolLiter() != null && ctx.expr(1).boolLiter() != null) {
@@ -256,7 +256,7 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
         }
     }
 
-    private void typeShouldbeBool(@NotNull BasicParser.ExprContext ctx) {
+    private void typeShouldbeBool(@NotNull WACCParser.ExprContext ctx) {
         try {
             ctx.expr(0).boolLiter();
         } catch(NullPointerException n) {
@@ -267,7 +267,7 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
     }
 
     @Override
-    public String visitExpr(@NotNull BasicParser.ExprContext ctx) {
+    public String visitExpr(@NotNull WACCParser.ExprContext ctx) {
         try{
             ctx.MUL();
             typeShouldBeInt(ctx);
@@ -356,7 +356,7 @@ public class myVisitor extends BasicParserBaseVisitor<String> {
     }
 
     @Override
-    public String visitType(@NotNull BasicParser.TypeContext ctx) {
+    public String visitType(@NotNull WACCParser.TypeContext ctx) {
         //System.out.println("type " + ctx.getText());
         return ctx.getText();
     }

@@ -1,6 +1,6 @@
 package frontEnd.ErrorHandling;
 
-import antlr.BasicParser;
+import antlr.WACCParser;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 
@@ -92,7 +92,7 @@ public class Exception extends RuntimeException {
 			int MAX_DEPTH = 15;
 			ParserRuleContext current = ctx;
 			int i = 0;
-			while(!(ctx instanceof BasicParser.StatContext) && i++ < MAX_DEPTH) {
+			while(!(ctx instanceof WACCParser.StatContext) && i++ < MAX_DEPTH) {
 				current = ctx.getParent();
 				if (current == null)
 					throw new Exception("Could not find a Stat parent");

@@ -1,6 +1,8 @@
 package frontEnd.tree.Parameter;
 
 import frontEnd.tree.Type.BaseType;
+import org.antlr.v4.runtime.ParserRuleContext;
+import symbolTable.SymbolTable;
 
 public class Scalar extends BaseType {
 
@@ -46,6 +48,10 @@ public class Scalar extends BaseType {
         return null;
     }
 
+    @Override
+    public boolean check(SymbolTable symbolTable, ParserRuleContext ctx) {
+        return true;
+    }
 }
 
 

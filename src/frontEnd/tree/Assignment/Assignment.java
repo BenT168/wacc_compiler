@@ -1,20 +1,20 @@
-package frontEnd.tree.AST;
+package frontEnd.tree.Assignment;
 
 import frontEnd.tree.Expr.Expr;
-import frontEnd.tree.Identifier;
-import frontEnd.tree.Variable;
+import frontEnd.tree.IdentifierAST;
+import frontEnd.tree.Function.Variable;
 import org.antlr.v4.runtime.ParserRuleContext;
 import symbolTable.SymbolTable;
 
 
-public class AssignmentAST extends AST {
+public class Assignment extends IdentifierAST {
 
     private Expr expr;
 
     @Override
     public boolean check(SymbolTable symbolTable, ParserRuleContext ctx) {
 
-        Identifier id = symbolTable.lookUpAll(varName);
+        IdentifierAST id = symbolTable.lookUpAll(varName);
         expr.check(symbolTable, ctx);
         if(id == null) {
             semanticError.semanticErrorCase(varName, "unknownVariable");

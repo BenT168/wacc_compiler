@@ -1,5 +1,8 @@
 package frontEnd.tree.Type;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+import symbolTable.SymbolTable;
+
 public class PairElemType extends BaseType {
 
     private BaseType elementType;
@@ -22,4 +25,8 @@ public class PairElemType extends BaseType {
         return elementType.toString();
     }
 
+    @Override
+    public boolean check(SymbolTable symbolTable, ParserRuleContext ctx) {
+        return true;
+    }
 }

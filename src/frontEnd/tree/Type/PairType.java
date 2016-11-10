@@ -1,6 +1,8 @@
 package frontEnd.tree.Type;
 
 import frontEnd.ErrorHandling.*;
+import org.antlr.v4.runtime.ParserRuleContext;
+import symbolTable.SymbolTable;
 
 public class PairType extends BaseType {
 
@@ -51,4 +53,8 @@ public class PairType extends BaseType {
     }
 
 
+    @Override
+    public boolean check(SymbolTable symbolTable, ParserRuleContext ctx) {
+        return true;
+    }
 }
