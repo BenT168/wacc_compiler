@@ -36,7 +36,7 @@ public class Main {
         try {
             fis = new FileInputStream(file);
             CharStream input = new ANTLRInputStream(fis);
-            WACCLexer lexer = getLexer((InputStream) input);
+            WACCLexer lexer = new WACCLexer(input);
             CommonTokenStream tokens = tokenise(lexer);
             WACCParser parser = new WACCParser(tokens);
             ParseTree tree = getParseTree(tokens);
