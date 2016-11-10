@@ -29,6 +29,7 @@ public class ArrayType extends Type {
     }
 
     @Override
+<<<<<<< HEAD
     public boolean equals(Type type) {
         if(!(type instanceof  ArrayType))  {
             return false;
@@ -36,4 +37,14 @@ public class ArrayType extends Type {
         return ((ArrayType)type).getBaseType().getTypeCode() == getBaseType().getTypeCode();
     }
 
+=======
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ArrayType))
+            return false;
+        if (obj == this)
+            return true;
+        ArrayType rhs = (ArrayType) obj;
+        return this.type.equals(rhs.type);
+    }
+>>>>>>> 6eb665d25d7c708a7734ea73782770447d3824c2
 }

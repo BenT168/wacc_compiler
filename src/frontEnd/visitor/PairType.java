@@ -15,16 +15,26 @@ public class PairType extends Type {
         return this;
     }
 
+    public Type getType1() {
+        return type1;
+    }
+
+    public Type getType2() {
+        return type2;
+    }
+
     @Override
     public String toString() {
         return "PAIR";
     }
 
     @Override
-    public boolean equals(Type type) {
-        if(!(type instanceof PairType)) {
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ArrayType))
             return false;
-        }
-        return type2.equals(type2);
+        if (obj == this)
+            return true;
+        PairType rhs = (PairType) obj;
+        return this.type1.equals(rhs.type1) && this.type2.equals(rhs.type2);
     }
 }

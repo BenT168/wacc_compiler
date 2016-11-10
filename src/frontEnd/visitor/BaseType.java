@@ -24,10 +24,12 @@ public final class BaseType extends Type {
     }
 
     @Override
-    public boolean equals(Type type) {
-        if(!(type instanceof BaseType)) {
+    public boolean equals(Object obj) {
+        if (!(obj instanceof BaseType))
             return false;
-        }
-        return ((BaseType) type).getTypeCode() == baseTypeCode;
+        if (obj == this)
+            return true;
+        BaseType rhs = (BaseType) obj;
+        return this.baseTypeCode == rhs.baseTypeCode;
     }
 }

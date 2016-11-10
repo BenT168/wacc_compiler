@@ -6,6 +6,6 @@ public abstract class Type {
     @Override
     public abstract String toString();
 
-    public abstract boolean equals(Type type);
-
+    @Override
+    public abstract boolean equals(Object o);
 }
