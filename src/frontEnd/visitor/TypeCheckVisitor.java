@@ -27,7 +27,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
             Type res;
             for (HashMap<String, Type> scope: vTableScopes) {
                 res = scope.get(key);
-                if (res != null) {
+                if (!(res == null)) {
                     return res;
                 }
             }
@@ -99,8 +99,10 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
                 Type t = visitType(funcCtx.type());
                 List<Type> paramTypes = new ArrayList<>();
                 paramTypes.add(t);
-                for (BasicParser.ParamContext pCtx: funcCtx.paramList().param()) {
-                    paramTypes.add(visitParam(pCtx));
+                if(funcCtx.paramList() != null) {
+                    for (BasicParser.ParamContext pCtx : funcCtx.paramList().param()) {
+                        paramTypes.add(visitParam(pCtx));
+                    }
                 }
                 typeEnv.fTableInsert(i, paramTypes);
             }
@@ -168,7 +170,6 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
         typeEnv.vTableInsert(i, t1);
 
         Type t2 = visitAssignRHS(ctx.assignRHS());
-
 
         if (!(t1.equals(t2))) {
             System.err.println("Type mismatch error:\nExpected: " + t1.toString() + "\nActual: " + t2.toString());
@@ -313,20 +314,25 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
             List<Type> types = typeEnv.funcLookup(i);
             List<BasicParser.ExprContext> exprCtxs = null;
 
-            t = visitIdent(ctx.ident());
+            //t is return type of function
+            t = typeEnv.funcLookup(ctx.ident().getText()).get(0);
 
-            if (ctx.argList() != null)
+            int sizeOfExprsCxt = 0;
+
+            if (ctx.argList() != null) {
                 exprCtxs = ctx.argList().expr();
+                sizeOfExprsCxt = exprCtxs.size();
+            }
 
             // TODO: Could cause null pointer exception
-            if ((types.size()-1) != exprCtxs.size()){
+            if ((types.size()-1) != sizeOfExprsCxt){
                 System.err.println("Invalid number of arguments in call declaration:\nExpecting: " + (types.size()-1) + "\nActual: " + exprCtxs.size());
                 System.exit(200);
             }
             
             for (int j = 1; j < types.size(); j++) {
                 Type temp1 = types.get(j);
-                Type temp2 = visitExpr(exprCtxs.get(j));
+                Type temp2 = visitExpr(exprCtxs.get(j - 1));
                 
                 if (!(temp1.equals(temp2))) {
                     System.err.println("Type mismatch error:\nExpecting: " + temp1.toString() + "\nActual: " + temp2.toString());
