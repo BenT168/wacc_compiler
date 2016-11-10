@@ -29,13 +29,14 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
                 }
             }
             // TODO: throw error, identifier unbound in current scope or any enclosing scopes
-            return null;
+            System.exit(200);
         }
 
         // Function symbol table insert method
         private void fTableInsert(String key, Type value) {
             if (fTable.containsKey(key)) {
                 // TODO: Throw error, function already bound
+                System.exit(200);
             }
             fTable.put(key, value);
         }
@@ -46,6 +47,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
             // in the program.
             if (vTableScopes.getFirst().containsKey(key)) {
                 // TODO: Throw error, variable already defined
+                System.exit(200);
             }
             vTableScopes.getFirst().put(key, value);
         }
@@ -76,6 +78,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
 
             if (typeEnv.fTable.containsKey(i)) {
                 // TODO: Throw error, function already bound
+                System.exit(200);
             }
 
             Type t = visitType(funcCtx.type());
@@ -108,6 +111,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
 
             if (!(typeEnv.lookup(i, typeEnv.vTableScopes) == null)) {
                 // TODO: throw error, identifier already bound
+                System.exit(200);
             }
 
             typeEnv.vTableInsert(i, t);
@@ -119,6 +123,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
 
         if (!(t0.equals(t1))) {
             // TODO: throw error, type mismatch between expected function return type and actual body return type
+            System.exit(200);
         }
         return t0;
     }
@@ -147,7 +152,8 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
         Type t2 = visitAssignRHS(ctx.assignRHS());
 
         if (!(t1.equals(t2))) {
-            throw new IncompatibleTypesException("Incomptible types, expected: " + t1.toString() + "actual: " + t2.toString());
+            // TODO: error
+            System.exit(200);
         }
         return null;
     }
@@ -159,6 +165,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
 
         if (!(t1.equals(t2))) {
             // TODO: error
+            System.exit(200);
         }
         return null;
     }
@@ -170,6 +177,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
         if (!(t.equals(new BaseType(BaseTypeCode.CHAR)) || t.equals(new
                 BaseType(BaseTypeCode.INT)))) {
             // TODO: error
+            System.exit(200);
         }
         return null;
     }
@@ -182,6 +190,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
         if (!(t.equals(new PairType(null, null)) || t.equals(new ArrayType(null)
         ))) {
             // TODO: error
+            System.exit(200);
         }
         return null;
     }
@@ -197,6 +206,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
         Type t = visitExpr(ctx.expr());
         if (!(t.equals(new BaseType(BaseTypeCode.INT)))) {
             // TODO: error
+            System.exit(200);
         }
         return null;
     }
@@ -216,15 +226,17 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
         Type t = visitExpr(ctx.expr());
         if (!(t instanceof BaseType)) {
             // TODO: type error
+            System.exit(200);
         }
         if (((BaseType) t).getTypeCode() != BaseTypeCode.BOOL) {
             // TODO: error
+            System.exit(200);
         }
         // Visit branches in conditional. If Statement conditional only has 2
         // branches
         for (int i = 0; i < 2; i++) {
             typeEnv.enterScope();
-            visit(ctx.stat(-1));
+            visit(ctx.stat(i));
             typeEnv.removeScope();
         }
         return null;
@@ -235,9 +247,11 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
         Type t = visitExpr(ctx.expr());
         if (!(t instanceof BaseType)) {
             // TODO: type error
+            System.exit(200);
         }
         if (((BaseType) t).getTypeCode() != BaseTypeCode.BOOL) {
             // TODO: error
+            System.exit(200);
         }
         typeEnv.enterScope();
         visit(ctx.stat());
@@ -261,18 +275,18 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
 
     @Override
     public Type visitAssignLHS(@NotNull BasicParser.AssignLHSContext ctx) {
-        Type t;
+        Type t = null;
         if (ctx.ident() != null) {
             t = typeEnv.lookup(ctx.ident().IDENTITY().getText(), typeEnv.vTableScopes);
         } else if (ctx.arrayElem() != null) {
             // TODO
-            return null;
+            System.exit(200);
         } else if (ctx.pairElem() != null) {
             // TODO
-            return null;
+            System.exit(200);
         } else {
             // throw error as in other visit methods
-            return null;
+            System.exit(200);
         }
         return t;
     }
@@ -308,6 +322,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
             return new PairType(null, null);
         } else {
             // TODO: throw error
+            System.exit(200);
         }
         return null;
     }
