@@ -9,6 +9,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.gui.SystemFontMetrics;
 
 import javax.net.ssl.SSLContext;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -315,12 +316,12 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
                     // TODO: Refactor ftable 'Type' value to 'List<Type>': we need to know param types.
                 }
             }
-        } else if (ctx.getChildCount() == 1 && ctx.expr() != null) {
-            t = visitExpr(ctx.expr(0));
         } else if (ctx.arrayLiter() != null) {
             t = visitArrayLiter(ctx.arrayLiter());
         } else if (ctx.pairElem() != null) {
             t = visitPairElem(ctx.pairElem());
+        } else if (ctx.expr() != null) {
+            t = visitExpr(ctx.expr(0));
         } else {
             System.err.println("Error in 'visitAssignRHS' method.");
             System.exit(200);
@@ -395,11 +396,24 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
 
     @Override
     public Type visitPairType(@NotNull BasicParser.PairTypeContext ctx) {
-        //List<BasicParser.PairElemContext> pairElemContexts = ctx.p
+        List<BasicParser.PairElemTypeContext> ctxs = ctx.pairElemType();
         if (ctx.pairElemType().size() != 2) {
             System.err.println("Invalid number of parameter types in pair type constructor: " + ctx.pairElemType().size());
         }
-        return new PairType(null, null);
+        List<Type> ls = new ArrayList<>();
+        Type t = null;
+        for (BasicParser.PairElemTypeContext x: ctxs) {
+            if (x.baseType() != null) {
+                t = visitBaseType(x.baseType());
+            } else if (x.arrayType() != null) {
+                t = visitArrayType(x.arrayType());
+            } else {
+                System.err.println("Error in method 'visitPairType'");
+                System.exit(200);
+            }
+            ls.add(t);
+        }
+        return new PairType(ls.get(0), ls.get(1));
     }
 
     @Override
