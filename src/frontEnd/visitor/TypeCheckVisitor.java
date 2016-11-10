@@ -128,23 +128,14 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
                 String i = ctxParam.ident().IDENTITY().getText();
                 Type t = visitParam(ctxParam);
 
-                if (!(typeEnv.varLookup(i, typeEnv.vTableScopes) == null)) {
-                    System.err.println("Identifier: " + i + " already bound");
-                    System.exit(200);
-                }
-
                 typeEnv.vTableInsert(i, t);
             }
         }
 
         typeEnv.enterScope();
-        Type t1 = visit(ctx.stat());
+        visit(ctx.stat());
         typeEnv.removeScope();
 
-        if (!(t0.equals(t1))) {
-            System.err.println("Type mismatch:\nExpected: " + t0.toString() + "\nActual: " + t1.toString());
-            System.exit(200);
-        }
         return null;
     }
 
@@ -219,7 +210,6 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     @Override
     public Type visitReturn(@NotNull BasicParser.ReturnContext ctx) {
         // Knows nothing about enclosing function and hence leaves type checking to enclosing function visitor method
-        System.out.println("IN RETURN");
         return visitExpr(ctx.expr());
     }
 
@@ -300,6 +290,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
         } else if (ctx.pairElem() != null) {
             t = visitPairElem(ctx.pairElem());
         } else {
+            System.err.println("Error in expression:" + ctx.getText() + "\nin method 'visitAssignLHS");
             System.exit(200);
         }
         return t;
@@ -445,7 +436,6 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
         } else if(ctx.arrayElem() != null) {
             type = visitArrayElem(ctx.arrayElem());
         } else if(ctx.ident() != null) {
-            System.out.println("in ident");
             type = visitIdent(ctx.ident(), typeEnv.vTableScopes);
         }
         return type;
