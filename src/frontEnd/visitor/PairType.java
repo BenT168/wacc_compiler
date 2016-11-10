@@ -27,4 +27,14 @@ public class PairType extends Type {
     public String toString() {
         return "PAIR";
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ArrayType))
+            return false;
+        if (obj == this)
+            return true;
+        PairType rhs = (PairType) obj;
+        return this.type1.equals(rhs.type1) && this.type2.equals(rhs.type2);
+    }
 }

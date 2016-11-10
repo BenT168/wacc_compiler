@@ -381,11 +381,24 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
 
     @Override
     public Type visitArrayType(@NotNull BasicParser.ArrayTypeContext ctx) {
-        return new ArrayType(new BaseType(null));
+        Type t = null;
+        if (ctx.baseType() != null) {
+            t = visitBaseType(ctx.baseType());
+        } else if (ctx.pairType() != null) {
+            t = visitPairType(ctx.pairType());
+        } else {
+            System.err.println("Error in method 'visitArrayType'");
+            System.exit(200);
+        }
+        return new ArrayType(t);
     }
 
     @Override
     public Type visitPairType(@NotNull BasicParser.PairTypeContext ctx) {
+        //List<BasicParser.PairElemContext> pairElemContexts = ctx.p
+        if (ctx.pairElemType().size() != 2) {
+            System.err.println("Invalid number of parameter types in pair type constructor: " + ctx.pairElemType().size());
+        }
         return new PairType(null, null);
     }
 

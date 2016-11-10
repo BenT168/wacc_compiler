@@ -22,4 +22,14 @@ public final class BaseType extends Type {
     public String toString() {
         return baseTypeCode.toString();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof BaseType))
+            return false;
+        if (obj == this)
+            return true;
+        BaseType rhs = (BaseType) obj;
+        return this.baseTypeCode == rhs.baseTypeCode;
+    }
 }
