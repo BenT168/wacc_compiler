@@ -20,6 +20,6 @@ public class ArrayType extends Type {
     public Type reduce() {
         // Syntactic analysis that occurs before semantic analysis should ensure
         // that we do not enter an infinite loop
-        return type.reduce();
+        return this.type.reduce();
     }
 }

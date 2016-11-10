@@ -14,10 +14,11 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     private static class TypeEnv {
 
         // Identifiers are strings
-        private LinkedList<HashMap<String, Type>> symTabScopes;
+        private LinkedList<HashMap<String, Type>> symTabScopes = new
+                LinkedList<>();
 
-        public Type lookup(String key) {
-            Type res = null;
+        Type lookup(String key) {
+            Type res;
             for (HashMap<String, Type> scope: symTabScopes) {
                 res = scope.get(key);
                 if (res != null) {
@@ -28,19 +29,19 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
             return null;
         }
 
-        public void insert(String key, Type value) {
+        void insert(String key, Type value) {
             // We cannot insert an identifier twice. This is a semantic error
             // in the program.
             symTabScopes.getFirst().putIfAbsent(key, value);
         }
 
-        public void enterScope() {
+        void enterScope() {
             symTabScopes.addFirst(new HashMap<>());
         }
 
         // TODO: We might need persistent scopes, so consider making symbol
         // TODO: table a persistent data structure.
-        public void removeScope() {
+        void removeScope() {
             symTabScopes.removeFirst();
         }
     }
@@ -68,7 +69,9 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
 
     @Override
     public Type visitParam(@NotNull BasicParser.ParamContext ctx) {
-        return super.visitParam(ctx);
+        Type t = visitType(ctx.type());
+        typeEnv.insert(ctx.ident().IDENTITY().getText(), t);
+        return t;
     }
 
     @Override
@@ -82,7 +85,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
         typeEnv.insert(ctx.ident().IDENTITY().getText(), t1);
         Type t2 = visitAssignRHS(ctx.assignRHS());
 
-        if (t1 != t2) {
+        if (!(t1.equals(t2))) {
             // TODO: error
         }
         return null;
@@ -93,7 +96,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
         Type t1 = visitAssignLHS(ctx.assignLHS());
         Type t2 = visitAssignRHS(ctx.assignRHS());
 
-        if (t1 != t2) {
+        if (!(t1.equals(t2))) {
             // TODO: error
         }
         return null;
@@ -103,7 +106,8 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     public Type visitRead(@NotNull BasicParser.ReadContext ctx) {
         Type t = visitAssignLHS(ctx.assignLHS());
 
-        if (!(t == Type.CHAR || t == Type.INT)) {
+        if (!(t.equals(new BaseType(BaseTypeCode.CHAR)) || t.equals(new
+                BaseType(BaseTypeCode.INT)))) {
             // TODO: error
         }
         return null;
@@ -113,7 +117,9 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     public Type visitFree(@NotNull BasicParser.FreeContext ctx) {
         Type t = visitExpr(ctx.expr());
 
-        if (!(t == Type.PAIR || t == Type.ARRAY)) {
+        // Nulls signify generic arrays/pairs.
+        if (!(t.equals(new PairType(null, null)) || t.equals(new ArrayType(null)
+        ))) {
             // TODO: error
         }
         return null;
@@ -131,7 +137,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
         }
         Type t1 = visitExpr(ctx.expr());
         Type t2 = visitFunc((BasicParser.FuncContext) tmpCtx);
-        if (t1 != t2) {
+        if (!(t1.equals(t2))) {
             // TODO: Mismatch between return statement type and function return
             // TODO: type
         }
@@ -141,7 +147,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     @Override
     public Type visitExit(@NotNull BasicParser.ExitContext ctx) {
         Type t = visitExpr(ctx.expr());
-        if (t != Type.INT) {
+        if (!(t.equals(new BaseType(BaseTypeCode.INT)))) {
             // TODO: error
         }
         return null;
@@ -166,6 +172,13 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
         if (((BaseType) t).getTypeCode() != BaseTypeCode.BOOL) {
             // TODO: error
         }
+        // Visit branches in conditional. If Statment conditional only has 2
+        // branches
+        for (int i = 0; i < 2; i++) {
+            typeEnv.enterScope();
+            visit(ctx.stat(i));
+            typeEnv.removeScope();
+        }
         return null;
     }
 
@@ -178,17 +191,26 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
         if (((BaseType) t).getTypeCode() != BaseTypeCode.BOOL) {
             // TODO: error
         }
+        typeEnv.enterScope();
+        visit(ctx.stat());
+        typeEnv.removeScope();
         return null;
     }
 
     @Override
     public Type visitBegin(@NotNull BasicParser.BeginContext ctx) {
-        return visit(ctx.stat());
+        typeEnv.enterScope();
+        visit(ctx.stat());
+        typeEnv.removeScope();
+        return null;
     }
 
     @Override
     public Type visitMultipleStat(@NotNull BasicParser.MultipleStatContext ctx) {
-        return super.visitMultipleStat(ctx);
+        for (BasicParser.StatContext statCtx: ctx.stat()) {
+            visit(statCtx);
+        }
+        return null;
     }
 
     @Override
@@ -235,9 +257,13 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
         } else if (ctx.baseType().INT() != null) {
             return new BaseType(BaseTypeCode.INT);
         } else if (ctx.arrayType() != null) {
-            return
+            return new ArrayType(null);
+        } else if (ctx.pairType() != null) {
+            return new PairType(null, null);
+        } else {
+            // TODO: throw error
         }
-        return super.visitType(ctx);
+        return null;
     }
 
     @Override
@@ -267,7 +293,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
 
     @Override
     public Type visitIdent(@NotNull BasicParser.IdentContext ctx) {
-        return super.visitIdent(ctx);
+        return typeEnv.lookup(ctx.IDENTITY().getText());
     }
 
     @Override
