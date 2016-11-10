@@ -32,7 +32,7 @@ public class PairType extends Type {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof ArrayType))
+        if (!(obj instanceof PairType))
             return false;
         if (obj == this)
             return true;

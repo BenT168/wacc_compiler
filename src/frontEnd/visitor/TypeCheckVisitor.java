@@ -149,7 +149,8 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         }
         if(returntype != null) {
             if(!(t0.equals(returntype))) {
-                System.err.print("Function: " + ctx.ident().getText() + " \nExpected return type: " + t0.toString() + " \nActual return type: " + returntype.toString());
+                System.err.print("Function: " + ctx.ident().getText()
+                        + " \nExpected return type: " + t0.toString() + " \nActual return type: " + returntype.toString());
                 System.exit(200);
             }
         }
@@ -322,6 +323,12 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
             t = typeEnv.varLookup(ctx.ident().IDENTITY().getText(), typeEnv.vTableScopes);
         } else if (ctx.arrayElem() != null) {
             t = visitArrayElem(ctx.arrayElem());
+            if(t.equals(new BaseType(BaseTypeCode.STRING))) {
+                //one element of string array is a char
+                t = new BaseType(BaseTypeCode.CHAR);
+            } else {
+                t = t.reduce();
+            }
         } else if (ctx.pairElem() != null) {
             t = visitPairElem(ctx.pairElem());
         } else {
@@ -362,7 +369,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
             for (int j = 1; j < types.size(); j++) {
                 Type temp1 = types.get(j);
                 Type temp2 = visitExpr(exprCtxs.get(j - 1));
-                
+
                 if (!(temp1.equals(temp2))) {
                     System.err.println("Type mismatch error:\nExpecting: " + temp1.toString() + "\nActual: " + temp2.toString());
                     System.exit(200);
@@ -505,31 +512,31 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         Type chartmp = new BaseType(BaseTypeCode.CHAR);
         Type inttmp = new BaseType(BaseTypeCode.INT);
          if(ctx.CHR() != null) {
-            //argument type = char
-            Type argType = visit(ctx.expr(0));
-            if(!argType.equals(chartmp)) {
-                System.err.println("Wrong argument type for unary operator.");
-                System.err.println("Expected type : Char ");
-                System.err.println("Actual type : " + argType.toString());
-                System.exit(200);
-            }
-            //return type = int
-            type = inttmp;
-        } else if(ctx.ORD() != null) {
             //argument type = int
             Type argType = visit(ctx.expr(0));
             if(!argType.equals(inttmp)) {
                 System.err.println("Wrong argument type for unary operator.");
-                System.err.println("Expected type : Int ");
+                System.err.println("Expected type : INT ");
                 System.err.println("Actual type : " + argType.toString());
                 System.exit(200);
             }
             //return type = char
             type = chartmp;
+        } else if(ctx.ORD() != null) {
+            //argument type = char
+            Type argType = visit(ctx.expr(0));
+            if(!argType.equals(chartmp)) {
+                System.err.println("Wrong argument type for unary operator.");
+                System.err.println("Expected type : Int ");
+                System.err.println("Actual type : " + argType.toString());
+                System.exit(200);
+            }
+            //return type = int
+            type = inttmp;
         } else if(ctx.LEN() != null) {
             //argument type = array
             Type argType = visit(ctx.expr(0));
-            if(argType != new ArrayType(visit(ctx.arrayElem()))) {
+            if(!(argType instanceof ArrayType)) {
                 System.err.println("Wrong argument type for unary operator.");
                 System.err.println("Expected type : Array ");
                 System.err.println("Actual type : " + argType.toString());

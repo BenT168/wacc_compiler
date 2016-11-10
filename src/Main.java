@@ -1,5 +1,6 @@
 import antlr.WACCLexer;
 import antlr.WACCParser;
+import frontEnd.ErrorHandling.Exception;
 import frontEnd.visitor.TypeCheckVisitor;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
@@ -41,7 +42,6 @@ public class Main {
             WACCParser parser = new WACCParser(tokens);
             ParseTree tree = parser.program();
 
-            //System.out.println(tree.toStringTree(parser));
 
             /*Check if there are any Syntatic errors
              */
@@ -51,11 +51,7 @@ public class Main {
             }
 
             TypeCheckVisitor visitor = new TypeCheckVisitor();
-
             visitor.visit(tree);
-            //System.out.println(answer);
-
-            //visitor.checkVariablesAreAdded();
 
             fis.close();
 
