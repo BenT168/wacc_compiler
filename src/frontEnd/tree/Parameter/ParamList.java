@@ -2,7 +2,7 @@ package frontEnd.tree.Parameter;
 
 import frontEnd.ErrorHandling.Exception;
 import frontEnd.ErrorHandling.IncompatibleTypesException;
-import frontEnd.tree.IdentifierAST;
+import frontEnd.tree.ASTTree;
 import frontEnd.tree.Type.BaseType;
 import org.antlr.v4.runtime.ParserRuleContext;
 import symbolTable.SymbolTable;
@@ -10,7 +10,7 @@ import symbolTable.SymbolTable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class ParamList extends IdentifierAST implements Iterable<Parameter> {
+public class ParamList extends ASTTree implements Iterable<Parameter> {
 
     ArrayList<Parameter> params;
 	

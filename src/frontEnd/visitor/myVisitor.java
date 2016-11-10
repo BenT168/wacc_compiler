@@ -2,438 +2,447 @@ package frontEnd.visitor;
 
 import antlr.WACCParser;
 import antlr.WACCParserBaseVisitor;
+import frontEnd.ErrorHandling.Exception;
+import frontEnd.ErrorHandling.UndeclaredIdentifierException;
 import frontEnd.semanticCheck.SemanticError;
-import frontEnd.tree.Parameter.Scalar;
-import frontEnd.tree.Type.ArrayType;
-import frontEnd.tree.Type.BaseType;
-import frontEnd.tree.Type.PairType;
-import frontEnd.tree.Function.Variable;
+import frontEnd.tree.ASTTree;
+import frontEnd.tree.Assignment.*;
+import frontEnd.tree.Expr.*;
+import frontEnd.tree.Function.FunctionDec;
+import frontEnd.tree.Function.VariableDec;
+import frontEnd.tree.Parameter.ParamList;
+import frontEnd.tree.Parameter.Parameter;
+import frontEnd.tree.Program;
+import frontEnd.tree.Stat.*;
+import frontEnd.tree.Type.*;
 import org.antlr.v4.runtime.misc.NotNull;
+import org.antlr.v4.runtime.tree.ParseTree;
 import symbolTable.SymbolTable;
 
-public class myVisitor extends WACCParserBaseVisitor<String> {
+import java.util.ArrayList;
+import java.util.List;
+
+public class myVisitor extends WACCParserBaseVisitor<ASTTree> {
 
     /* For Storing Variables and its information
      */
-    private SymbolTable TopSymbolTable = new SymbolTable(null);
-    private SymbolTable ST = TopSymbolTable;
+    private ParseTree parseTree;
+    private SymbolTable currentSymbolTable;
 
     /* For calling semantic error     */
     private SemanticError semanticError = new SemanticError();
 
-    private int arrayDepth = 0;
-    private int frees = 0;
+    public myVisitor(ParseTree pTree) {
+        this.parseTree = pTree;
+        this.currentSymbolTable = new SymbolTable();
+    }
+
+    public void init() {
+        
+        semanticError.printV("Checking sematic integrity...");
+        ASTTree tree = parseTree.accept(this);
+
+        //Debugging: prints the WACC tree after semantic checking
+        //XStream xstream = new XStream(new JsonHierarchicalStreamDriver());
+        //xstream.setMode(xstream.ID_REFERENCES);
+        //xstream.alias("WACCTree", BaseType.class);
+        //semanticError.printD(xstream.toXML(tree));
+    }
+
+
+    public boolean terminate() {
+        return Exception.ERROR_LISTENER.finished();
+    }
+
 
     //................................PROGRAM.........................................
     @Override
-    public String visitProgram(@NotNull WACCParser.ProgramContext ctx) {
-        ST.add("int", new Scalar(-2147483648, 2147483647));
-        ST.add("char", new Scalar(0, 255));
-        ST.add("bool", new Scalar(0, 1));
-
-        //System.out.println(ctx.start.getLine());
-
-        return visitChildren(ctx);
-    }
-
-    //....................................STAT........................................
-    /*PRINT expr*/
-    @Override
-    public String visitPrint(@NotNull WACCParser.PrintContext ctx) {
-        visit(ctx.expr());
-        return visitChildren(ctx);
-    }
-
-    /*PRINTLN expr*/
-    @Override
-    public String visitPrintln(@NotNull antlr.WACCParser.PrintlnContext ctx) {
-        visit(ctx.expr());
-        return visitChildren(ctx);
-    }
-
-    /*READ assignLHS */
-    @Override
-    public String visitRead(@NotNull WACCParser.ReadContext ctx) {
-        visit(ctx.assignLHS());
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public String visitAssignLHS(@NotNull WACCParser.AssignLHSContext ctx) {
-        BaseType type;
-        try {
-            type = ((Variable) ST.lookUpAll(visit(ctx.ident()))).getType();
-       } catch(NullPointerException n) {
-           //Check arrayElem
-       }
-
-       try {
-           type = ((Variable) ST.lookUpAll(visit(ctx.arrayElem()))).getType();
-        } catch (NullPointerException n) {
-           //Check pairElem
-       }
-
-        try {
-          type = ((Variable) ST.lookUpAll(visit(ctx.pairElem()))).getType();
-        } catch (NullPointerException n) {
-            semanticError.semanticErrorCase(ctx.getText(), "notInitialised");
+    public ASTTree visitProgram(@NotNull WACCParser.ProgramContext ctx) {
+        for (WACCParser.FuncContext fctx : ctx.func()) {
+            registerFunction(fctx);
         }
 
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public String visitArrayElem(@NotNull WACCParser.ArrayElemContext ctx) {
-        for(int i = 0; i < ctx.expr().size(); i++) {
-            if(!isParsable(ctx.expr(i).getText())) {
-                semanticError.semanticErrorCase(ctx.expr(i).getText(), "exit");
-             } else if(Integer.parseInt(ctx.expr(i).getText()) < 0) {
-                throw new ArrayIndexOutOfBoundsException();
-            }
-        }
-        return ctx.ident().getText();
-    }
-
-    @Override
-    public String visitPairElem(@NotNull WACCParser.PairElemContext ctx) {
-        String pairExpr = "";
-        try {
-            pairExpr = ctx.FST().getText();
-        } catch(NullPointerException n) {
-            //Check snd
+        ArrayList<FunctionDec> functions = new ArrayList<>();
+        // We visit all the functions and create full nodes
+        for (WACCParser.FuncContext fctx : ctx.func()) {
+            FunctionDec fdec = (FunctionDec) visit(fctx);
+            fdec.check(currentSymbolTable, ctx);
+            functions.add(fdec);
         }
 
-        try {
-            pairExpr = ctx.SND().getText();
-        } catch (NullPointerException n) {
+        // Then we visit the statement
+        Stat progBody = (Stat) visit(ctx.stat());
 
-        }
-        return pairExpr;
+        // Finally, we return the program node
+        return new Program(functions, progBody);
     }
 
-    /*EXIT expr */
-    @Override
-    public String visitExit(@NotNull WACCParser.ExitContext ctx) {
-        String value = visitExpr(ctx.expr());
-        //Check if a letter
-        if(!isParsable(value)) {
-            //Look up to see if letter is a variable in symbolTable
-            BaseType type = ((Variable) ST.lookUp(value)).getType();
-            if (type != BaseType.INT) {
-                //If variable type is not an int, throw an error
-                semanticError.semanticErrorCase(value, "exit");
-            }
-        }
-        return visitChildren(ctx);
-    }
+    private void registerFunction(WACCParser.FuncContext ctx) {
 
-    /* assignLHS EQUALS assignRHS  */
-    @Override
-    public String visitAssign(@NotNull WACCParser.AssignContext ctx) {
-        String LHStype = visitAssignLHS(ctx.assignLHS());
-        String RHStype = visitAssignRHS(ctx.assignRHS());
-        if (LHStype.equals(RHStype)) {
-            // replace identity in the symbol table
-            //ST.replace(ctx.ident().text(), ctx.ident());
+        String funcName = ctx.ident().getText();
+        if (currentSymbolTable.containsRecursive(funcName)) {
+            throw new UndeclaredIdentifierException("Function has already been defined", ctx);
+        }
+        String typeEval = ctx.type().getText();
+        BaseType returnType = BaseType.evalType(typeEval);
+        WACCParser.ParamListContext paramCtx = ctx.paramList();
+        ParamList params = null;
+        if (paramCtx != null) {
+            params = (ParamList) visit(ctx.paramList());
         } else {
-            // error: type mismatch
-            semanticError.semanticType(LHStype, RHStype);
+            params = new ParamList();
         }
-        return visitChildren(ctx);
+        FunctionDec func = new FunctionDec(returnType, funcName, params);
+        currentSymbolTable.add(funcName, func);
+    }
+
+
+    //....................................FUNCTION......................................
+
+    @Override
+    public ASTTree visitFunc(WACCParser.FuncContext ctx) {
+        String funcName = ctx.ident().getText();
+        assert (currentSymbolTable.containsCurrent(funcName));
+        FunctionDec func = (FunctionDec) currentSymbolTable.lookUp(funcName);
+
+        // Create an inner scope Symbol Table for the function body.
+        currentSymbolTable = new SymbolTable(currentSymbolTable, func.getType());
+
+        // Add params to current SymbolTable
+        ParamList paramList = (ParamList) func.getParams();
+        registerParams(currentSymbolTable, paramList);
+
+        // Create the functionBody node
+        Stat funcBody = (Stat) visit(ctx.stat());
+
+        // finalise the current symbolTable and restore the parent scope
+        currentSymbolTable.finaliseScope(funcName);
+        currentSymbolTable = currentSymbolTable.getEncSymbolTable();
+
+        // Add function body statement to the function node
+        func.add(funcBody);
+        func.check(currentSymbolTable, ctx);
+        return func;
+    }
+
+    private void registerParams(SymbolTable st, ParamList paramList) {
+        for (Parameter param : paramList) {
+            st.add(param.getIdent(), param);
+        }
     }
 
     /* type IDENTITY EQUALS assignRHS */
     @Override
-    public String visitDeclare(@NotNull WACCParser.DeclareContext ctx) {
-        System.out.println(ctx.type().getText());
-        String type = visit(ctx.type());
-        String name = ctx.ident().getText();
-        String rhsExpr = visit(ctx.assignRHS());
+    public ASTTree visitDeclare(@NotNull WACCParser.DeclareContext ctx) {
+        Assignment rhsTree = (Assignment) visit(ctx.assignRHS());
+        BaseType varType = BaseType.evalType(ctx.type());
+        String ident = ctx.ident().getText();
+        VariableDec vcd = new VariableDec(varType, ident, rhsTree);
+        vcd.check(currentSymbolTable, ctx);
 
-        if(!isArray(type) && !isPair(type)) {
-            //Just a base type
-            Variable variable = new Variable(fromStringType(type), rhsExpr);
-            ST.add(name, variable);
-        } else if(isArray(type)) {
-
-            //Array Type
-            ArrayType arrayType =
-                    recurseinitArray(fromStringType(reduceStringArray(type)));
-            Variable variable = new Variable(arrayType, rhsExpr);
-            ST.add(name, variable);
-        } else if(isPair(type)) {
-
-
-
-        }
-
-        //Variable variable = new Variable(baseType, )
-
-        return visitChildren(ctx);
+        return vcd;
     }
 
-    /* type IDENTITY EQUALS assignRHS
+    // Variable context cant be found
+    public ASTTree visitVariable(WACCParser.DeclareContext ctx) {
+        AssignLHS lhs = (AssignLHS) visit(ctx.assignRHS());
+        Assignment rhs = (Assignment) visit(ctx.assignRHS());
+        AssignStat assignment = new AssignStat(lhs, rhs);
+        assignment.check(currentSymbolTable, ctx);
+
+        return assignment;
+    }
+
+    //....................................PARAMETER......................................
+
     @Override
-    public String visitDeclare(@NotNull BasicParser.DeclareContext ctx) {
-        // check whether type is the same as assignRHS's one
-        String LHStype = ctx.type().getText();
-        String RHStype = visitAssignRHS(ctx.assignRHS());
-        if (LHStype.equals(RHStype)) {
-            // add identity to symbol table
-            ST.add(ctx.IDENTITY().getText(), ctx.IDENTITY());
+    public ASTTree visitParam(WACCParser.ParamContext ctx) {
+        BaseType paramType = BaseType.evalType(ctx.type());
+        String ident = ctx.ident().getText();
+        Parameter paramNode = new Parameter(paramType, ident);
+        paramNode.check(currentSymbolTable, ctx);
+        return paramNode;
+    }
+
+    @Override
+    public ASTTree visitParamList(WACCParser.ParamListContext ctx) {
+        ParamList params = new ParamList();
+        for (WACCParser.ParamContext p : ctx.param()) {
+            Parameter pn = (Parameter) visit(p);
+            params.add(pn);
+        }
+        params.check(currentSymbolTable, ctx);
+        return params;
+    }
+
+
+    //....................................STAT........................................
+
+    /*PRINT expr*/
+    @Override
+    public ASTTree visitPrint(@NotNull WACCParser.PrintContext ctx) {
+        Expr expr = (Expr) visit(ctx.expr());
+        PrintStat ps = new PrintStat(expr);
+        ps.check(currentSymbolTable, ctx);
+
+        return ps;
+    }
+
+    /*PRINTLN expr*/
+    @Override
+    public ASTTree visitPrintln(@NotNull antlr.WACCParser.PrintlnContext ctx) {
+        Expr expr = (Expr) visit(ctx.expr());
+        PrintLnStat ps = new PrintLnStat(expr);
+        ps.check(currentSymbolTable, ctx);
+
+        return ps;
+    }
+
+    /*READ assignLHS */
+    @Override
+    public ASTTree visitRead(@NotNull WACCParser.ReadContext ctx) {
+        Expr lhs = (Expr) visit(ctx.assignLHS());
+        ReadStat rhs = new ReadStat(lhs);
+        rhs.check(currentSymbolTable, ctx);
+
+        return rhs;
+    }
+
+    /*EXIT expr */
+    @Override
+    public ASTTree visitExit(@NotNull WACCParser.ExitContext ctx) {
+        Expr exitVal = (Expr) visit(ctx.expr());
+        ExitStat stat = new ExitStat(exitVal);
+        stat.check(currentSymbolTable, ctx);
+
+        return stat;
+    }
+
+    @Override
+    public ASTTree visitSkip(WACCParser.SkipContext ctx) {
+        SkipStat ssn = new SkipStat();
+        return ssn;
+    }
+
+    @Override
+    public ASTTree visitReturn(WACCParser.ReturnContext ctx) {
+        Expr exprType = (Expr) visit(ctx.expr());
+        ReturnStat rst = new ReturnStat(exprType);
+        rst.check(currentSymbolTable, ctx);
+
+        return rst;
+    }
+
+    @Override
+    public ASTTree visitFree(WACCParser.FreeContext ctx) {
+        Expr expr = (Expr) visit(ctx.expr());
+        FreeStat stat = new FreeStat(expr);
+        stat.check(currentSymbolTable, ctx);
+
+        return stat;
+    }
+
+
+    /* assignLHS EQUALS assignRHS  */
+    @Override
+    public ASTTree visitAssign(@NotNull WACCParser.AssignContext ctx) {
+        AssignLHS lhs = (AssignLHS) visitAssignLHS(ctx.assignLHS());
+        Expr rhs = (Expr) visitAssignRHS(ctx.assignRHS());
+        AssignStat stat = new AssignStat(lhs, rhs);
+        stat.check(currentSymbolTable, ctx);
+
+        return stat;
+    }
+
+    @Override
+    public ASTTree visitWhile(WACCParser.WhileContext ctx) {
+        Expr loopCond = (Expr) visit(ctx.expr());
+        WhileStat whileStat = new WhileStat(loopCond);
+        whileStat.check(currentSymbolTable, ctx);
+
+        return whileStat;
+    }
+
+    @Override
+    public ASTTree visitIfElse(WACCParser.IfElseContext ctx) {
+        Expr ifCond = (Expr) visit(ctx.expr());
+        IfElseStat ifelseStat = new IfElseStat(ifCond);
+        ifelseStat.check(currentSymbolTable, ctx);
+
+        return ifelseStat;
+    }
+
+    @Override
+    public ASTTree visitBegin(@NotNull WACCParser.BeginContext ctx) {
+        currentSymbolTable = new SymbolTable(currentSymbolTable);
+        Stat stat = (Stat) visit(ctx.stat());
+        currentSymbolTable.finaliseScope();
+        currentSymbolTable = currentSymbolTable.getEncSymbolTable();
+        return stat;
+    }
+
+    @Override
+    public ASTTree visitMultipleStat(@NotNull WACCParser.MultipleStatContext ctx) {
+        ctx.stat().forEach(this::visit);
+        return null;
+    }
+
+
+//..................................ASSIGNMENT......................................
+
+    // Function Call context cant be found
+    public ASTTree visitCallFunc(WACCParser.FuncContext ctx) {
+        String ident = ctx.ident().getText();
+        FunctionDec funcDef = (FunctionDec) currentSymbolTable.lookUp(ident);
+        ArgList args;
+
+        //Here we check that the call has arguments
+        //if no arguments are present, a new empty arg_list will be made.
+        if (ctx.paramList() == null) {
+            args = new ArgList();
         } else {
-            // error: type mismatch
-            semanticError.semanticType(LHStype, RHStype);
+            args = (ArgList) visit(ctx.paramList());
         }
-        return visitChildren(ctx);
-    } */
-
-    @Override
-    public String visitFree(@NotNull WACCParser.FreeContext ctx) {
-        frees++;
-        String expr = visit(ctx.expr());
-        BaseType type = ((Variable) ST.lookUp(expr)).getType();
-        if(!(type instanceof PairType)) {
-            semanticError.semanticType("Pair", type.toString());
-        }
-        if(frees > 1) {
-            throw new RuntimeException();
-        }
-        return visitChildren(ctx);
-    }
-
-
-
-
-    @Override
-    public String visitBaseType(@NotNull WACCParser.BaseTypeContext ctx) {
-        return visitChildren(ctx);
+        CallFunc callStat = new CallFunc(funcDef, args);
+        callStat.check(currentSymbolTable, ctx);
+        return callStat;
     }
 
     @Override
-    public String visitArrayType(@NotNull WACCParser.ArrayTypeContext ctx) {
-
-        return visitChildren(ctx);
+    public ASTTree visitArgList(WACCParser.ArgListContext ctx) {
+        int argListLength = ctx.expr().size();
+        ArgList args = new ArgList();
+        for (int i = 0; i < argListLength; i++) {
+            args.add((Expr) visit(ctx.expr(i)));
+        }
+        args.check(currentSymbolTable, ctx);
+        return args;
     }
 
     @Override
-    public String visitPairType(@NotNull WACCParser.PairTypeContext ctx) {
-        String typeOne = visit(ctx.pairElemType(0));
-        String typeTwo = visit(ctx.pairElemType(1));
-//        pairTypes[0] = typeOne;
-//        pairTypes[1] = typeTwo;
-
-        //Check
-
-        //PairType pair = new PairType(typeOne, typeTwo);
-
-
-
-        return visitChildren(ctx);
-    }
-
-    private void typeShouldBeInt(@NotNull WACCParser.ExprContext ctx) {
-        String ex1 = visit(ctx.expr(0));
-        System.out.println(ex1);
-        String ex2 = ctx.expr(1).getText();
-        if(!isParsable(ex1) || !isParsable(ex2)) {
-            semanticError.semanticErrorCase(ex1, "exit");
-        }
-    }
-
-    private void typeCanBeAny(@NotNull WACCParser.ExprContext ctx) {
-        if (ctx.expr(0).intLiter() != null && ctx.expr(1).intLiter() != null) {
-            //do nothing
-        } else if (ctx.expr(0).boolLiter() != null && ctx.expr(1).boolLiter() != null) {
-
-        } else if (ctx.expr(0).charLiter() != null && ctx.expr(1).charLiter() != null) {
-
-        } else if (ctx.expr(0).stringLiter() != null && ctx.expr(1).stringLiter() != null) {
-
-        } else {
-            //types not equal
-            semanticError.semanticErrorCase(ctx.LT().getText(), "exit");
-        }
-    }
-
-    private void typeShouldbeBool(@NotNull WACCParser.ExprContext ctx) {
-        try {
-            ctx.expr(0).boolLiter();
-        } catch(NullPointerException n) {
-            //should be between boolean
-            semanticError.semanticErrorCase("bool", "exit");
-        }
-
+    public ASTTree visitPairElem(@NotNull WACCParser.PairElemContext ctx) {
+        String fstOrSnd = ctx.getChild(0).getText();
+        Expr expr = (Expr) visit(ctx.expr());
+        PairElem pairElem = new PairElem(fstOrSnd, expr);
+        pairElem.check(currentSymbolTable, ctx);
+        return pairElem;
     }
 
     @Override
-    public String visitExpr(@NotNull WACCParser.ExprContext ctx) {
-        try{
-            ctx.MUL();
-            typeShouldBeInt(ctx);
-        } catch (NullPointerException n) {
-            //Check DIV
+    public ASTTree visitArrayElem(@NotNull WACCParser.ArrayElemContext ctx) {
+        String ident = ctx.ident().getText();
+        List<WACCParser.ExprContext> exprCtxs = ctx.expr();
+        ArrayList<Expr> exprs = new ArrayList<Expr>();
+        for (WACCParser.ExprContext ec : exprCtxs) {
+            exprs.add((Expr) visit(ec));
         }
 
-        try{
-            ctx.DIV();
-            typeShouldBeInt(ctx);
-            if(Integer.parseInt(ctx.expr(1).getText()) == 0) {
-                throw new RuntimeException();
-            }
-        } catch (NullPointerException n) {
-            //CHECK MOD
-        }
-
-        try{
-            ctx.MOD();
-            typeShouldBeInt(ctx);
-        } catch (NullPointerException n) {
-            //CHECK PLUS
-        }
-
-        try{
-            ctx.PLUS();
-            typeShouldBeInt(ctx);
-        } catch (NullPointerException n) {
-            //CHECK MINUS
-        }
-
-        try{
-            ctx.MINUS();
-            typeShouldBeInt(ctx);
-        } catch (NullPointerException n) {
-            //CHECK LESS THAN
-
-        }
-        try{
-            ctx.LT();
-            typeCanBeAny(ctx);
-        } catch (NullPointerException n) {
-            //CHECK GT
-        }
-
-        try{
-            ctx.GT();
-            typeCanBeAny(ctx);
-        } catch (NullPointerException n) {
-            //CHECK LTE
-        }
-
-        try{
-            ctx.LTE();
-            typeCanBeAny(ctx);
-        } catch (NullPointerException n) {
-
-        }try{
-            ctx.GTE();
-            typeCanBeAny(ctx);
-        } catch (NullPointerException n) {
-
-        }try{
-            ctx.EQ();
-            typeCanBeAny(ctx);
-        } catch (NullPointerException n) {
-
-        }try{
-            ctx.NEQ();
-            typeCanBeAny(ctx);
-        } catch (NullPointerException n) {
-
-        }try{
-            ctx.AND();
-            typeShouldbeBool(ctx);
-        } catch (NullPointerException n) {
-
-        }
-        try{
-            ctx.OR();
-            typeShouldbeBool(ctx);
-        } catch (NullPointerException n) {
-
-        }
-        return ctx.getText();
+        ArrayType t = (ArrayType) currentSymbolTable.lookUp(ident).getType();
+        ArrayElem arrayElem = new ArrayElem(exprs, t);
+        return arrayElem;
     }
 
     @Override
-    public String visitType(@NotNull WACCParser.TypeContext ctx) {
-        //System.out.println("type " + ctx.getText());
-        return ctx.getText();
-    }
+    public ASTTree visitArrayLiter(WACCParser.ArrayLiterContext ctx) {
+        ArrayList<Expr> elems = new ArrayList<Expr>();
 
-    //Helper Method to check if string given can be converted to an integer
-    private boolean isParsable(String input) {
-        Boolean parsable = true;
-        try {
-            Integer.parseInt(input);
-        } catch(NumberFormatException e) {
-            parsable = false;
+        for (int i = 0; i < ctx.expr().size(); i++) {
+            elems.add((Expr) visit(ctx.expr(i)));
         }
-        return parsable;
+
+        ArrayLiter arrayLiter = new ArrayLiter(elems);
+        arrayLiter.check(currentSymbolTable, ctx);
+        return arrayLiter;
     }
 
-     private BaseType fromStringType(String stype) {
-         switch(stype) {
-             case "int" :
-                 return BaseType.INT;
-             case "bool" :
-                 return BaseType.BOOL;
-             case "char" :
-                 return BaseType.CHAR;
-             case "string" :
-                 return BaseType.STRING;
-         }
-         return null;
-     }
 
-     private String  reduceStringArray(String stype) {
-         char[] array = new char[6];
-         if(isArray(stype)) {
-             int i = 0;
-             while(stype.charAt(i) != '[') {
-                 array[i] = stype.charAt(i);
-                 i++;
-             }
-         }
-         return String.valueOf(array);
-     }
+    //..................................EXPRESSION......................................
 
-     private boolean isArray(String type) {
-        char bracket = '[';
-         boolean array = false;
-         int numofbrackets = 0;
-         for(int i = 0; i < type.length(); i++) {
-             if(type.charAt(i) == bracket) {
-                 numofbrackets++;
-                 array = true;
-             }
-         }
-         arrayDepth = numofbrackets;
-         return array;
-     }
+    @Override
+    public ASTTree visitExpr(WACCParser.ExprContext ctx) {
+        // if it's an atomic `( expr )` expression, we just call visit on the
+        // inner expr
+        if (ctx.OPEN_PARENTHESES() != null) {
+            assert (ctx.children.size() == 3);
+            return visit(ctx.expr(0));
+        }
 
-     private boolean isPair(String type) {
-         if(type.length() >= 4) {
-             return type.substring(0,4).compareTo("pair") == 0;
-         }
-         return false;
+        switch (ctx.getChildCount()) {
+            case 3: // Binary Expression of type `lhs OP rhs`
+                Expr lhs = (Expr) visit(ctx.expr(0));
+                Expr rhs = (Expr) visit(ctx.expr(1));
+                BinaryOp binaryOp = BinaryOp.evalBinOp(ctx.getChild(1).getText());
+                BinaryOper binExpr = new BinaryOper(lhs, binaryOp, rhs);
+                binExpr.check(currentSymbolTable, ctx);
 
-     }
+                return binExpr;
 
-     private ArrayType recurseinitArray(BaseType type) {
-         if(arrayDepth == 1) {
-             return new ArrayType(type);
-         } else {
-             arrayDepth--;
-             return new ArrayType(recurseinitArray(type));
-         }
-     }
+            case 2: // Unary Expression of type `OP expr`
+                Expr expr = (Expr) visit(ctx.expr(0));
+                UnaryOp unaryOp = UnaryOp.evalUnOp(ctx.getChild(0).getText());
+                UnaryOper unaryExpr = new UnaryOper(unaryOp, expr);
+                unaryExpr.check(currentSymbolTable, ctx);
 
+                return unaryExpr;
 
+            default: // in this case this is a single rule (i.e. int_liter, char_liter)
+                return visit(ctx.getChild(0));
+        }
+    }
 
+    @Override
+    public ASTTree visitCharLiter(WACCParser.CharLiterContext ctx) {
+        CharLiter charleaf = new CharLiter(ctx.getText());
+        charleaf.check(currentSymbolTable, ctx);
+        return charleaf;
+    }
 
-//    public void checkVariablesAreAdded() {
-//        symbolTable.printList();
-//    }
+    @Override
+    public ASTTree visitIntLiter(WACCParser.IntLiterContext ctx) {
+        String intValue = ctx.getText();
+        IntLiter intLeaf = new IntLiter(Integer.valueOf(intValue));
+        intLeaf.check(currentSymbolTable, ctx);
+        return intLeaf;
+    }
+
+    @Override
+    public ASTTree visitBoolLiter(WACCParser.BoolLiterContext ctx) {
+        BoolLiter boolLeaf = new BoolLiter(ctx.getText());
+        boolLeaf.check(currentSymbolTable, ctx);
+        return boolLeaf;
+    }
+
+    @Override
+    public ASTTree visitStringLiter(WACCParser.StringLiterContext ctx) {
+        StrLiter strLeaf = new StrLiter(ctx.getText());
+        strLeaf.check(currentSymbolTable, ctx);
+        return strLeaf;
+    }
+
+    // Pair literals are null by default.
+    @Override
+    public ASTTree visitPairLiter(WACCParser.PairLiterContext ctx) {
+        return new PairLiter();
+    }
+
+    //..................................IDENTITY....................................
+
+    @Override
+    public ASTTree visitIdent(WACCParser.IdentContext ctx) {
+        String ident = ctx.IDENTITY().getText();
+        if (currentSymbolTable.containsRecursive(ident)) {
+            ASTTree var = currentSymbolTable.lookUp(ident);
+            BaseType varType = var.getType();
+            Ident id = new Ident(varType, ident);
+            return id;
+        }
+        throw new UndeclaredIdentifierException("The variable " + ident
+                + " was undefined", ctx);
+    }
 
 }
+
+
+
+
+

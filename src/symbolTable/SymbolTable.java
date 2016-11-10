@@ -1,6 +1,7 @@
 package symbolTable;
 
-import frontEnd.tree.IdentifierAST;
+import frontEnd.ErrorHandling.UnresolvedExpectationException;
+import frontEnd.tree.ASTTree;
 import frontEnd.tree.Type.BaseType;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +9,7 @@ import java.util.Map;
 public class SymbolTable {
 
     private SymbolTable encSymbolTable;
-    private Map<String, IdentifierAST> dict;
+    private Map<String, ASTTree> dict;
     private Expectation expectation;
     private boolean isTopSymbolTable;
 
@@ -36,15 +37,15 @@ public class SymbolTable {
 
     }
 
-    public void add(String name, IdentifierAST id) {
+    public void add(String name, ASTTree id) {
         dict.put(name, id);
     }
 
-    public void replace(String name, IdentifierAST id) {
+    public void replace(String name, ASTTree id) {
         dict.replace(name, id);
     }
 
-    public IdentifierAST lookUp(String name) {
+    public ASTTree lookUp(String name) {
         if (!containsCurrent(name)) {
         	return encSymbolTable.lookUp(name);
 	}
@@ -53,10 +54,10 @@ public class SymbolTable {
 
 
 
-    public IdentifierAST lookUpAll(String name) {
+    public ASTTree lookUpAll(String name) {
         SymbolTable s = this;
         while(s != null) {
-            IdentifierAST t = s.lookUp(name);
+            ASTTree t = s.lookUp(name);
             if(t != null) {
                 return t;
             }
@@ -77,7 +78,7 @@ public class SymbolTable {
         return encSymbolTable;
     }
 
-    public Map<String, IdentifierAST> getDict() {
+    public Map<String, ASTTree> getDict() {
         return dict;
     }
     
@@ -98,5 +99,17 @@ public class SymbolTable {
     
     public boolean checkType(BaseType returnType) {
 	return expectation.checkType(returnType);
+    }
+
+    public void finaliseScope(String funcName) {
+        if(!expectation.isResolved()){
+            throw new UnresolvedExpectationException("The code block is the expected one.");
+        }
+    }
+
+    public void finaliseScope() {
+        if(!expectation.isResolved()){
+            throw new UnresolvedExpectationException("The code block is the expected one.");
+        }
     }
 }

@@ -57,4 +57,6 @@ public class PairType extends BaseType {
     public boolean check(SymbolTable symbolTable, ParserRuleContext ctx) {
         return true;
     }
+
+
 }

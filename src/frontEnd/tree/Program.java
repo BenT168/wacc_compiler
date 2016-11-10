@@ -8,7 +8,7 @@ import symbolTable.SymbolTable;
 
 import java.util.List;
 
-public class Program extends IdentifierAST {
+public class Program extends ASTTree {
    
     private List<FunctionDec> functions;
     private Stat body;

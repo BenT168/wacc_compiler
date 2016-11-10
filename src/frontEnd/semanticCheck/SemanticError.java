@@ -2,6 +2,9 @@ package frontEnd.semanticCheck;
 
 public class SemanticError {
 
+    private boolean testEnvironment = false;
+    private boolean debuggingEnvironment = false;
+
     public void semanticErrorCase(String name, String errorType) {
         switch(errorType) {
             case "notInitialised" :
@@ -51,5 +54,24 @@ public class SemanticError {
                 " ,actual: " + actualType.toUpperCase() + ")");
         System.exit(200);
     }
+
+
+    public void printV(String s) {
+		if(testEnvironment)
+			System.out.println(s);
+	}
+
+	public void printD(String s) {
+		if(debuggingEnvironment)
+			System.out.println(s);
+	}
+
+	public void printD(int indentation, String text) {
+		String res = "";
+		for (int i = 0; i < indentation; i++) {
+			res += '\t';
+		}
+		printD(res + text);
+	}
 }
 

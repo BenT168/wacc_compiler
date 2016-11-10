@@ -1,29 +1,29 @@
 package frontEnd.tree.Function;
 
-import frontEnd.tree.IdentifierAST;
+import frontEnd.tree.ASTTree;
+import frontEnd.tree.Parameter.ParamList;
 import frontEnd.tree.Parameter.Parameter;
+import frontEnd.tree.Stat.Stat;
 import frontEnd.tree.Type.BaseType;
 import org.antlr.v4.runtime.ParserRuleContext;
 import symbolTable.SymbolTable;
 
-import java.util.List;
+public class FunctionDec extends ASTTree {
 
-public class FunctionDec extends IdentifierAST {
-
-    private final String returnType;
+    private BaseType returnType;
     private String funcName;
-    private List<Parameter> params;
-    private Function funcBody;
+    private ParamList params;
+    private Stat funcBody;
     private boolean complete;
 
 
-    public FunctionDec(String returnType, String funcName, List<Parameter> params) {
-	this(returnType, funcName);
+    public FunctionDec(BaseType returnType, String funcName, ParamList params) {
+	this.returnType = returnType;
 	this.params = params;
 	complete = false;
     }
 
-    public FunctionDec(String returnType, String funcName) {
+    public FunctionDec(BaseType returnType, String funcName) {
 	this.returnType = returnType;
 	this.funcName = funcName;
 	complete = false;
@@ -31,13 +31,13 @@ public class FunctionDec extends IdentifierAST {
 
 
     private void checkFunctionNameAndReturnType(SymbolTable symbolTable, ParserRuleContext ctx) {
-        IdentifierAST idfromAll = symbolTable.lookUpAll(returnType);
-        IdentifierAST id = symbolTable.lookUp(funcName);
+        ASTTree idfromAll = symbolTable.lookUpAll(String.valueOf(returnType));
+        ASTTree id = symbolTable.lookUp(funcName);
 
         if(idfromAll != null) {
-            semanticError.semanticErrorCase(returnType, "unknownType");
+            semanticError.semanticErrorCase(String.valueOf(returnType), "unknownType");
         } else if( !(idfromAll instanceof BaseType)) {
-            semanticError.semanticErrorCase(returnType, "notAType");
+            semanticError.semanticErrorCase(String.valueOf(returnType), "notAType");
         } else if(id != null) {
             semanticError.semanticErrorCase(funcName, "alreadyDeclared");
         } else {
@@ -62,4 +62,13 @@ public class FunctionDec extends IdentifierAST {
         return true;
     }
 
+    public ParamList getParams() {
+        return params;
+    }
+
+
+    public void add(Stat funcBody) {
+        this.funcBody = funcBody;
+		complete = true; 
+    }
 }

@@ -1,19 +1,23 @@
 package frontEnd.tree.Stat;
 
-import frontEnd.tree.IdentifierAST;
+import frontEnd.tree.ASTTree;
+import frontEnd.tree.Expr.Expr;
 import frontEnd.tree.Parameter.Parameter;
 import frontEnd.tree.Type.BaseType;
 import org.antlr.v4.runtime.ParserRuleContext;
 import symbolTable.SymbolTable;
 
-public class Stat extends IdentifierAST {
+public class Stat extends ASTTree {
 
-    private BaseType returnType;
+    private Expr expr;
     private Parameter formals[];
     private SymbolTable symbolTable;
 
-    public Stat(BaseType returnType) {
-        this.returnType = returnType;
+    public Stat(Expr expr) {
+        this.expr = expr;
+    }
+
+    public Stat() {
     }
 
     public void setSymbolTable(SymbolTable symbolTable) {
@@ -31,6 +35,10 @@ public class Stat extends IdentifierAST {
     @Override
     public boolean check(SymbolTable symbolTable, ParserRuleContext ctx) {
         return true;
+    }
+
+    public BaseType getType() {
+        return expr.getType();
     }
 }
 

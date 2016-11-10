@@ -1,12 +1,12 @@
 package frontEnd.tree.Function;
 
-import frontEnd.tree.IdentifierAST;
+import frontEnd.tree.ASTTree;
 import frontEnd.tree.Parameter.Parameter;
 import frontEnd.tree.Type.BaseType;
 import org.antlr.v4.runtime.ParserRuleContext;
 import symbolTable.SymbolTable;
 
-public class Function extends IdentifierAST {
+public class Function extends ASTTree {
 
     private BaseType returnType;
     private Parameter formals[];

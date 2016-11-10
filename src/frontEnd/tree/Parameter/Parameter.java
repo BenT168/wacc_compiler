@@ -1,11 +1,11 @@
 package frontEnd.tree.Parameter;
 
-import frontEnd.tree.IdentifierAST;
+import frontEnd.tree.ASTTree;
 import frontEnd.tree.Type.BaseType;
 import org.antlr.v4.runtime.ParserRuleContext;
 import symbolTable.SymbolTable;
 
-public class Parameter extends IdentifierAST {
+public class Parameter extends ASTTree {
 
     private BaseType type;
     private String ident;
