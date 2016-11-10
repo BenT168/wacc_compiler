@@ -27,7 +27,6 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
                     return res;
                 }
             }
-            // TODO: throw error, identifier unbound in current scope or any enclosing scopes
             System.err.println("Variable identifier: " + key + " unbound in current scope or any enclosing scopes");
             System.exit(200);
             return null;
@@ -44,7 +43,6 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         // Function symbol table insert method
         private void fTableInsert(String key, List<Type> value) {
             if (fTable.containsKey(key)) {
-                // TODO: Throw error, function already bound
                 System.err.println("Function identifier: " + key + " already in scope");
                 System.exit(200);
             }
@@ -106,7 +104,6 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
                 }
                 typeEnv.fTableInsert(i, paramTypes);
             }
-
 
             for (WACCParser.FuncContext funcCtx : ctx.func()) {
                 typeEnv.enterScope();
@@ -264,8 +261,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
             System.err.println("In expression: " + ctx.expr().getText() + "\nExpected type: " + temp.toString() + "\nActual type: " + t.toString());
             System.exit(200);
         }
-        // Visit branches in conditional. If Statement conditional only has 2
-        // branches
+        // Visit branches in conditional. If Statement conditional only has 2 branches
         for (int i = 0; i < 2; i++) {
             typeEnv.enterScope();
             visit(ctx.stat(i));
@@ -301,6 +297,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         boolean seenReturn = false;
         int pos = 0;
 
+        // looking up return statements
         for(int i = 0; i < ctx.stat().size(); i++) {
             if(ctx.stat(i).getText().matches("return(.*)")) {
                 seenReturn = true;
@@ -308,10 +305,13 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
             }
         }
 
+        // if in the top-level scope there is any statement past the return statement
+        // then that should cause an error
         if(seenReturn && pos != ctx.stat().size() - 1) {
             System.err.print("Statement after return. Unreachable statement.");
             System.exit(200);
         }
+        // visit all statements sequentially
         ctx.stat().forEach(this::visit);
         return null;
     }
@@ -606,10 +606,6 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         }
         return type;
     }
-
-
-
-
 
         // We redefine the identifier visit method
     public Type visitIdent(@NotNull WACCParser.IdentContext ctx, LinkedList<HashMap<String, Type>> symTabScopes) {

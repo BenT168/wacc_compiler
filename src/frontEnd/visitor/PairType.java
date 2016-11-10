@@ -17,10 +17,12 @@ public class PairType extends Type {
         return this;
     }
 
+    /* Returns type of first element of the pair */
     public Type getType1() {
         return type1;
     }
 
+    /* Returns type of second element of the pair */
     public Type getType2() {
         return type2;
     }
