@@ -67,11 +67,15 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         }
 
         private void removeScope() {
-            vTableScopes.removeFirst();
+            if(vTableScopes.size() != 1) {
+                vTableScopes.removeFirst();
+            }
         }
     }
 
     private TypeEnv typeEnv;
+    private boolean returned = false;
+    private boolean inFunction = false;
 
     public TypeCheckVisitor() {
         this.typeEnv = new TypeEnv();
@@ -122,6 +126,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     // Function identifiers and types should already be added to ftable by time we call this method.
     @Override
     public Type visitFunc(@NotNull WACCParser.FuncContext ctx) {
+        inFunction = true;
 
         // Function return type
         Type t0 = visitType(ctx.type());
@@ -136,8 +141,20 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         }
 
         typeEnv.enterScope();
-        visit(ctx.stat());
+        Type returntype = null;
+        try {
+            returntype = visit(ctx.stat());
+        } catch (NullPointerException e) {
+            //do nothing
+        }
+        if(returntype != null) {
+            if(!(t0.equals(returntype))) {
+                System.err.print("Function: " + ctx.ident().getText() + " \nExpected return type: " + t0.toString() + " \nActual return type: " + returntype.toString());
+                System.exit(200);
+            }
+        }
         typeEnv.removeScope();
+        inFunction = false;
 
         return null;
     }
@@ -212,7 +229,9 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     @Override
     public Type visitReturn(@NotNull WACCParser.ReturnContext ctx) {
         // Knows nothing about enclosing function and hence leaves type checking to enclosing function visitor method
-        return visitExpr(ctx.expr());
+        Type ret = visitExpr(ctx.expr());
+        typeEnv.removeScope();
+        return ret;
     }
 
     @Override
@@ -278,6 +297,24 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
     @Override
     public Type visitMultipleStat(@NotNull WACCParser.MultipleStatContext ctx) {
+        if(inFunction && !(ctx.stat(ctx.stat().size() - 1).getText().matches("return(.*)"))) {
+            System.err.print("Statement after return. Unreachable statement.");
+            System.exit(200);
+        }
+        boolean seenReturn = false;
+        int pos = 0;
+
+        for(int i = 0; i < ctx.stat().size(); i++) {
+            if(ctx.stat(i).getText().matches("return(.*)")) {
+                seenReturn = true;
+                pos = i;
+            }
+        }
+
+        if(seenReturn && pos != ctx.stat().size() - 1) {
+            System.err.print("Statement after return. Unreachable statement.");
+            System.exit(200);
+        }
         ctx.stat().forEach(this::visit);
         return null;
     }
