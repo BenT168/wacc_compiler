@@ -87,29 +87,32 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
         // We use two passes: one for added the function identifiers to the symbol table, another for evaluating the
         // function bodies.
 
-        for (BasicParser.FuncContext funcCtx: ctx.func()) {
-            String i = funcCtx.ident().IDENTITY().getText();
+        if(ctx.func() != null) {
+            for (BasicParser.FuncContext funcCtx : ctx.func()) {
+                String i = funcCtx.ident().IDENTITY().getText();
 
-            if (typeEnv.fTable.containsKey(i)) {
-                System.err.println("Function already contains key: " + i);
-                System.exit(200);
+                if (typeEnv.fTable.containsKey(i)) {
+                    System.err.println("Function already contains key: " + i);
+                    System.exit(200);
+                }
+
+                Type t = visitType(funcCtx.type());
+                typeEnv.fTableInsert(i, t);
             }
 
-            Type t = visitType(funcCtx.type());
-            typeEnv.fTableInsert(i, t);
+
+            for (BasicParser.FuncContext funcCtx : ctx.func()) {
+                typeEnv.enterScope();
+                visitFunc(funcCtx);
+                typeEnv.removeScope();
+            }
         }
 
-        for (BasicParser.FuncContext funcCtx: ctx.func()) {
+            // Evaluate "main function" body
             typeEnv.enterScope();
-            visitFunc(funcCtx);
+            visit(ctx.stat());
             typeEnv.removeScope();
-        }
 
-        // Evaluate "main function" body
-        typeEnv.enterScope();
-        Type t = visit(ctx.stat());
-        typeEnv.removeScope();
-        
         return null;
     }
 
@@ -170,6 +173,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
 
         Type t2 = visitAssignRHS(ctx.assignRHS());
 
+
         if (!(t1.equals(t2))) {
             System.err.println("Type mismatch error:\nExpected: " + t1.toString() + "\nActual: " + t2.toString());
             System.exit(200);
@@ -215,6 +219,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     @Override
     public Type visitReturn(@NotNull BasicParser.ReturnContext ctx) {
         // Knows nothing about enclosing function and hence leaves type checking to enclosing function visitor method
+        System.out.println("IN RETURN");
         return visitExpr(ctx.expr());
     }
 
@@ -423,10 +428,117 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
 
     @Override
     public Type visitExpr(@NotNull BasicParser.ExprContext ctx) {
-        return super.visitExpr(ctx);
+        Type type = null;
+        if(ctx.intLiter()!= null) {
+            type = new BaseType(BaseTypeCode.INT);
+        } else if(ctx.boolLiter() != null) {
+            type = new BaseType(BaseTypeCode.BOOL);
+        } else if(ctx.charLiter() != null) {
+            type = new BaseType(BaseTypeCode.CHAR);
+        } else if(ctx.stringLiter() != null) {
+            type = new BaseType(BaseTypeCode.STRING);
+        } else if(ctx.CHR() != null || ctx.ORD() != null || ctx.LEN() != null || ctx.NOT() != null
+                || ctx.MINUS() != null) {
+            type = visitUnaryExpr(ctx);
+        } else if (ctx.expr().size() == 2) { //binary operations
+            type = visitBinaryExpr(ctx);
+        } else if(ctx.arrayElem() != null) {
+            type = visitArrayElem(ctx.arrayElem());
+        } else if(ctx.ident() != null) {
+            System.out.println("in ident");
+            type = visitIdent(ctx.ident(), typeEnv.vTableScopes);
+        }
+        return type;
     }
 
-    // We redefine the identifier visit method
+    public Type visitUnaryExpr(@NotNull BasicParser.ExprContext ctx) {
+        Type type = null;
+         if(ctx.CHR() != null) {
+            //argument type = char
+            Type argType = visit(ctx.expr(0));
+            if(argType != new BaseType(BaseTypeCode.CHAR)) {
+                //TODO wrong argument type
+                System.exit(200);
+            }
+            //return type = int
+            type = new BaseType(BaseTypeCode.INT);
+        } else if(ctx.ORD() != null) {
+            //argument type = int
+            Type argType = visit(ctx.expr(0));
+            if(argType != new BaseType(BaseTypeCode.INT)) {
+                //TODO wrong argument type
+                System.exit(200);
+            }
+            //return type = char
+            type = new BaseType(BaseTypeCode.CHAR);
+        } else if(ctx.LEN() != null) {
+            //argument type = array
+            Type argType = visit(ctx.expr(0));
+            if(argType != new ArrayType(visit(ctx.arrayElem()))) {
+                //TODO wrong argument type
+                System.exit(200);
+            }
+            //return type = int
+            type = new BaseType(BaseTypeCode.INT);
+        } else if(ctx.NOT() != null) {
+            //argument type = bool
+            Type argType = visit(ctx.expr(0));
+            if(argType != new BaseType(BaseTypeCode.BOOL)) {
+                //TODO wrong argument type
+                System.exit(200);
+            }
+            //return type = int
+            type = new BaseType(BaseTypeCode.BOOL);
+        } else if(ctx.MINUS() != null) {
+            //argument type = int
+            Type argType = visit(ctx.expr(0));
+            if(argType != new BaseType(BaseTypeCode.INT)) {
+                //TODO wrong argument type
+                System.exit(200);
+            }
+            //return type = int
+            type = new BaseType(BaseTypeCode.INT);
+        }
+        return type;
+    }
+
+    public Type visitBinaryExpr(@NotNull BasicParser.ExprContext ctx) {
+        Type expr1 = visit(ctx.expr(0));
+        Type expr2 = visit(ctx.expr(1));
+        Type type = null;
+
+        boolean bothNotInt = (expr1 != new BaseType(BaseTypeCode.INT) ||
+                expr2 != new BaseType(BaseTypeCode.INT));
+
+        if(ctx.MUL() != null || ctx.DIV() != null || ctx.MOD() != null
+                || ctx.PLUS() != null || ctx.MINUS() != null) {
+            if (bothNotInt) {
+                //TODO wrong type used with multiplication
+                System.exit(200);
+            }
+            type = new BaseType(BaseTypeCode.INT);
+        } else if(ctx.LT() != null || ctx.LTE() != null || ctx.GT() != null || ctx.GTE() != null
+                || ctx.EQ() != null || ctx.NEQ() != null) {
+            if(expr1 != expr2) {
+                //TODO incompatible types
+                System.exit(200);
+            }
+            type = expr1;
+        } else if(ctx.AND() != null || ctx.OR() != null) {
+            if(expr1 != new BaseType(BaseTypeCode.BOOL) || expr2 != new BaseType(BaseTypeCode.BOOL)) {
+                //TODO wrong type
+                System.exit(100);
+            }
+            type = expr1;
+        }
+        return type;
+    }
+
+
+
+
+
+        // We redefine the identifier visit method
     public Type visitIdent(@NotNull BasicParser.IdentContext ctx, LinkedList<HashMap<String, Type>> symTabScopes) {
         return typeEnv.varLookup(ctx.IDENTITY().getText(), symTabScopes);
     }
