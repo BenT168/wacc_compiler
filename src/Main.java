@@ -1,5 +1,5 @@
-import antlr.BasicLexer;
-import antlr.BasicParser;
+import antlr.WACCLexer;
+import antlr.WACCParser;
 import frontEnd.visitor.TypeCheckVisitor;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
@@ -36,9 +36,9 @@ public class Main {
         try {
             fis = new FileInputStream(file);
             CharStream input = new ANTLRInputStream(fis);
-            BasicLexer lexer = new BasicLexer(input);
+            WACCLexer lexer = new WACCLexer(input);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
-            BasicParser parser = new BasicParser(tokens);
+            WACCParser parser = new WACCParser(tokens);
             ParseTree tree = parser.program();
 
             //System.out.println(tree.toStringTree(parser));

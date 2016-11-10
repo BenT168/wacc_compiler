@@ -1,4 +1,4 @@
-// Generated from ./BasicLexer.g4 by ANTLR 4.4
+// Generated from ./WACCLexer.g4 by ANTLR 4.4
 package antlr;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
@@ -10,7 +10,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
-public class BasicLexer extends Lexer {
+public class WACCLexer extends Lexer {
 	static { RuntimeMetaData.checkVersion("4.4", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
@@ -57,13 +57,13 @@ public class BasicLexer extends Lexer {
 	};
 
 
-	public BasicLexer(CharStream input) {
+	public WACCLexer(CharStream input) {
 		super(input);
 		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 
 	@Override
-	public String getGrammarFileName() { return "BasicLexer.g4"; }
+	public String getGrammarFileName() { return "WACCLexer.g4"; }
 
 	@Override
 	public String[] getTokenNames() { return tokenNames; }

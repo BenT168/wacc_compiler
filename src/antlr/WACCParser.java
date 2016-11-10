@@ -1,4 +1,4 @@
-// Generated from ./BasicParser.g4 by ANTLR 4.4
+// Generated from ./WACCParser.g4 by ANTLR 4.4
 package antlr;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
-public class BasicParser extends Parser {
+public class WACCParser extends Parser {
 	static { RuntimeMetaData.checkVersion("4.4", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
@@ -53,7 +53,7 @@ public class BasicParser extends Parser {
 	};
 
 	@Override
-	public String getGrammarFileName() { return "BasicParser.g4"; }
+	public String getGrammarFileName() { return "WACCParser.g4"; }
 
 	@Override
 	public String[] getTokenNames() { return tokenNames; }
@@ -67,20 +67,20 @@ public class BasicParser extends Parser {
 	@Override
 	public ATN getATN() { return _ATN; }
 
-	public BasicParser(TokenStream input) {
+	public WACCParser(TokenStream input) {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 	public static class ProgramContext extends ParserRuleContext {
-		public TerminalNode EOF() { return getToken(BasicParser.EOF, 0); }
+		public TerminalNode EOF() { return getToken(WACCParser.EOF, 0); }
 		public List<FuncContext> func() {
 			return getRuleContexts(FuncContext.class);
 		}
 		public FuncContext func(int i) {
 			return getRuleContext(FuncContext.class,i);
 		}
-		public TerminalNode BEGIN() { return getToken(BasicParser.BEGIN, 0); }
-		public TerminalNode END() { return getToken(BasicParser.END, 0); }
+		public TerminalNode BEGIN() { return getToken(WACCParser.BEGIN, 0); }
+		public TerminalNode END() { return getToken(WACCParser.END, 0); }
 		public StatContext stat() {
 			return getRuleContext(StatContext.class,0);
 		}
@@ -90,7 +90,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_program; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitProgram(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitProgram(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -135,29 +135,29 @@ public class BasicParser extends Parser {
 	}
 
 	public static class FuncContext extends ParserRuleContext {
-		public TerminalNode CLOSE_PARENTHESES() { return getToken(BasicParser.CLOSE_PARENTHESES, 0); }
-		public TerminalNode IS() { return getToken(BasicParser.IS, 0); }
+		public TerminalNode CLOSE_PARENTHESES() { return getToken(WACCParser.CLOSE_PARENTHESES, 0); }
+		public TerminalNode IS() { return getToken(WACCParser.IS, 0); }
 		public ParamListContext paramList() {
 			return getRuleContext(ParamListContext.class,0);
 		}
 		public IdentContext ident() {
 			return getRuleContext(IdentContext.class,0);
 		}
-		public TerminalNode END() { return getToken(BasicParser.END, 0); }
+		public TerminalNode END() { return getToken(WACCParser.END, 0); }
 		public TypeContext type() {
 			return getRuleContext(TypeContext.class,0);
 		}
 		public StatContext stat() {
 			return getRuleContext(StatContext.class,0);
 		}
-		public TerminalNode OPEN_PARENTHESES() { return getToken(BasicParser.OPEN_PARENTHESES, 0); }
+		public TerminalNode OPEN_PARENTHESES() { return getToken(WACCParser.OPEN_PARENTHESES, 0); }
 		public FuncContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_func; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitFunc(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitFunc(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -201,12 +201,12 @@ public class BasicParser extends Parser {
 		public List<ParamContext> param() {
 			return getRuleContexts(ParamContext.class);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(BasicParser.COMMA); }
+		public List<TerminalNode> COMMA() { return getTokens(WACCParser.COMMA); }
 		public ParamContext param(int i) {
 			return getRuleContext(ParamContext.class,i);
 		}
 		public TerminalNode COMMA(int i) {
-			return getToken(BasicParser.COMMA, i);
+			return getToken(WACCParser.COMMA, i);
 		}
 		public ParamListContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -214,7 +214,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_paramList; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitParamList(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitParamList(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -267,7 +267,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_param; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitParam(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitParam(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -305,19 +305,19 @@ public class BasicParser extends Parser {
 		}
 	}
 	public static class ReadContext extends StatContext {
-		public TerminalNode READ() { return getToken(BasicParser.READ, 0); }
+		public TerminalNode READ() { return getToken(WACCParser.READ, 0); }
 		public AssignLHSContext assignLHS() {
 			return getRuleContext(AssignLHSContext.class,0);
 		}
 		public ReadContext(StatContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitRead(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitRead(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 	public static class DeclareContext extends StatContext {
-		public TerminalNode EQUALS() { return getToken(BasicParser.EQUALS, 0); }
+		public TerminalNode EQUALS() { return getToken(WACCParser.EQUALS, 0); }
 		public IdentContext ident() {
 			return getRuleContext(IdentContext.class,0);
 		}
@@ -330,33 +330,33 @@ public class BasicParser extends Parser {
 		public DeclareContext(StatContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitDeclare(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitDeclare(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 	public static class SkipContext extends StatContext {
-		public TerminalNode SKIP() { return getToken(BasicParser.SKIP, 0); }
+		public TerminalNode SKIP() { return getToken(WACCParser.SKIP, 0); }
 		public SkipContext(StatContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitSkip(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitSkip(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 	public static class WhileContext extends StatContext {
-		public TerminalNode DONE() { return getToken(BasicParser.DONE, 0); }
+		public TerminalNode DONE() { return getToken(WACCParser.DONE, 0); }
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
-		public TerminalNode DO() { return getToken(BasicParser.DO, 0); }
+		public TerminalNode DO() { return getToken(WACCParser.DO, 0); }
 		public StatContext stat() {
 			return getRuleContext(StatContext.class,0);
 		}
-		public TerminalNode WHILE() { return getToken(BasicParser.WHILE, 0); }
+		public TerminalNode WHILE() { return getToken(WACCParser.WHILE, 0); }
 		public WhileContext(StatContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitWhile(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitWhile(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -364,23 +364,23 @@ public class BasicParser extends Parser {
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
-		public TerminalNode EXIT() { return getToken(BasicParser.EXIT, 0); }
+		public TerminalNode EXIT() { return getToken(WACCParser.EXIT, 0); }
 		public ExitContext(StatContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitExit(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitExit(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 	public static class PrintContext extends StatContext {
-		public TerminalNode PRINT() { return getToken(BasicParser.PRINT, 0); }
+		public TerminalNode PRINT() { return getToken(WACCParser.PRINT, 0); }
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
 		public PrintContext(StatContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitPrint(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitPrint(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -388,16 +388,16 @@ public class BasicParser extends Parser {
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
-		public TerminalNode PRINTLN() { return getToken(BasicParser.PRINTLN, 0); }
+		public TerminalNode PRINTLN() { return getToken(WACCParser.PRINTLN, 0); }
 		public PrintlnContext(StatContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitPrintln(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitPrintln(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 	public static class MultipleStatContext extends StatContext {
-		public TerminalNode SEMI_COLON() { return getToken(BasicParser.SEMI_COLON, 0); }
+		public TerminalNode SEMI_COLON() { return getToken(WACCParser.SEMI_COLON, 0); }
 		public StatContext stat(int i) {
 			return getRuleContext(StatContext.class,i);
 		}
@@ -407,30 +407,30 @@ public class BasicParser extends Parser {
 		public MultipleStatContext(StatContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitMultipleStat(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitMultipleStat(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 	public static class FreeContext extends StatContext {
-		public TerminalNode FREE() { return getToken(BasicParser.FREE, 0); }
+		public TerminalNode FREE() { return getToken(WACCParser.FREE, 0); }
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
 		public FreeContext(StatContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitFree(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitFree(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 	public static class IfElseContext extends StatContext {
-		public TerminalNode ELSE() { return getToken(BasicParser.ELSE, 0); }
-		public TerminalNode IF() { return getToken(BasicParser.IF, 0); }
+		public TerminalNode ELSE() { return getToken(WACCParser.ELSE, 0); }
+		public TerminalNode IF() { return getToken(WACCParser.IF, 0); }
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
-		public TerminalNode THEN() { return getToken(BasicParser.THEN, 0); }
-		public TerminalNode ENDIF() { return getToken(BasicParser.ENDIF, 0); }
+		public TerminalNode THEN() { return getToken(WACCParser.THEN, 0); }
+		public TerminalNode ENDIF() { return getToken(WACCParser.ENDIF, 0); }
 		public StatContext stat(int i) {
 			return getRuleContext(StatContext.class,i);
 		}
@@ -440,37 +440,37 @@ public class BasicParser extends Parser {
 		public IfElseContext(StatContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitIfElse(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitIfElse(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 	public static class BeginContext extends StatContext {
-		public TerminalNode BEGIN() { return getToken(BasicParser.BEGIN, 0); }
-		public TerminalNode END() { return getToken(BasicParser.END, 0); }
+		public TerminalNode BEGIN() { return getToken(WACCParser.BEGIN, 0); }
+		public TerminalNode END() { return getToken(WACCParser.END, 0); }
 		public StatContext stat() {
 			return getRuleContext(StatContext.class,0);
 		}
 		public BeginContext(StatContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitBegin(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitBegin(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 	public static class ReturnContext extends StatContext {
-		public TerminalNode RETURN() { return getToken(BasicParser.RETURN, 0); }
+		public TerminalNode RETURN() { return getToken(WACCParser.RETURN, 0); }
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
 		public ReturnContext(StatContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitReturn(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitReturn(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 	public static class AssignContext extends StatContext {
-		public TerminalNode EQUALS() { return getToken(BasicParser.EQUALS, 0); }
+		public TerminalNode EQUALS() { return getToken(WACCParser.EQUALS, 0); }
 		public AssignRHSContext assignRHS() {
 			return getRuleContext(AssignRHSContext.class,0);
 		}
@@ -480,7 +480,7 @@ public class BasicParser extends Parser {
 		public AssignContext(StatContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitAssign(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitAssign(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -683,7 +683,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_assignLHS; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitAssignLHS(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitAssignLHS(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -729,8 +729,8 @@ public class BasicParser extends Parser {
 		public ArgListContext argList() {
 			return getRuleContext(ArgListContext.class,0);
 		}
-		public TerminalNode NEWPAIR() { return getToken(BasicParser.NEWPAIR, 0); }
-		public TerminalNode CLOSE_PARENTHESES() { return getToken(BasicParser.CLOSE_PARENTHESES, 0); }
+		public TerminalNode NEWPAIR() { return getToken(WACCParser.NEWPAIR, 0); }
+		public TerminalNode CLOSE_PARENTHESES() { return getToken(WACCParser.CLOSE_PARENTHESES, 0); }
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
@@ -740,12 +740,12 @@ public class BasicParser extends Parser {
 		public ArrayLiterContext arrayLiter() {
 			return getRuleContext(ArrayLiterContext.class,0);
 		}
-		public TerminalNode COMMA() { return getToken(BasicParser.COMMA, 0); }
-		public TerminalNode CALL() { return getToken(BasicParser.CALL, 0); }
+		public TerminalNode COMMA() { return getToken(WACCParser.COMMA, 0); }
+		public TerminalNode CALL() { return getToken(WACCParser.CALL, 0); }
 		public IdentContext ident() {
 			return getRuleContext(IdentContext.class,0);
 		}
-		public TerminalNode OPEN_PARENTHESES() { return getToken(BasicParser.OPEN_PARENTHESES, 0); }
+		public TerminalNode OPEN_PARENTHESES() { return getToken(WACCParser.OPEN_PARENTHESES, 0); }
 		public PairElemContext pairElem() {
 			return getRuleContext(PairElemContext.class,0);
 		}
@@ -755,7 +755,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_assignRHS; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitAssignRHS(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitAssignRHS(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -849,9 +849,9 @@ public class BasicParser extends Parser {
 		public ExprContext expr(int i) {
 			return getRuleContext(ExprContext.class,i);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(BasicParser.COMMA); }
+		public List<TerminalNode> COMMA() { return getTokens(WACCParser.COMMA); }
 		public TerminalNode COMMA(int i) {
-			return getToken(BasicParser.COMMA, i);
+			return getToken(WACCParser.COMMA, i);
 		}
 		public ArgListContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -859,7 +859,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_argList; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitArgList(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitArgList(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -903,15 +903,15 @@ public class BasicParser extends Parser {
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
-		public TerminalNode SND() { return getToken(BasicParser.SND, 0); }
-		public TerminalNode FST() { return getToken(BasicParser.FST, 0); }
+		public TerminalNode SND() { return getToken(WACCParser.SND, 0); }
+		public TerminalNode FST() { return getToken(WACCParser.FST, 0); }
 		public PairElemContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_pairElem; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitPairElem(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitPairElem(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -967,7 +967,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_type; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitType(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitType(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1010,17 +1010,17 @@ public class BasicParser extends Parser {
 	}
 
 	public static class BaseTypeContext extends ParserRuleContext {
-		public TerminalNode BOOL() { return getToken(BasicParser.BOOL, 0); }
-		public TerminalNode STRING() { return getToken(BasicParser.STRING, 0); }
-		public TerminalNode CHAR() { return getToken(BasicParser.CHAR, 0); }
-		public TerminalNode INT() { return getToken(BasicParser.INT, 0); }
+		public TerminalNode BOOL() { return getToken(WACCParser.BOOL, 0); }
+		public TerminalNode STRING() { return getToken(WACCParser.STRING, 0); }
+		public TerminalNode CHAR() { return getToken(WACCParser.CHAR, 0); }
+		public TerminalNode INT() { return getToken(WACCParser.INT, 0); }
 		public BaseTypeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_baseType; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitBaseType(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitBaseType(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1052,13 +1052,13 @@ public class BasicParser extends Parser {
 	}
 
 	public static class ArrayTypeContext extends ParserRuleContext {
-		public List<TerminalNode> CLOSE_SQUARE() { return getTokens(BasicParser.CLOSE_SQUARE); }
-		public List<TerminalNode> OPEN_SQUARE() { return getTokens(BasicParser.OPEN_SQUARE); }
+		public List<TerminalNode> CLOSE_SQUARE() { return getTokens(WACCParser.CLOSE_SQUARE); }
+		public List<TerminalNode> OPEN_SQUARE() { return getTokens(WACCParser.OPEN_SQUARE); }
 		public TerminalNode OPEN_SQUARE(int i) {
-			return getToken(BasicParser.OPEN_SQUARE, i);
+			return getToken(WACCParser.OPEN_SQUARE, i);
 		}
 		public TerminalNode CLOSE_SQUARE(int i) {
-			return getToken(BasicParser.CLOSE_SQUARE, i);
+			return getToken(WACCParser.CLOSE_SQUARE, i);
 		}
 		public BaseTypeContext baseType() {
 			return getRuleContext(BaseTypeContext.class,0);
@@ -1072,7 +1072,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_arrayType; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitArrayType(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitArrayType(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1130,23 +1130,23 @@ public class BasicParser extends Parser {
 	}
 
 	public static class PairTypeContext extends ParserRuleContext {
-		public TerminalNode CLOSE_PARENTHESES() { return getToken(BasicParser.CLOSE_PARENTHESES, 0); }
+		public TerminalNode CLOSE_PARENTHESES() { return getToken(WACCParser.CLOSE_PARENTHESES, 0); }
 		public PairElemTypeContext pairElemType(int i) {
 			return getRuleContext(PairElemTypeContext.class,i);
 		}
 		public List<PairElemTypeContext> pairElemType() {
 			return getRuleContexts(PairElemTypeContext.class);
 		}
-		public TerminalNode PAIR() { return getToken(BasicParser.PAIR, 0); }
-		public TerminalNode COMMA() { return getToken(BasicParser.COMMA, 0); }
-		public TerminalNode OPEN_PARENTHESES() { return getToken(BasicParser.OPEN_PARENTHESES, 0); }
+		public TerminalNode PAIR() { return getToken(WACCParser.PAIR, 0); }
+		public TerminalNode COMMA() { return getToken(WACCParser.COMMA, 0); }
+		public TerminalNode OPEN_PARENTHESES() { return getToken(WACCParser.OPEN_PARENTHESES, 0); }
 		public PairTypeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_pairType; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitPairType(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitPairType(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1180,7 +1180,7 @@ public class BasicParser extends Parser {
 		public ArrayTypeContext arrayType() {
 			return getRuleContext(ArrayTypeContext.class,0);
 		}
-		public TerminalNode PAIR() { return getToken(BasicParser.PAIR, 0); }
+		public TerminalNode PAIR() { return getToken(WACCParser.PAIR, 0); }
 		public BaseTypeContext baseType() {
 			return getRuleContext(BaseTypeContext.class,0);
 		}
@@ -1190,7 +1190,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_pairElemType; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitPairElemType(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitPairElemType(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1236,21 +1236,21 @@ public class BasicParser extends Parser {
 		public ExprContext expr(int i) {
 			return getRuleContext(ExprContext.class,i);
 		}
-		public TerminalNode GTE() { return getToken(BasicParser.GTE, 0); }
+		public TerminalNode GTE() { return getToken(WACCParser.GTE, 0); }
 		public IntLiterContext intLiter() {
 			return getRuleContext(IntLiterContext.class,0);
 		}
 		public StringLiterContext stringLiter() {
 			return getRuleContext(StringLiterContext.class,0);
 		}
-		public TerminalNode LTE() { return getToken(BasicParser.LTE, 0); }
-		public TerminalNode OPEN_PARENTHESES() { return getToken(BasicParser.OPEN_PARENTHESES, 0); }
-		public TerminalNode MUL() { return getToken(BasicParser.MUL, 0); }
-		public TerminalNode NOT() { return getToken(BasicParser.NOT, 0); }
+		public TerminalNode LTE() { return getToken(WACCParser.LTE, 0); }
+		public TerminalNode OPEN_PARENTHESES() { return getToken(WACCParser.OPEN_PARENTHESES, 0); }
+		public TerminalNode MUL() { return getToken(WACCParser.MUL, 0); }
+		public TerminalNode NOT() { return getToken(WACCParser.NOT, 0); }
 		public CharLiterContext charLiter() {
 			return getRuleContext(CharLiterContext.class,0);
 		}
-		public TerminalNode CLOSE_PARENTHESES() { return getToken(BasicParser.CLOSE_PARENTHESES, 0); }
+		public TerminalNode CLOSE_PARENTHESES() { return getToken(WACCParser.CLOSE_PARENTHESES, 0); }
 		public ArrayElemContext arrayElem() {
 			return getRuleContext(ArrayElemContext.class,0);
 		}
@@ -1260,32 +1260,32 @@ public class BasicParser extends Parser {
 		public BoolLiterContext boolLiter() {
 			return getRuleContext(BoolLiterContext.class,0);
 		}
-		public TerminalNode AND() { return getToken(BasicParser.AND, 0); }
-		public TerminalNode DIV() { return getToken(BasicParser.DIV, 0); }
-		public TerminalNode ORD() { return getToken(BasicParser.ORD, 0); }
-		public TerminalNode NEQ() { return getToken(BasicParser.NEQ, 0); }
-		public TerminalNode LT() { return getToken(BasicParser.LT, 0); }
-		public TerminalNode GT() { return getToken(BasicParser.GT, 0); }
-		public TerminalNode LEN() { return getToken(BasicParser.LEN, 0); }
-		public TerminalNode MOD() { return getToken(BasicParser.MOD, 0); }
-		public TerminalNode OR() { return getToken(BasicParser.OR, 0); }
+		public TerminalNode AND() { return getToken(WACCParser.AND, 0); }
+		public TerminalNode DIV() { return getToken(WACCParser.DIV, 0); }
+		public TerminalNode ORD() { return getToken(WACCParser.ORD, 0); }
+		public TerminalNode NEQ() { return getToken(WACCParser.NEQ, 0); }
+		public TerminalNode LT() { return getToken(WACCParser.LT, 0); }
+		public TerminalNode GT() { return getToken(WACCParser.GT, 0); }
+		public TerminalNode LEN() { return getToken(WACCParser.LEN, 0); }
+		public TerminalNode MOD() { return getToken(WACCParser.MOD, 0); }
+		public TerminalNode OR() { return getToken(WACCParser.OR, 0); }
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
 		public IdentContext ident() {
 			return getRuleContext(IdentContext.class,0);
 		}
-		public TerminalNode MINUS() { return getToken(BasicParser.MINUS, 0); }
-		public TerminalNode PLUS() { return getToken(BasicParser.PLUS, 0); }
-		public TerminalNode EQ() { return getToken(BasicParser.EQ, 0); }
-		public TerminalNode CHR() { return getToken(BasicParser.CHR, 0); }
+		public TerminalNode MINUS() { return getToken(WACCParser.MINUS, 0); }
+		public TerminalNode PLUS() { return getToken(WACCParser.PLUS, 0); }
+		public TerminalNode EQ() { return getToken(WACCParser.EQ, 0); }
+		public TerminalNode CHR() { return getToken(WACCParser.CHR, 0); }
 		public ExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_expr; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitExpr(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitExpr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1481,16 +1481,16 @@ public class BasicParser extends Parser {
 	}
 
 	public static class IntLiterContext extends ParserRuleContext {
-		public TerminalNode INTEGER() { return getToken(BasicParser.INTEGER, 0); }
-		public TerminalNode PLUS() { return getToken(BasicParser.PLUS, 0); }
-		public TerminalNode MINUS() { return getToken(BasicParser.MINUS, 0); }
+		public TerminalNode INTEGER() { return getToken(WACCParser.INTEGER, 0); }
+		public TerminalNode PLUS() { return getToken(WACCParser.PLUS, 0); }
+		public TerminalNode MINUS() { return getToken(WACCParser.MINUS, 0); }
 		public IntLiterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_intLiter; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitIntLiter(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitIntLiter(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1537,19 +1537,19 @@ public class BasicParser extends Parser {
 	}
 
 	public static class ArrayElemContext extends ParserRuleContext {
-		public List<TerminalNode> CLOSE_SQUARE() { return getTokens(BasicParser.CLOSE_SQUARE); }
+		public List<TerminalNode> CLOSE_SQUARE() { return getTokens(WACCParser.CLOSE_SQUARE); }
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
-		public List<TerminalNode> OPEN_SQUARE() { return getTokens(BasicParser.OPEN_SQUARE); }
+		public List<TerminalNode> OPEN_SQUARE() { return getTokens(WACCParser.OPEN_SQUARE); }
 		public TerminalNode OPEN_SQUARE(int i) {
-			return getToken(BasicParser.OPEN_SQUARE, i);
+			return getToken(WACCParser.OPEN_SQUARE, i);
 		}
 		public ExprContext expr(int i) {
 			return getRuleContext(ExprContext.class,i);
 		}
 		public TerminalNode CLOSE_SQUARE(int i) {
-			return getToken(BasicParser.CLOSE_SQUARE, i);
+			return getToken(WACCParser.CLOSE_SQUARE, i);
 		}
 		public IdentContext ident() {
 			return getRuleContext(IdentContext.class,0);
@@ -1560,7 +1560,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_arrayElem; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitArrayElem(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitArrayElem(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1608,15 +1608,15 @@ public class BasicParser extends Parser {
 	}
 
 	public static class BoolLiterContext extends ParserRuleContext {
-		public TerminalNode FALSE() { return getToken(BasicParser.FALSE, 0); }
-		public TerminalNode TRUE() { return getToken(BasicParser.TRUE, 0); }
+		public TerminalNode FALSE() { return getToken(WACCParser.FALSE, 0); }
+		public TerminalNode TRUE() { return getToken(WACCParser.TRUE, 0); }
 		public BoolLiterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_boolLiter; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitBoolLiter(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitBoolLiter(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1648,14 +1648,14 @@ public class BasicParser extends Parser {
 	}
 
 	public static class CharLiterContext extends ParserRuleContext {
-		public TerminalNode CHAR_LITER() { return getToken(BasicParser.CHAR_LITER, 0); }
+		public TerminalNode CHAR_LITER() { return getToken(WACCParser.CHAR_LITER, 0); }
 		public CharLiterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_charLiter; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitCharLiter(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitCharLiter(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1681,14 +1681,14 @@ public class BasicParser extends Parser {
 	}
 
 	public static class StringLiterContext extends ParserRuleContext {
-		public TerminalNode STRING_LITER() { return getToken(BasicParser.STRING_LITER, 0); }
+		public TerminalNode STRING_LITER() { return getToken(WACCParser.STRING_LITER, 0); }
 		public StringLiterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_stringLiter; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitStringLiter(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitStringLiter(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1714,17 +1714,17 @@ public class BasicParser extends Parser {
 	}
 
 	public static class ArrayLiterContext extends ParserRuleContext {
-		public TerminalNode CLOSE_SQUARE() { return getToken(BasicParser.CLOSE_SQUARE, 0); }
+		public TerminalNode CLOSE_SQUARE() { return getToken(WACCParser.CLOSE_SQUARE, 0); }
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
-		public TerminalNode OPEN_SQUARE() { return getToken(BasicParser.OPEN_SQUARE, 0); }
+		public TerminalNode OPEN_SQUARE() { return getToken(WACCParser.OPEN_SQUARE, 0); }
 		public ExprContext expr(int i) {
 			return getRuleContext(ExprContext.class,i);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(BasicParser.COMMA); }
+		public List<TerminalNode> COMMA() { return getTokens(WACCParser.COMMA); }
 		public TerminalNode COMMA(int i) {
-			return getToken(BasicParser.COMMA, i);
+			return getToken(WACCParser.COMMA, i);
 		}
 		public ArrayLiterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1732,7 +1732,7 @@ public class BasicParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_arrayLiter; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitArrayLiter(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitArrayLiter(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1784,14 +1784,14 @@ public class BasicParser extends Parser {
 	}
 
 	public static class PairLiterContext extends ParserRuleContext {
-		public TerminalNode NULL() { return getToken(BasicParser.NULL, 0); }
+		public TerminalNode NULL() { return getToken(WACCParser.NULL, 0); }
 		public PairLiterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_pairLiter; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitPairLiter(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitPairLiter(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1817,14 +1817,14 @@ public class BasicParser extends Parser {
 	}
 
 	public static class IdentContext extends ParserRuleContext {
-		public TerminalNode IDENTITY() { return getToken(BasicParser.IDENTITY, 0); }
+		public TerminalNode IDENTITY() { return getToken(WACCParser.IDENTITY, 0); }
 		public IdentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_ident; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BasicParserVisitor ) return ((BasicParserVisitor<? extends T>)visitor).visitIdent(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitIdent(this);
 			else return visitor.visitChildren(this);
 		}
 	}

@@ -1,20 +1,16 @@
 package frontEnd.visitor;
 
-import antlr.BasicParser;
-import antlr.BasicParserBaseVisitor;
-import frontEnd.ErrorHandling.Exception;
-import frontEnd.ErrorHandling.IncompatibleTypesException;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.misc.NotNull;
-import org.antlr.v4.runtime.tree.gui.SystemFontMetrics;
 
-import javax.net.ssl.SSLContext;
+import antlr.WACCParser;
+import antlr.WACCParserBaseVisitor;
+import org.antlr.v4.runtime.misc.NotNull;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
+public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
     // Holds symbol table information needed by our type checker
     private static class TypeEnv {
@@ -82,13 +78,13 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     }
 
     @Override
-    public Type visitProgram(@NotNull BasicParser.ProgramContext ctx) {
+    public Type visitProgram(@NotNull WACCParser.ProgramContext ctx) {
 
         // We use two passes: one for added the function identifiers to the symbol table, another for evaluating the
         // function bodies.
 
         if(ctx.func() != null) {
-            for (BasicParser.FuncContext funcCtx : ctx.func()) {
+            for (WACCParser.FuncContext funcCtx : ctx.func()) {
                 String i = funcCtx.ident().IDENTITY().getText();
 
                 if (typeEnv.fTable.containsKey(i)) {
@@ -100,7 +96,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
                 List<Type> paramTypes = new ArrayList<>();
                 paramTypes.add(t);
                 if(funcCtx.paramList() != null) {
-                    for (BasicParser.ParamContext pCtx : funcCtx.paramList().param()) {
+                    for (WACCParser.ParamContext pCtx : funcCtx.paramList().param()) {
                         paramTypes.add(visitParam(pCtx));
                     }
                 }
@@ -108,7 +104,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
             }
 
 
-            for (BasicParser.FuncContext funcCtx : ctx.func()) {
+            for (WACCParser.FuncContext funcCtx : ctx.func()) {
                 typeEnv.enterScope();
                 visitFunc(funcCtx);
                 typeEnv.removeScope();
@@ -125,13 +121,13 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
 
     // Function identifiers and types should already be added to ftable by time we call this method.
     @Override
-    public Type visitFunc(@NotNull BasicParser.FuncContext ctx) {
+    public Type visitFunc(@NotNull WACCParser.FuncContext ctx) {
 
         // Function return type
         Type t0 = visitType(ctx.type());
 
         if (ctx.paramList() != null) {
-            for (BasicParser.ParamContext ctxParam: ctx.paramList().param()) {
+            for (WACCParser.ParamContext ctxParam: ctx.paramList().param()) {
                 String i = ctxParam.ident().IDENTITY().getText();
                 Type t = visitParam(ctxParam);
 
@@ -148,22 +144,22 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
 
     @Deprecated
     @Override
-    public Type visitParamList(@NotNull BasicParser.ParamListContext ctx) {
+    public Type visitParamList(@NotNull WACCParser.ParamListContext ctx) {
         return super.visitParamList(ctx);
     }
 
     @Override
-    public Type visitParam(@NotNull BasicParser.ParamContext ctx) {
+    public Type visitParam(@NotNull WACCParser.ParamContext ctx) {
         return visitType(ctx.type());
     }
 
     @Override
-    public Type visitSkip(@NotNull BasicParser.SkipContext ctx) {
+    public Type visitSkip(@NotNull WACCParser.SkipContext ctx) {
         return null;
     }
 
     @Override
-    public Type visitDeclare(@NotNull BasicParser.DeclareContext ctx) {
+    public Type visitDeclare(@NotNull WACCParser.DeclareContext ctx) {
         Type t1 = visitType(ctx.type());
         String i = ctx.ident().IDENTITY().getText();
 
@@ -179,7 +175,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     }
 
     @Override
-    public Type visitAssign(@NotNull BasicParser.AssignContext ctx) {
+    public Type visitAssign(@NotNull WACCParser.AssignContext ctx) {
         Type t1 = visitAssignLHS(ctx.assignLHS());
         Type t2 = visitAssignRHS(ctx.assignRHS());
 
@@ -191,7 +187,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     }
 
     @Override
-    public Type visitRead(@NotNull BasicParser.ReadContext ctx) {
+    public Type visitRead(@NotNull WACCParser.ReadContext ctx) {
         Type t = visitAssignLHS(ctx.assignLHS());
 
         if (!(t.equals(new BaseType(BaseTypeCode.CHAR)) || t.equals(new BaseType(BaseTypeCode.INT)))) {
@@ -202,7 +198,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     }
 
     @Override
-    public Type visitFree(@NotNull BasicParser.FreeContext ctx) {
+    public Type visitFree(@NotNull WACCParser.FreeContext ctx) {
         Type t = visitExpr(ctx.expr());
 
         // Nulls signify generic arrays/pairs.
@@ -214,13 +210,13 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     }
 
     @Override
-    public Type visitReturn(@NotNull BasicParser.ReturnContext ctx) {
+    public Type visitReturn(@NotNull WACCParser.ReturnContext ctx) {
         // Knows nothing about enclosing function and hence leaves type checking to enclosing function visitor method
         return visitExpr(ctx.expr());
     }
 
     @Override
-    public Type visitExit(@NotNull BasicParser.ExitContext ctx) {
+    public Type visitExit(@NotNull WACCParser.ExitContext ctx) {
         Type t = visitExpr(ctx.expr());
         Type temp = new BaseType(BaseTypeCode.INT);
         if (!(t.equals(temp))) {
@@ -231,17 +227,17 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     }
 
     @Override
-    public Type visitPrint(@NotNull BasicParser.PrintContext ctx) {
+    public Type visitPrint(@NotNull WACCParser.PrintContext ctx) {
         return visitExpr(ctx.expr());
     }
 
     @Override
-    public Type visitPrintln(@NotNull BasicParser.PrintlnContext ctx) {
+    public Type visitPrintln(@NotNull WACCParser.PrintlnContext ctx) {
         return visitExpr(ctx.expr());
     }
 
     @Override
-    public Type visitIfElse(@NotNull BasicParser.IfElseContext ctx) {
+    public Type visitIfElse(@NotNull WACCParser.IfElseContext ctx) {
         Type t = visitExpr(ctx.expr());
         Type temp = new BaseType(BaseTypeCode.BOOL);
         if (!(t.equals(temp))) {
@@ -259,7 +255,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     }
 
     @Override
-    public Type visitWhile(@NotNull BasicParser.WhileContext ctx) {
+    public Type visitWhile(@NotNull WACCParser.WhileContext ctx) {
         Type t = visitExpr(ctx.expr());
         Type temp = new BaseType(BaseTypeCode.BOOL);
         if (!(t.equals(temp))) {
@@ -273,7 +269,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     }
 
     @Override
-    public Type visitBegin(@NotNull BasicParser.BeginContext ctx) {
+    public Type visitBegin(@NotNull WACCParser.BeginContext ctx) {
         typeEnv.enterScope();
         visit(ctx.stat());
         typeEnv.removeScope();
@@ -281,13 +277,13 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     }
 
     @Override
-    public Type visitMultipleStat(@NotNull BasicParser.MultipleStatContext ctx) {
+    public Type visitMultipleStat(@NotNull WACCParser.MultipleStatContext ctx) {
         ctx.stat().forEach(this::visit);
         return null;
     }
 
     @Override
-    public Type visitAssignLHS(@NotNull BasicParser.AssignLHSContext ctx) {
+    public Type visitAssignLHS(@NotNull WACCParser.AssignLHSContext ctx) {
         Type t = null;
         if (ctx.ident() != null) {
             t = typeEnv.varLookup(ctx.ident().IDENTITY().getText(), typeEnv.vTableScopes);
@@ -303,7 +299,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     }
 
     @Override
-    public Type visitAssignRHS(@NotNull BasicParser.AssignRHSContext ctx) {
+    public Type visitAssignRHS(@NotNull WACCParser.AssignRHSContext ctx) {
         Type t = null;
         if (ctx.NEWPAIR() != null) {
             Type t1 = visitExpr(ctx.expr(0));
@@ -312,7 +308,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
         } else if (ctx.CALL() != null) {
             String i = ctx.ident().IDENTITY().getText();
             List<Type> types = typeEnv.funcLookup(i);
-            List<BasicParser.ExprContext> exprCtxs = null;
+            List<WACCParser.ExprContext> exprCtxs = null;
 
             //t is return type of function
             t = typeEnv.funcLookup(ctx.ident().getText()).get(0);
@@ -353,12 +349,12 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     }
 
     @Override
-    public Type visitArgList(@NotNull BasicParser.ArgListContext ctx) {
+    public Type visitArgList(@NotNull WACCParser.ArgListContext ctx) {
         return super.visitArgList(ctx);
     }
 
     @Override
-    public Type visitPairElem(@NotNull BasicParser.PairElemContext ctx) {
+    public Type visitPairElem(@NotNull WACCParser.PairElemContext ctx) {
         Type t = visitExpr(ctx.expr());
         if (!(t instanceof PairType)) {
             System.err.println("In expression: " + ctx.getText() + "\nExpecting type: Pair" + "\nActual type: " + t.toString());
@@ -372,7 +368,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     }
 
     @Override
-    public Type visitType(@NotNull BasicParser.TypeContext ctx) {
+    public Type visitType(@NotNull WACCParser.TypeContext ctx) {
         if (ctx.baseType() != null) {
             return visitBaseType(ctx.baseType());
         } else if (ctx.arrayType() != null) {
@@ -387,7 +383,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     }
 
     @Override
-    public Type visitBaseType(@NotNull BasicParser.BaseTypeContext ctx) {
+    public Type visitBaseType(@NotNull WACCParser.BaseTypeContext ctx) {
         if (ctx.BOOL() != null) {
             return new BaseType(BaseTypeCode.BOOL);
         } else if (ctx.CHAR() != null) {
@@ -404,7 +400,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     }
 
     @Override
-    public Type visitArrayType(@NotNull BasicParser.ArrayTypeContext ctx) {
+    public Type visitArrayType(@NotNull WACCParser.ArrayTypeContext ctx) {
         Type t = null;
         if (ctx.baseType() != null) {
             t = visitBaseType(ctx.baseType());
@@ -418,14 +414,14 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     }
 
     @Override
-    public Type visitPairType(@NotNull BasicParser.PairTypeContext ctx) {
-        List<BasicParser.PairElemTypeContext> ctxs = ctx.pairElemType();
+    public Type visitPairType(@NotNull WACCParser.PairTypeContext ctx) {
+        List<WACCParser.PairElemTypeContext> ctxs = ctx.pairElemType();
         if (ctx.pairElemType().size() != 2) {
             System.err.println("Invalid number of parameter types in pair type constructor: " + ctx.pairElemType().size());
         }
         List<Type> ls = new ArrayList<>();
         Type t = null;
-        for (BasicParser.PairElemTypeContext x: ctxs) {
+        for (WACCParser.PairElemTypeContext x: ctxs) {
             if (x.baseType() != null) {
                 t = visitBaseType(x.baseType());
             } else if (x.arrayType() != null) {
@@ -440,12 +436,12 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     }
 
     @Override
-    public Type visitPairElemType(@NotNull BasicParser.PairElemTypeContext ctx) {
+    public Type visitPairElemType(@NotNull WACCParser.PairElemTypeContext ctx) {
         return super.visitPairElemType(ctx);
     }
 
     @Override
-    public Type visitExpr(@NotNull BasicParser.ExprContext ctx) {
+    public Type visitExpr(@NotNull WACCParser.ExprContext ctx) {
         Type type = null;
         if(ctx.intLiter()!= null) {
             type = new BaseType(BaseTypeCode.INT);
@@ -470,7 +466,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
         return type;
     }
 
-    public Type visitUnaryExpr(@NotNull BasicParser.ExprContext ctx) {
+    public Type visitUnaryExpr(@NotNull WACCParser.ExprContext ctx) {
         Type type = null;
         Type booltmp = new BaseType(BaseTypeCode.BOOL);
         Type chartmp = new BaseType(BaseTypeCode.CHAR);
@@ -524,7 +520,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
         return type;
     }
 
-    public Type visitBinaryExpr(@NotNull BasicParser.ExprContext ctx) {
+    public Type visitBinaryExpr(@NotNull WACCParser.ExprContext ctx) {
         Type expr1 = visitExpr(ctx.expr(0));
         Type expr2 = visitExpr(ctx.expr(1));
         Type booltmp = new BaseType(BaseTypeCode.BOOL);
@@ -563,12 +559,12 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
 
 
         // We redefine the identifier visit method
-    public Type visitIdent(@NotNull BasicParser.IdentContext ctx, LinkedList<HashMap<String, Type>> symTabScopes) {
+    public Type visitIdent(@NotNull WACCParser.IdentContext ctx, LinkedList<HashMap<String, Type>> symTabScopes) {
         return typeEnv.varLookup(ctx.IDENTITY().getText(), symTabScopes);
     }
 
     @Override
-    public Type visitArrayElem(@NotNull BasicParser.ArrayElemContext ctx) {
+    public Type visitArrayElem(@NotNull WACCParser.ArrayElemContext ctx) {
         Type t1 = visitIdent(ctx.ident(), typeEnv.vTableScopes);
         // Array element's type is determined by the type of the first
         // expression.
@@ -583,27 +579,27 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     }
 
     @Override
-    public Type visitBoolLiter(@NotNull BasicParser.BoolLiterContext ctx) {
+    public Type visitBoolLiter(@NotNull WACCParser.BoolLiterContext ctx) {
         return new BaseType(BaseTypeCode.BOOL);
     }
 
     @Override
-    public Type visitCharLiter(@NotNull BasicParser.CharLiterContext ctx) {
+    public Type visitCharLiter(@NotNull WACCParser.CharLiterContext ctx) {
         return new BaseType(BaseTypeCode.CHAR);
     }
 
     @Override
-    public Type visitStringLiter(@NotNull BasicParser.StringLiterContext ctx) {
+    public Type visitStringLiter(@NotNull WACCParser.StringLiterContext ctx) {
         return new BaseType(BaseTypeCode.STRING);
     }
 
     @Override
-    public Type visitIntLiter(@NotNull BasicParser.IntLiterContext ctx) {
+    public Type visitIntLiter(@NotNull WACCParser.IntLiterContext ctx) {
         return new BaseType(BaseTypeCode.INT);
     }
 
     @Override
-    public Type visitArrayLiter(@NotNull BasicParser.ArrayLiterContext ctx) {
+    public Type visitArrayLiter(@NotNull WACCParser.ArrayLiterContext ctx) {
         // The array literal's type is determined by the type of the first
         // expression.
         Type t = visitExpr(ctx.expr(0));
@@ -618,7 +614,7 @@ public class TypeCheckVisitor extends BasicParserBaseVisitor<Type> {
     }
 
     @Override
-    public Type visitPairLiter(@NotNull BasicParser.PairLiterContext ctx) {
+    public Type visitPairLiter(@NotNull WACCParser.PairLiterContext ctx) {
         return new PairType(null, null);
     }
 }
