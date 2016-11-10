@@ -2,6 +2,8 @@
 
 #ignore idea files
 .idea/
+#ignore compile output
+/out
 
 #ignore temp files
 *~

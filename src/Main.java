@@ -1,7 +1,6 @@
 import antlr.BasicLexer;
 import antlr.BasicParser;
 import frontEnd.visitor.TypeCheckVisitor;
-import frontEnd.visitor.myVisitor;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
