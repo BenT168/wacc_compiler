@@ -1,5 +1,7 @@
 package frontEnd.visitor;
 
+import java.util.Objects;
+
 public final class BaseType extends Type {
 
     private BaseTypeCode baseTypeCode;
@@ -25,11 +27,17 @@ public final class BaseType extends Type {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof BaseType))
+        if (!(obj instanceof BaseType)) {
             return false;
+        }
         if (obj == this)
             return true;
         BaseType rhs = (BaseType) obj;
         return this.baseTypeCode == rhs.baseTypeCode;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.baseTypeCode);
     }
 }

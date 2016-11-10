@@ -297,10 +297,6 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
     @Override
     public Type visitMultipleStat(@NotNull WACCParser.MultipleStatContext ctx) {
-        if(inFunction && !(ctx.stat(ctx.stat().size() - 1).getText().matches("return(.*)"))) {
-            System.err.print("Statement after return. Unreachable statement.");
-            System.exit(200);
-        }
         boolean seenReturn = false;
         int pos = 0;
 
@@ -512,7 +508,9 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
             //argument type = char
             Type argType = visit(ctx.expr(0));
             if(!argType.equals(chartmp)) {
-                //TODO wrong argument type
+                System.err.println("Wrong argument type for unary operator.");
+                System.err.println("Expected type : Char ");
+                System.err.println("Actual type : " + argType.toString());
                 System.exit(200);
             }
             //return type = int
@@ -521,7 +519,9 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
             //argument type = int
             Type argType = visit(ctx.expr(0));
             if(!argType.equals(inttmp)) {
-                //TODO wrong argument type
+                System.err.println("Wrong argument type for unary operator.");
+                System.err.println("Expected type : Int ");
+                System.err.println("Actual type : " + argType.toString());
                 System.exit(200);
             }
             //return type = char
@@ -530,7 +530,9 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
             //argument type = array
             Type argType = visit(ctx.expr(0));
             if(argType != new ArrayType(visit(ctx.arrayElem()))) {
-                //TODO wrong argument type
+                System.err.println("Wrong argument type for unary operator.");
+                System.err.println("Expected type : Array ");
+                System.err.println("Actual type : " + argType.toString());
                 System.exit(200);
             }
             //return type = int
@@ -539,7 +541,9 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
             //argument type = bool
             Type argType = visit(ctx.expr(0));
             if(!argType.equals(booltmp)) {
-                //TODO wrong argument type
+                System.err.println("Wrong argument type for unary operator.");
+                System.err.println("Expected type : Bool ");
+                System.err.println("Actual type : " + argType.toString());
                 System.exit(200);
             }
             //return type = int
@@ -548,7 +552,9 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
             //argument type = int
             Type argType = visit(ctx.expr(0));
             if(!argType.equals(inttmp)) {
-                //TODO wrong argument type
+                System.err.println("Wrong argument type for unary operator.");
+                System.err.println("Expected type : Int ");
+                System.err.println("Actual type : " + argType.toString());
                 System.exit(200);
             }
             //return type = int
@@ -564,29 +570,32 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         Type inttmp = new BaseType(BaseTypeCode.INT);
         Type type = null;
 
-        //boolean bothNotInt = (!(expr1.equals(inttmp)) || !(expr2.equals(inttmp)));
-
         if(ctx.MUL() != null || ctx.DIV() != null || ctx.MOD() != null
                 || ctx.PLUS() != null || ctx.MINUS() != null) {
             boolean bothNotInt = (!(expr1.equals(inttmp)) || !(expr2.equals(inttmp)));
             if (bothNotInt) {
-                //TODO wrong type used with multiplication
+                System.err.println("Wrong argument types for binary operator.");
+                System.err.println("Expected types : INT, INT ");
+                System.err.println("Actual type : " + expr1.toString() + " , " + expr2.toString());
                 System.exit(200);
             }
             type = new BaseType(BaseTypeCode.INT);
         } else if(ctx.LT() != null || ctx.LTE() != null || ctx.GT() != null || ctx.GTE() != null
                 || ctx.EQ() != null || ctx.NEQ() != null) {
-            if(expr1 != expr2) {
-                //TODO incompatible types
+            if(!expr1.equals(expr2)) {
+                System.err.println("Expected arguments to be the same type in Binary Operator");
+                System.err.println("Actual type : " + expr1.toString() + " , " + expr2.toString());
                 System.exit(200);
             }
-            type = expr1;
+            type = booltmp;
         } else if(ctx.AND() != null || ctx.OR() != null) {
             if(!expr1.equals(booltmp) || !expr2.equals(booltmp)) {
-                //TODO wrong type
+                System.err.println("Wrong argument types for binary operator.");
+                System.err.println("Expected types : Bool, Bool ");
+                System.err.println("Actual type : " + expr1.toString() + " , " + expr2.toString());
                 System.exit(200);
             }
-            type = expr1;
+            type = booltmp;
         }
         return type;
     }

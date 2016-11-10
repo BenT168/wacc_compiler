@@ -1,5 +1,7 @@
 package frontEnd.visitor;
 
+import java.util.Objects;
+
 public class PairType extends Type {
 
     private Type type1, type2;
@@ -36,5 +38,11 @@ public class PairType extends Type {
             return true;
         PairType rhs = (PairType) obj;
         return this.type1.equals(rhs.type1) && this.type2.equals(rhs.type2);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.type1, this.type2);
+
     }
 }

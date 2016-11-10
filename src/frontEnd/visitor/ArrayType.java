@@ -1,5 +1,7 @@
 package frontEnd.visitor;
 
+import java.util.Objects;
+
 public class ArrayType extends Type {
     // Type of elements in array
     private Type type;
@@ -36,5 +38,11 @@ public class ArrayType extends Type {
             return true;
         ArrayType rhs = (ArrayType) obj;
         return this.type.equals(rhs.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.type);
+
     }
 }
