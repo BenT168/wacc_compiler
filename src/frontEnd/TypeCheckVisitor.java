@@ -58,7 +58,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
                 visitFunc(funcCtx);
                 typeEnv.removeScope();
                 if (!returnCheck) {
-                    throw new SemanticException("No return statement");
+                    throw new SyntaxException("No return statement");
                 }
             }
 
@@ -195,7 +195,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         typeEnv.removeScope();
         inFunction = false;
 
-        if (typeEnv.getvTableScopes().size() == 2) {
+        if (typeEnv.getvTableScopes().size() == 1) {
             returnCheck = true;
         }
         return ret;
@@ -455,6 +455,10 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     public Type visitExpr(@NotNull WACCParser.ExprContext ctx) {
         Type type = null;
         if(ctx.intLiter()!= null) {
+            int value = Integer.parseInt(ctx.intLiter().INTEGER().getText());
+            if (!(Scalar.isAcceptableInt(value))) {
+                throw new SyntaxException("Integer is outside acceptable range.");
+            }
             type = new BaseType(BaseTypeEnum.INT);
         } else if(ctx.boolLiter() != null) {
             type = new BaseType(BaseTypeEnum.BOOL);
