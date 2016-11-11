@@ -13,6 +13,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
@@ -35,6 +36,9 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         // another for evaluating the function bodies.
 
         if(ctx.func() != null) {
+            Function f = null;
+            String name = "";
+
             for (WACCParser.FuncContext funcCtx : ctx.func()) {
                 String i = funcCtx.ident().IDENTITY().getText();
 
@@ -58,6 +62,15 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
                 visitFunc(funcCtx);
                 typeEnv.removeScope();
             }
+
+            for (int i = 0; i < ctx.func().size(); i++) {
+                // visit statements the current function isnt set
+                inFunction = checkForReturnStatementAsIsInFunction(ctx.func().get(i).stat());
+                visitChildren(ctx.func().get(i));
+                if (!inFunction) {
+                    throw new SyntaxException("Syntax error: No return/exit statement at all inside function");
+                }
+            }
         }
 
         // Evaluate "main function" body
@@ -66,6 +79,25 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         typeEnv.removeScope();
 
         return null;
+    }
+
+    /*
+	 *  Method: checkForReturnStatementAsIsInFunction
+	 *  Usage: This is a helper method for visitProgram that given a node, will
+	 *         return true if and only if that node is an instance of exit_stat
+	 *         or return_stat. This tells us if the function has an explicit
+	 *         return statement i.e) not a return statement inside an if
+	 */
+    public boolean checkForReturnStatementAsIsInFunction(ParseTree tree) {
+        if (tree instanceof  WACCParser.StatContext) {
+            return checkForReturnStatementAsIsInFunction(tree.getChild(2));
+        } else if (tree instanceof WACCParser.ReturnContext) {
+            return true;
+        } else if (tree instanceof WACCParser.ExitContext) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     //....................................FUNCTION......................................
@@ -195,15 +227,6 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     /*IF ELSE stat*/
     @Override
     public Type visitIfElse(@NotNull WACCParser.IfElseContext ctx) {
-        boolean if_return = checkForReturn(ctx.getChild(3));
-        boolean else_return = checkForReturn(ctx.getChild(5));
-        if (!inFunction) {
-            if (if_return != else_return) {
-                throw new SyntaxException("Syntax Error: Return statement missing in if or else");
-            } else {
-                inFunction = true;
-            }
-        }
         new IfElseStatNode(visitExpr(ctx.expr()), ctx.expr().getText()).check();
         // Visit branches in conditional. If Statement conditional only has 2 branches
         for (int i = 0; i < 2; i++) {
@@ -250,38 +273,13 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
         // if in the top-level scope there is any statement past the return statement
         // then that should cause an error
-        if(seenReturn && pos != ctx.stat().size() - 1) {
-            System.err.println("Statement after return. Unreachable statement.");
-        }
+        //if(seenReturn && pos != ctx.stat().size() - 1) {
+        //    System.err.println("Statement after return. Unreachable statement.");
+        //}
 
         // visit all statements sequentially
         ctx.stat().forEach(this::visit);
         return null;
-    }
-
-    /*
-	 *  Method: checkForReturn
-	 *  Usage: This is a helper method used by visitIf_stat that will see if
-	 *         there is a return/exit statement within an if or else branch.
-	 */
-    private boolean checkForReturn(ParseTree tree) {
-        if (tree instanceof WACCParser.IfElseContext) {
-            if (checkForReturn(tree.getChild(3)) &&
-                    checkForReturn(tree.getChild(5))) {
-                return true;
-            }
-        } else if (tree instanceof WACCParser.WhileContext) {
-            return checkForReturn(tree.getChild(3));
-        } else if (tree instanceof WACCParser.BeginContext) {
-            return checkForReturn(tree.getChild(1));
-        } else if (tree instanceof WACCParser.StatContext) {
-            return checkForReturn(tree.getChild(2));
-        } else if (tree instanceof WACCParser.ReturnContext) {
-            return true;
-        } else if (tree instanceof WACCParser.ExitContext) {
-            return true;
-        }
-        return false;
     }
 
 
