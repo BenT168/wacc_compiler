@@ -4,14 +4,16 @@ import antlr.WACCParser;
 import antlr.WACCParserBaseVisitor;
 import frontEnd.exception.SemanticException;
 import frontEnd.exception.SyntaxException;
+import frontEnd.expr.BinaryExprNode;
 import frontEnd.expr.UnaryExprNode;
 import frontEnd.stat.*;
-import frontEnd.expr.BinaryExprNode;
 import frontEnd.type.*;
 import org.antlr.v4.runtime.misc.NotNull;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
@@ -34,6 +36,9 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         // another for evaluating the function bodies.
 
         if(ctx.func() != null) {
+            Function f = null;
+            String name = "";
+
             for (WACCParser.FuncContext funcCtx : ctx.func()) {
                 String i = funcCtx.ident().IDENTITY().getText();
 
@@ -57,6 +62,15 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
                 visitFunc(funcCtx);
                 typeEnv.removeScope();
             }
+
+            for (int i = 0; i < ctx.func().size(); i++) {
+                // visit statements the current function isnt set
+                inFunction = checkForReturnStatementAsIsInFunction(ctx.func().get(i).stat());
+                visitChildren(ctx.func().get(i));
+                if (!inFunction) {
+                    throw new SyntaxException("Syntax error: No return/exit statement at all inside function");
+                }
+            }
         }
 
         // Evaluate "main function" body
@@ -65,6 +79,25 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         typeEnv.removeScope();
 
         return null;
+    }
+
+    /*
+	 *  Method: checkForReturnStatementAsIsInFunction
+	 *  Usage: This is a helper method for visitProgram that given a node, will
+	 *         return true if and only if that node is an instance of exit_stat
+	 *         or return_stat. This tells us if the function has an explicit
+	 *         return statement i.e) not a return statement inside an if
+	 */
+    public boolean checkForReturnStatementAsIsInFunction(ParseTree tree) {
+        if (tree instanceof  WACCParser.StatContext) {
+            return checkForReturnStatementAsIsInFunction(tree.getChild(2));
+        } else if (tree instanceof WACCParser.ReturnContext) {
+            return true;
+        } else if (tree instanceof WACCParser.ExitContext) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     //....................................FUNCTION......................................
@@ -250,9 +283,9 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
         // if in the top-level scope there is any statement past the return statement
         // then that should cause an error
-        if(seenReturn && pos != ctx.stat().size() - 1) {
-            throw new SyntaxException("Statement after return. Unreachable statement.");
-        }
+        //if(seenReturn && pos != ctx.stat().size() - 1) {
+        //    System.err.println("Statement after return. Unreachable statement.");
+        //}
 
         // visit all statements sequentially
         ctx.stat().forEach(this::visit);
