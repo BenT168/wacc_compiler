@@ -1,6 +1,7 @@
 package frontEnd.stat;
 
 import frontEnd.Node;
+import frontEnd.exception.SemanticException;
 import frontEnd.type.BaseType;
 import frontEnd.type.BaseTypeEnum;
 import frontEnd.type.Type;
@@ -16,7 +17,7 @@ public class ExitStat extends Node {
   public Object check() {
     Type temp = new BaseType(BaseTypeEnum.INT);
     if (!(t.equals(temp))) {
-      System.err.println("In 'Exit' statement:\nExpecting type: " + temp.toString() + "\nActual: " + t.toString());
+      new SemanticException("In 'Exit' statement:\nExpecting type: " + temp.toString() + "\nActual: " + t.toString());
       System.exit(200);
     }
     return null;

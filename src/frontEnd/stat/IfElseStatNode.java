@@ -1,6 +1,7 @@
 package frontEnd.stat;
 
 import frontEnd.Node;
+import frontEnd.exception.SemanticException;
 import frontEnd.type.Type;
 import frontEnd.type.BaseType;
 import frontEnd.type.BaseTypeEnum;
@@ -18,7 +19,7 @@ public class IfElseStatNode extends Node {
   public Object check() {
     Type temp = new BaseType(BaseTypeEnum.BOOL);
     if (!(t.equals(temp))) {
-      System.err.println("In expression: " + expr + "\nExpected type: " + temp.toString() + "\nActual type: " + t.toString());
+      new SemanticException("In expression: " + expr + "\nExpected type: " + temp.toString() + "\nActual type: " + t.toString());
       System.exit(200);
     }
     return null;

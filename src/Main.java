@@ -1,6 +1,8 @@
 import antlr.WACCLexer;
 import antlr.WACCParser;
 import frontEnd.TypeCheckVisitor;
+import frontEnd.exception.SemanticException;
+import frontEnd.exception.SyntaxException;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -27,7 +29,7 @@ public class Main {
         /* Check if file exists
          */
         if(!file.exists()) {
-            System.out.println("Error: File inputed does not exist.");
+            System.out.println("Error: File input does not exist.");
             System.exit(-1);
         }
 
@@ -42,15 +44,30 @@ public class Main {
             ParseTree tree = parser.program();
 
 
-            /*Check if there are any Syntatic errors
+            /*Check if there are any Syntax errors
              */
             int syntaxErr = parser.getNumberOfSyntaxErrors();
             if(syntaxErr > 0) {
+                System.out.println("SYNTAX ERROR: "
+                        + parser.getNumberOfSyntaxErrors());
                 System.exit(100);
-            }
+            } else {
 
-            TypeCheckVisitor visitor = new TypeCheckVisitor();
-            visitor.visit(tree);
+                /*Check if there are any Semantic errors*/
+                try {
+                    System.out.println("The visitor visits every nodes of AST");
+                    TypeCheckVisitor visitor = new TypeCheckVisitor();
+                    visitor.visit(tree);
+                    System.out.println("====");
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                    if (e instanceof SemanticException) {
+                        System.exit(200);
+                    } else if (e instanceof SyntaxException) {
+                        System.exit(100);
+                    }
+                }
+            }
 
             fis.close();
 
@@ -59,6 +76,9 @@ public class Main {
         } catch (NullPointerException ee) {
             System.exit(0);
         }
+
+        /* A successful compilation should return the exit status 0 */
+        System.exit(0);
     }
 }
 
