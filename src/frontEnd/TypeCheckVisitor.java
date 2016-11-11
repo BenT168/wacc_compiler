@@ -302,7 +302,8 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
             // TODO: Could cause null pointer exception
             if ((types.size()-1) != sizeOfExprsCxt){
-                System.err.println("Invalid number of arguments in call declaration:\nExpecting: " + (types.size()-1) + "\nActual: " + exprCtxs.size());
+                System.err.println("Invalid number of arguments in call declaration:\nExpecting:" +
+                        " " + (types.size()-1) + "\nActual: " + exprCtxs.size());
                 System.exit(200);
             }
 
@@ -311,7 +312,8 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
                 Type temp2 = visitExpr(exprCtxs.get(j - 1));
 
                 if (!(temp1.equals(temp2))) {
-                    System.err.println("Type mismatch error:\nExpecting: " + temp1.toString() + "\nActual: " + temp2.toString());
+                    System.err.println("Type mismatch error:\nExpecting: " +
+                            temp1.toString() + "\nActual: " + temp2.toString());
                     System.exit(200);
                 }
             }
@@ -337,7 +339,8 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     public Type visitPairElem(@NotNull WACCParser.PairElemContext ctx) {
         Type t = visitExpr(ctx.expr());
         if (!(t instanceof PairType)) {
-            System.err.println("In expression: " + ctx.getText() + "\nExpecting type: Pair" + "\nActual type: " + t.toString());
+            System.err.println("In expression: " + ctx.getText() +
+                    "\nExpecting type: Pair" + "\nActual type: " + t.toString());
         }
         if (ctx.FST() != null) {
             t = ((PairType) t).getType1();
@@ -406,7 +409,8 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         List<WACCParser.PairElemTypeContext> contexts = ctx.pairElemType();
 
         if (ctx.pairElemType().size() != 2) {
-            System.err.println("Invalid number of parameter types in pair type constructor: " + ctx.pairElemType().size());
+            System.err.println("Invalid number of parameter types in pair type constructor: "
+                    + ctx.pairElemType().size());
         }
 
         List<Type> ls = new ArrayList<>();
@@ -485,11 +489,17 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         Type t1 = visitIdent(ctx.ident());
         // Array element's type is determined by the type of the first
         // expression.
+
+        //Check if Array and get type of first element
+        if(t1 instanceof ArrayType) {
+            t1 = t1.reduce();
+        }
         Type t2 = visitExpr(ctx.expr(0));
         Type temp = new BaseType(BaseTypeEnum.INT);
         // TODO: must check all indices
         if (!(t2.equals(temp))) {
-            System.err.println("In expression: " + ctx.getText() + "\nExpecting type: " + temp.toString() +"\nActual type: " + t2.toString());
+            System.err.println("In expression: " + ctx.getText() + "\nExpecting type: "
+                    + temp.toString() +"\nActual type: " + t2.toString());
             System.exit(200);
         }
         return t1;
@@ -522,7 +532,8 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         for (int i = 1; i < ctx.expr().size(); i++) {
             Type temp = visitExpr(ctx.expr(i));
             if (!(t.equals(temp))) {
-                System.err.printf("Conflicting types in array literal:\nAt index %d: %s\nAt index: %d: %s\n", (i-1), t.toString(), i, temp.toString());
+                System.err.printf("Conflicting types in array literal:\nAt index %d: %s\nAt index: %d: %s\n",
+                        (i-1), t.toString(), i, temp.toString());
             }
             t = temp;
         }
