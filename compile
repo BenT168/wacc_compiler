@@ -5,7 +5,7 @@
 
 #----------------------------------MAIN-----------------------------------------
 
-classPath = ["bin", "lib/antlr-4.4-complete.jar", "lib/xstream-1.4.7.jar","lib/commons-c1i-1.3.1.jar"].join(":")
+classPath = ["bin", "lib/antlr-4.4-complete.jar"].join(":")
 
 className = "Main"
 #checks that the first argument is a file, if so the java program is running in normal mode

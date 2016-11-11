@@ -13,7 +13,7 @@ RM	:= rm -rf
 MKDIR	:= mkdir -p
 JAVA	:= java
 JAVAC	:= javac
-LIBS	:= lib/xstream-1.4.7.jar:lib/antlr-4.4-complete.jar:lib/commons-cli-1.3.1.jar
+LIBS	:= lib/antlr-4.4-complete.jar
 
 JFLAGS	:= -sourcepath $(SOURCE_DIR) -d $(OUTPUT_DIR) -cp $(LIBS)
 
