@@ -1,10 +1,15 @@
-package frontEnd.visitor;
+package frontEnd.stat;
 
-public class FreeAST extends AST {
+import frontEnd.Node;
+import frontEnd.type.PairType;
+import frontEnd.type.Type;
+import frontEnd.type.ArrayType;
+
+public class FreeStat extends Node {
 
   private Type t;
 
-  public FreeAST(Type t) {
+  public FreeStat(Type t) {
     this.t = t;
   }
 

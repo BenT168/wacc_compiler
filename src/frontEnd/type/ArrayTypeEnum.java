@@ -1,5 +1,5 @@
-package frontEnd.visitor;
+package frontEnd.type;
 
-public enum ArrayTypeCode {
+public enum ArrayTypeEnum {
     ARRAY {public String toString() {return  "array";}}
 }

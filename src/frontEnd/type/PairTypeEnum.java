@@ -1,5 +1,5 @@
-package frontEnd.visitor;
+package frontEnd.type;
 
-public enum PairTypeCode {
+public enum PairTypeEnum {
     PAIR {public String toString() {return  "pair";}},
 }

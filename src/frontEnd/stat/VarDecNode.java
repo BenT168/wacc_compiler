@@ -1,11 +1,14 @@
-package frontEnd.visitor;
+package frontEnd.stat;
 
-public class VariableDeclarationAST extends AST {
+import frontEnd.Node;
+import frontEnd.type.Type;
+
+public class VarDecNode extends Node {
 
   private Type t1;
   private Type t2;
 
-  public VariableDeclarationAST(Type t1, Type t2) {
+  public VarDecNode(Type t1, Type t2) {
     this.t1 = t1;
     this.t2 = t2;
   }

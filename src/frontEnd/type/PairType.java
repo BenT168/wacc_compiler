@@ -1,4 +1,4 @@
-package frontEnd.visitor;
+package frontEnd.type;
 
 import java.util.Objects;
 

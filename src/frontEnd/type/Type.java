@@ -1,4 +1,4 @@
-package frontEnd.visitor;
+package frontEnd.type;
 
 public abstract class Type {
     public abstract Type reduce();

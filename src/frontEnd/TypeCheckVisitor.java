@@ -1,16 +1,20 @@
-package frontEnd.visitor;
+package frontEnd;
 
 import antlr.WACCParser;
 import antlr.WACCParserBaseVisitor;
+import frontEnd.expr.UnaryExprNode;
+import frontEnd.stat.*;
+import frontEnd.expr.BinaryExprNode;
+import frontEnd.type.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
+    /* For Storing Variables and its information
+     */
     private SymbolTable typeEnv;
     private boolean returned = false;
     private boolean inFunction = false;
@@ -19,6 +23,8 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         this.typeEnv = new SymbolTable();
     }
 
+
+    //................................PROGRAM.........................................
     @Override
     public Type visitProgram(@NotNull WACCParser.ProgramContext ctx) {
 
@@ -52,13 +58,15 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
             }
         }
 
-            // Evaluate "main function" body
-            typeEnv.enterScope();
-            visit(ctx.stat());
-            typeEnv.removeScope();
+        // Evaluate "main function" body
+        typeEnv.enterScope();
+        visit(ctx.stat());
+        typeEnv.removeScope();
 
         return null;
     }
+
+    //....................................FUNCTION......................................
 
     // Function identifiers and types should already be added to ftable by time we call this method.
     @Override
@@ -87,8 +95,8 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         if(actual != null) {
             if(!(defined.equals(actual))) {
                 System.err.print("Function: " + ctx.ident().getText()
-                    + " \nExpected return type: " + defined.toString() +
-                    " \nActual return type: " + actual.toString());
+                        + " \nExpected return type: " + defined.toString() +
+                        " \nActual return type: " + actual.toString());
                 System.exit(200);
             }
         }
@@ -99,7 +107,9 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         return null;
     }
 
-    @Deprecated
+
+    //...................................PARAMETER......................................
+
     @Override
     public Type visitParamList(@NotNull WACCParser.ParamListContext ctx) {
         return super.visitParamList(ctx);
@@ -110,41 +120,70 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         return visitType(ctx.type());
     }
 
+
+    //....................................STAT........................................
+
+    /*SKIP*/
     @Override
     public Type visitSkip(@NotNull WACCParser.SkipContext ctx) {
         return null;
     }
 
+    /* type IDENTITY EQUALS assignRHS */
     @Override
     public Type visitDeclare(@NotNull WACCParser.DeclareContext ctx) {
         Type type1 = visitType(ctx.type());
         String name = ctx.ident().IDENTITY().getText();
         typeEnv.vTableInsert(name, type1);
         Type type2 = visitAssignRHS(ctx.assignRHS());
-        new VariableDeclarationAST(type1, type2).check();
+        new VarDecNode(type1, type2).check();
         return null;
     }
 
+    /* assignLHS EQUALS assignRHS  */
     @Override
     public Type visitAssign(@NotNull WACCParser.AssignContext ctx) {
         Type t1 = visitAssignLHS(ctx.assignLHS());
         Type t2 = visitAssignRHS(ctx.assignRHS());
-        new AssignmentAST(t1, t2).check();
+        new Assignment(t1, t2).check();
         return null;
     }
 
+    /*PRINT expr*/
+    @Override
+    public Type visitPrint(@NotNull WACCParser.PrintContext ctx) {
+        return visitExpr(ctx.expr());
+    }
+
+    /*PRINTLN expr*/
+    @Override
+    public Type visitPrintln(@NotNull WACCParser.PrintlnContext ctx) {
+        return visitExpr(ctx.expr());
+    }
+
+
+    /*READ assignLHS */
     @Override
     public Type visitRead(@NotNull WACCParser.ReadContext ctx) {
-        new ReadAST(visitAssignLHS(ctx.assignLHS())).check();
+        new ReadStatNode(visitAssignLHS(ctx.assignLHS())).check();
         return null;
     }
 
+    /*FREE expr */
     @Override
     public Type visitFree(@NotNull WACCParser.FreeContext ctx) {
-        new FreeAST(visitExpr(ctx.expr())).check();
+        new FreeStat(visitExpr(ctx.expr())).check();
         return null;
     }
 
+    /*EXIT expr */
+    @Override
+    public Type visitExit(@NotNull WACCParser.ExitContext ctx) {
+        new ExitStat(visitExpr(ctx.expr())).check();
+        return null;
+    }
+
+    /*RETURN expr*/
     @Override
     public Type visitReturn(@NotNull WACCParser.ReturnContext ctx) {
         // Knows nothing about enclosing function and hence leaves type checking to enclosing function visitor method
@@ -153,25 +192,10 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         return ret;
     }
 
-    @Override
-    public Type visitExit(@NotNull WACCParser.ExitContext ctx) {
-        new ExitAST(visitExpr(ctx.expr())).check();
-        return null;
-    }
-
-    @Override
-    public Type visitPrint(@NotNull WACCParser.PrintContext ctx) {
-        return visitExpr(ctx.expr());
-    }
-
-    @Override
-    public Type visitPrintln(@NotNull WACCParser.PrintlnContext ctx) {
-        return visitExpr(ctx.expr());
-    }
-
+    /*IF ELSE stat*/
     @Override
     public Type visitIfElse(@NotNull WACCParser.IfElseContext ctx) {
-        new IfElseAST(visitExpr(ctx.expr()), ctx.expr().getText()).check();
+        new IfElseStatNode(visitExpr(ctx.expr()), ctx.expr().getText()).check();
         // Visit branches in conditional. If Statement conditional only has 2 branches
         for (int i = 0; i < 2; i++) {
             typeEnv.enterScope();
@@ -181,9 +205,10 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         return null;
     }
 
+    /*WHILE stat*/
     @Override
     public Type visitWhile(@NotNull WACCParser.WhileContext ctx) {
-        new WhileAST(visitExpr(ctx.expr()), ctx.expr().getText()).check();
+        new WhileStatNode(visitExpr(ctx.expr()), ctx.expr().getText()).check();
         // examine body of while
         typeEnv.enterScope();
         visit(ctx.stat());
@@ -191,6 +216,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         return null;
     }
 
+    /*BEGIN stat END*/
     @Override
     public Type visitBegin(@NotNull WACCParser.BeginContext ctx) {
         typeEnv.enterScope();
@@ -199,6 +225,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         return null;
     }
 
+    /*stat ; stat*/
     @Override
     public Type visitMultipleStat(@NotNull WACCParser.MultipleStatContext ctx) {
         boolean seenReturn = false;
@@ -224,6 +251,10 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         return null;
     }
 
+
+//..................................ASSIGNMENT......................................
+
+    /*assign-lhs*/
     @Override
     public Type visitAssignLHS(@NotNull WACCParser.AssignLHSContext ctx) {
         Type t = null;
@@ -231,9 +262,9 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
             t = typeEnv.varLookup(ctx.ident().IDENTITY().getText());
         } else if (ctx.arrayElem() != null) {
             t = visitArrayElem(ctx.arrayElem());
-            if(t.equals(new BaseType(BaseTypeCode.STRING))) {
+            if(t.equals(new BaseType(BaseTypeEnum.STRING))) {
                 //one element of string array is a char
-                t = new BaseType(BaseTypeCode.CHAR);
+                t = new BaseType(BaseTypeEnum.CHAR);
             } else {
                 t = t.reduce();
             }
@@ -246,6 +277,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         return t;
     }
 
+    /*assign-rhs*/
     @Override
     public Type visitAssignRHS(@NotNull WACCParser.AssignRHSContext ctx) {
         Type t = null;
@@ -273,7 +305,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
                 System.err.println("Invalid number of arguments in call declaration:\nExpecting: " + (types.size()-1) + "\nActual: " + exprCtxs.size());
                 System.exit(200);
             }
-            
+
             for (int j = 1; j < types.size(); j++) {
                 Type temp1 = types.get(j);
                 Type temp2 = visitExpr(exprCtxs.get(j - 1));
@@ -315,6 +347,8 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         return t;
     }
 
+//..................................TYPE......................................
+
     @Override
     public Type visitType(@NotNull WACCParser.TypeContext ctx) {
         if (ctx.baseType() != null) {
@@ -333,13 +367,13 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     @Override
     public Type visitBaseType(@NotNull WACCParser.BaseTypeContext ctx) {
         if (ctx.BOOL() != null) {
-            return new BaseType(BaseTypeCode.BOOL);
+            return new BaseType(BaseTypeEnum.BOOL);
         } else if (ctx.CHAR() != null) {
-            return new BaseType(BaseTypeCode.CHAR);
+            return new BaseType(BaseTypeEnum.CHAR);
         } else if (ctx.INT() != null) {
-            return new BaseType(BaseTypeCode.INT);
+            return new BaseType(BaseTypeEnum.INT);
         } else if (ctx.STRING() != null) {
-            return new BaseType(BaseTypeCode.STRING);
+            return new BaseType(BaseTypeEnum.STRING);
         } else {
             System.err.println("Error in 'visitBaseType' method");
             System.exit(200);
@@ -400,17 +434,21 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         return super.visitPairElemType(ctx);
     }
 
+
+
+    //..................................EXPRESSION......................................
+
     @Override
     public Type visitExpr(@NotNull WACCParser.ExprContext ctx) {
         Type type = null;
         if(ctx.intLiter()!= null) {
-            type = new BaseType(BaseTypeCode.INT);
+            type = new BaseType(BaseTypeEnum.INT);
         } else if(ctx.boolLiter() != null) {
-            type = new BaseType(BaseTypeCode.BOOL);
+            type = new BaseType(BaseTypeEnum.BOOL);
         } else if(ctx.charLiter() != null) {
-            type = new BaseType(BaseTypeCode.CHAR);
+            type = new BaseType(BaseTypeEnum.CHAR);
         } else if(ctx.stringLiter() != null) {
-            type = new BaseType(BaseTypeCode.STRING);
+            type = new BaseType(BaseTypeEnum.STRING);
         } else if(ctx.CHR() != null || ctx.ORD() != null || ctx.LEN() != null || ctx.NOT() != null
                 || ctx.MINUS() != null) {
             type = visitUnaryExpr(ctx);
@@ -428,13 +466,13 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
     public Type visitUnaryExpr(@NotNull WACCParser.ExprContext ctx) {
         Type argType = visit(ctx.expr(0));
-        return (Type) new UnaryExprAST(argType, ctx).check();
+        return (Type) new UnaryExprNode(argType, ctx).check();
     }
 
     public Type visitBinaryExpr(@NotNull WACCParser.ExprContext ctx) {
         Type lhs = visitExpr(ctx.expr(0));
         Type rhs = visitExpr(ctx.expr(1));
-        return (Type) new BinaryExprAST(lhs, rhs, ctx).check();
+        return (Type) new BinaryExprNode(lhs, rhs, ctx).check();
     }
 
     @Override
@@ -448,7 +486,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         // Array element's type is determined by the type of the first
         // expression.
         Type t2 = visitExpr(ctx.expr(0));
-        Type temp = new BaseType(BaseTypeCode.INT);
+        Type temp = new BaseType(BaseTypeEnum.INT);
         // TODO: must check all indices
         if (!(t2.equals(temp))) {
             System.err.println("In expression: " + ctx.getText() + "\nExpecting type: " + temp.toString() +"\nActual type: " + t2.toString());
@@ -459,22 +497,22 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
     @Override
     public Type visitBoolLiter(@NotNull WACCParser.BoolLiterContext ctx) {
-        return new BaseType(BaseTypeCode.BOOL);
+        return new BaseType(BaseTypeEnum.BOOL);
     }
 
     @Override
     public Type visitCharLiter(@NotNull WACCParser.CharLiterContext ctx) {
-        return new BaseType(BaseTypeCode.CHAR);
+        return new BaseType(BaseTypeEnum.CHAR);
     }
 
     @Override
     public Type visitStringLiter(@NotNull WACCParser.StringLiterContext ctx) {
-        return new BaseType(BaseTypeCode.STRING);
+        return new BaseType(BaseTypeEnum.STRING);
     }
 
     @Override
     public Type visitIntLiter(@NotNull WACCParser.IntLiterContext ctx) {
-        return new BaseType(BaseTypeCode.INT);
+        return new BaseType(BaseTypeEnum.INT);
     }
 
     @Override

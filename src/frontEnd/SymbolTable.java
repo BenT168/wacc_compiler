@@ -1,4 +1,6 @@
-package frontEnd.visitor;
+package frontEnd;
+
+import frontEnd.type.Type;
 
 import java.util.HashMap;
 import java.util.LinkedList;

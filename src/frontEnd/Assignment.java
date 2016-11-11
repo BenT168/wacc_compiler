@@ -1,11 +1,13 @@
-package frontEnd.visitor;
+package frontEnd;
 
-public class AssignmentAST extends AST {
+import frontEnd.type.Type;
+
+public class Assignment extends Node {
 
   private Type t1;
   private Type t2;
 
-  public AssignmentAST(Type t1, Type t2) {
+  public Assignment(Type t1, Type t2) {
     this.t1 = t1;
     this.t2 = t2;
   }

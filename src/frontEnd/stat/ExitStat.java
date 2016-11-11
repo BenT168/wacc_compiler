@@ -1,15 +1,20 @@
-package frontEnd.visitor;
+package frontEnd.stat;
 
-public class ExitAST extends AST {
+import frontEnd.Node;
+import frontEnd.type.BaseType;
+import frontEnd.type.BaseTypeEnum;
+import frontEnd.type.Type;
+
+public class ExitStat extends Node {
   private Type t;
 
-  public ExitAST(Type t) {
+  public ExitStat(Type t) {
     this.t = t;
   }
 
   @Override
   public Object check() {
-    Type temp = new BaseType(BaseTypeCode.INT);
+    Type temp = new BaseType(BaseTypeEnum.INT);
     if (!(t.equals(temp))) {
       System.err.println("In 'Exit' statement:\nExpecting type: " + temp.toString() + "\nActual: " + t.toString());
       System.exit(200);

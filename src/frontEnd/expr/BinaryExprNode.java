@@ -1,14 +1,18 @@
-package frontEnd.visitor;
+package frontEnd.expr;
 
 import antlr.WACCParser;
+import frontEnd.Node;
+import frontEnd.type.BaseType;
+import frontEnd.type.BaseTypeEnum;
+import frontEnd.type.Type;
 
-public class BinaryExprAST extends AST {
+public class BinaryExprNode extends Node {
   private Type lhs;
   private Type rhs;
   private Type type = null;
   private WACCParser.ExprContext ctx;
 
-  public BinaryExprAST(Type lhs, Type rhs, WACCParser.ExprContext ctx) {
+  public BinaryExprNode(Type lhs, Type rhs, WACCParser.ExprContext ctx) {
     this.lhs = lhs;
     this.rhs = rhs;
     this.ctx = ctx;
@@ -16,8 +20,8 @@ public class BinaryExprAST extends AST {
 
   @Override
   public Object check() {
-    Type booltmp = new BaseType(BaseTypeCode.BOOL);
-    Type inttmp = new BaseType(BaseTypeCode.INT);
+    Type booltmp = new BaseType(BaseTypeEnum.BOOL);
+    Type inttmp = new BaseType(BaseTypeEnum.INT);
 
 
     if(ctx.MUL() != null || ctx.DIV() != null || ctx.MOD() != null
@@ -29,7 +33,7 @@ public class BinaryExprAST extends AST {
         System.err.println("Actual type : " + lhs.toString() + " , " + rhs.toString());
         System.exit(200);
       }
-      type = new BaseType(BaseTypeCode.INT);
+      type = new BaseType(BaseTypeEnum.INT);
     } else if(ctx.LT() != null || ctx.LTE() != null || ctx.GT() != null || ctx.GTE() != null
         || ctx.EQ() != null || ctx.NEQ() != null) {
       if(!lhs.equals(rhs)) {

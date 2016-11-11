@@ -1,6 +1,6 @@
 import antlr.WACCLexer;
 import antlr.WACCParser;
-import frontEnd.visitor.TypeCheckVisitor;
+import frontEnd.TypeCheckVisitor;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;

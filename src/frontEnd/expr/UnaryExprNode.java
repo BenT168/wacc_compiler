@@ -1,23 +1,28 @@
-package frontEnd.visitor;
+package frontEnd.expr;
 
 import antlr.WACCParser;
+import frontEnd.Node;
+import frontEnd.type.ArrayType;
+import frontEnd.type.BaseType;
+import frontEnd.type.BaseTypeEnum;
+import frontEnd.type.Type;
 
-public class UnaryExprAST extends AST {
+public class UnaryExprNode extends Node {
 
   private Type type = null;
   private Type argType;
   private WACCParser.ExprContext ctx;
 
-  public UnaryExprAST(Type argType, WACCParser.ExprContext ctx) {
+  public UnaryExprNode(Type argType, WACCParser.ExprContext ctx) {
     this.argType = argType;
     this.ctx = ctx;
   }
 
   @Override
   public Object check() {
-    Type booltmp = new BaseType(BaseTypeCode.BOOL);
-    Type chartmp = new BaseType(BaseTypeCode.CHAR);
-    Type inttmp = new BaseType(BaseTypeCode.INT);
+    Type booltmp = new BaseType(BaseTypeEnum.BOOL);
+    Type chartmp = new BaseType(BaseTypeEnum.CHAR);
+    Type inttmp = new BaseType(BaseTypeEnum.INT);
 
     if(ctx.CHR() != null) {
       //argument type = int

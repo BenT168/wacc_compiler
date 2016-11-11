@@ -1,17 +1,17 @@
-package frontEnd.visitor;
+package frontEnd.type;
 
 import java.util.Objects;
 
 public final class BaseType extends Type {
 
-    private BaseTypeCode baseTypeCode;
+    private BaseTypeEnum baseTypeEnum;
 
-    public BaseType(BaseTypeCode baseTypeCode) {
-        this.baseTypeCode = baseTypeCode;
+    public BaseType(BaseTypeEnum baseTypeEnum) {
+        this.baseTypeEnum = baseTypeEnum;
     }
 
-    public BaseTypeCode getTypeCode() {
-        return baseTypeCode;
+    public BaseTypeEnum getTypeCode() {
+        return baseTypeEnum;
     }
 
     @Override
@@ -22,7 +22,7 @@ public final class BaseType extends Type {
 
     @Override
     public String toString() {
-        return baseTypeCode.toString();
+        return baseTypeEnum.toString();
     }
 
     @Override
@@ -33,11 +33,11 @@ public final class BaseType extends Type {
         if (obj == this)
             return true;
         BaseType rhs = (BaseType) obj;
-        return this.baseTypeCode == rhs.baseTypeCode;
+        return this.baseTypeEnum == rhs.baseTypeEnum;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(this.baseTypeCode);
+        return Objects.hashCode(this.baseTypeEnum);
     }
 }
