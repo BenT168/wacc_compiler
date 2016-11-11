@@ -3,11 +3,13 @@ package frontEnd;
 import antlr.WACCParser;
 import antlr.WACCParserBaseVisitor;
 import frontEnd.exception.SemanticException;
+import frontEnd.exception.SyntaxException;
 import frontEnd.expr.BinaryExprNode;
 import frontEnd.expr.UnaryExprNode;
 import frontEnd.stat.*;
 import frontEnd.type.*;
 import org.antlr.v4.runtime.misc.NotNull;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -193,6 +195,15 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     /*IF ELSE stat*/
     @Override
     public Type visitIfElse(@NotNull WACCParser.IfElseContext ctx) {
+        boolean if_return = checkForReturn(ctx.getChild(3));
+        boolean else_return = checkForReturn(ctx.getChild(5));
+        if (!inFunction) {
+            if (if_return != else_return) {
+                throw new SyntaxException("Syntax Error: Return statement missing in if or else");
+            } else {
+                inFunction = true;
+            }
+        }
         new IfElseStatNode(visitExpr(ctx.expr()), ctx.expr().getText()).check();
         // Visit branches in conditional. If Statement conditional only has 2 branches
         for (int i = 0; i < 2; i++) {
@@ -240,12 +251,37 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         // if in the top-level scope there is any statement past the return statement
         // then that should cause an error
         if(seenReturn && pos != ctx.stat().size() - 1) {
-            throw new SemanticException("Statement after return. Unreachable statement.");
+            System.err.println("Statement after return. Unreachable statement.");
         }
 
         // visit all statements sequentially
         ctx.stat().forEach(this::visit);
         return null;
+    }
+
+    /*
+	 *  Method: checkForReturn
+	 *  Usage: This is a helper method used by visitIf_stat that will see if
+	 *         there is a return/exit statement within an if or else branch.
+	 */
+    private boolean checkForReturn(ParseTree tree) {
+        if (tree instanceof WACCParser.IfElseContext) {
+            if (checkForReturn(tree.getChild(3)) &&
+                    checkForReturn(tree.getChild(5))) {
+                return true;
+            }
+        } else if (tree instanceof WACCParser.WhileContext) {
+            return checkForReturn(tree.getChild(3));
+        } else if (tree instanceof WACCParser.BeginContext) {
+            return checkForReturn(tree.getChild(1));
+        } else if (tree instanceof WACCParser.StatContext) {
+            return checkForReturn(tree.getChild(2));
+        } else if (tree instanceof WACCParser.ReturnContext) {
+            return true;
+        } else if (tree instanceof WACCParser.ExitContext) {
+            return true;
+        }
+        return false;
     }
 
 
