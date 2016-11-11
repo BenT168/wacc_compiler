@@ -90,7 +90,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         try {
             actual = visit(ctx.stat());
         } catch (NullPointerException e) {
-            throw new SyntaxException("Null pointer.");
+            throw new SemanticException("Null pointer.");
         }
         if(actual != null) {
             if(!(defined.equals(actual))) {
