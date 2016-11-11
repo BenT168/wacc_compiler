@@ -248,10 +248,10 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         // if in the top-level scope there is any statement past the return statement
         // then that should cause an error
         if(seenReturn && pos != ctx.stat().size() - 1) {
-            //if in function, then throw syntax error
-            if (inFunction)(
+            //if in functionseenReturnow syntax error
+            if(inFunction){
                 throw new SyntaxException("Function does not have a return statement.");
-                )
+                }
             throw new SemanticException("Statement after return. Unreachable statement.");
         }
 
