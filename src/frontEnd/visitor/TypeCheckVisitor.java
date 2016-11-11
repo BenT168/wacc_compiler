@@ -1,6 +1,5 @@
 package frontEnd.visitor;
 
-
 import antlr.WACCParser;
 import antlr.WACCParserBaseVisitor;
 import org.antlr.v4.runtime.misc.NotNull;
@@ -12,78 +11,19 @@ import java.util.List;
 
 public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
-    // Holds symbol table information needed by our type checker
-    private static class TypeEnv {
-
-        // Identifiers are strings
-        private LinkedList<HashMap<String, Type>> vTableScopes = new LinkedList<>();
-        private HashMap<String, List<Type>> fTable = new HashMap<>();
-
-        private Type varLookup(String key, LinkedList<HashMap<String, Type>> symTabScopes) {
-            Type res;
-            for (HashMap<String, Type> scope: vTableScopes) {
-                res = scope.get(key);
-                if (!(res == null)) {
-                    return res;
-                }
-            }
-            System.err.println("Variable identifier: " + key + " unbound in current scope or any enclosing scopes");
-            System.exit(200);
-            return null;
-        }
-        
-        private List<Type> funcLookup(String key) {
-            if (!(fTable.containsKey(key))) {
-                System.err.println("Function " + key + " doesn't exist in symbol table");
-                System.exit(200);
-            }
-            return fTable.get(key);
-        }
-
-        // Function symbol table insert method
-        private void fTableInsert(String key, List<Type> value) {
-            if (fTable.containsKey(key)) {
-                System.err.println("Function identifier: " + key + " already in scope");
-                System.exit(200);
-            }
-            fTable.put(key, value);
-        }
-
-        // Variable symbol table insert method
-        private void vTableInsert(String key, Type value) {
-            // We cannot insert an identifier twice. This is a semantic error
-            // in the program.
-            if (vTableScopes.getFirst().containsKey(key)) {
-                System.err.println("Variable identifier: " + key + " already in scope");
-                System.exit(200);
-            }
-            vTableScopes.getFirst().put(key, value);
-        }
-
-        private void enterScope() {
-            vTableScopes.addFirst(new HashMap<>());
-        }
-
-        private void removeScope() {
-            if(vTableScopes.size() != 1) {
-                vTableScopes.removeFirst();
-            }
-        }
-    }
-
-    private TypeEnv typeEnv;
+    private SymbolTable typeEnv;
     private boolean returned = false;
     private boolean inFunction = false;
 
     public TypeCheckVisitor() {
-        this.typeEnv = new TypeEnv();
+        this.typeEnv = new SymbolTable();
     }
 
     @Override
     public Type visitProgram(@NotNull WACCParser.ProgramContext ctx) {
 
-        // We use two passes: one for added the function identifiers to the symbol table, another for evaluating the
-        // function bodies.
+        // We use two passes: one for adding the function identifiers to the symbol table,
+        // another for evaluating the function bodies.
 
         if(ctx.func() != null) {
             for (WACCParser.FuncContext funcCtx : ctx.func()) {
@@ -649,8 +589,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
     @Override
     public Type visitArrayLiter(@NotNull WACCParser.ArrayLiterContext ctx) {
-        // The array literal's type is determined by the type of the first
-        // expression.
+        // The array literal's type is determined by the type of the first expression.
         Type t = visitExpr(ctx.expr(0));
         for (int i = 1; i < ctx.expr().size(); i++) {
             Type temp = visitExpr(ctx.expr(i));
