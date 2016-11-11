@@ -105,7 +105,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         typeEnv.removeScope(); // end of new scope
 
         //Checks if Function has a return statement
-        new HelperFunction(inFunction, isMultipleStat).checksIfFunctionReturns(ctx.stat());
+        //new HelperFunction(inFunction, isMultipleStat).checksIfFunctionReturns(ctx.stat());
 
         return null;
     }
