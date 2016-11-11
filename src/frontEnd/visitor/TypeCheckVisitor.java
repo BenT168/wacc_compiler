@@ -64,7 +64,8 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     @Override
     public Type visitFunc(@NotNull WACCParser.FuncContext ctx) {
         inFunction = true; // start of function declaration
-        Type defined = visitType(ctx.type());
+
+        Type defined = visitType(ctx.type()); // function return type according to definition
 
         // loop through and store parameters into Symbol Table
         if (ctx.paramList() != null) {
@@ -82,11 +83,13 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         } catch (NullPointerException e) {
             // do nothing
         }
-        if(!(defined.equals(actual))) {
-            System.err.print("Function: " + ctx.ident().getText()
-                + " \nExpected return type: " + defined.toString() +
-                " \nActual return type: " + (actual != null ? actual.toString() : null));
-            System.exit(200);
+        if(actual != null) {
+            if(!(defined.equals(actual))) {
+                System.err.print("Function: " + ctx.ident().getText()
+                    + " \nExpected return type: " + defined.toString() +
+                    " \nActual return type: " + actual.toString());
+                System.exit(200);
+            }
         }
         typeEnv.removeScope(); // end of new scope
 
