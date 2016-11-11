@@ -55,10 +55,8 @@ public class Main {
 
                 /*Check if there are any Semantic errors*/
                 try {
-                    //System.out.println("The visitor visits every nodes of AST");
                     TypeCheckVisitor visitor = new TypeCheckVisitor();
                     visitor.visit(tree);
-                    //System.out.println("====");
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                     if (e instanceof SemanticException) {
