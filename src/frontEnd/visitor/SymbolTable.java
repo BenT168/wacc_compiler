@@ -22,7 +22,7 @@ public class SymbolTable {
         return fTable.containsKey(key);
     }
 
-    public Type varLookup(String key, LinkedList<HashMap<String, Type>> symTabScopes) {
+    public Type varLookup(String key) {
         Type res;
         for (HashMap<String, Type> scope: vTableScopes) {
             res = scope.get(key);
@@ -37,7 +37,7 @@ public class SymbolTable {
 
     public List<Type> funcLookup(String key) {
         if (!(fTable.containsKey(key))) {
-            System.err.println("Function " + key + " doesn't exist in symbol table");
+            System.err.println("Function: " + key + " doesn't exist in symbol table");
             System.exit(200);
         }
         return fTable.get(key);
@@ -67,6 +67,8 @@ public class SymbolTable {
     }
 
     void removeScope() {
+        // TODO: Why do we need to check whether it equals 1?
+        // TODO: What about when we are removing the symbol table in 'visitProgram' after visiting each function context.
         if(vTableScopes.size() != 1) {
             vTableScopes.removeFirst();
         }
