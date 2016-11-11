@@ -89,8 +89,6 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         typeEnv.enterScope(); // new scope
         Type actual = null;
 
-        //Checks if Function has a return statement
-        new HelperFunction(inFunction, isMultipleStat).checksIfFunctionReturns(ctx.stat());
 
         try {
             actual = visit(ctx.stat());
@@ -105,6 +103,9 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
             }
         }
         typeEnv.removeScope(); // end of new scope
+
+        //Checks if Function has a return statement
+        new HelperFunction(inFunction, isMultipleStat).checksIfFunctionReturns(ctx.stat());
 
         return null;
     }
@@ -242,6 +243,11 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
                 seenReturn = true;
                 pos = i;
             }
+        }
+
+        // if in function and return isnt seen, then throw syntatic error
+        if(inFunction && !seenReturn && pos != ctx.stat().size() - 1) {
+            throw new SyntaxException("Function does not have a return statement");
         }
 
         // if in the top-level scope there is any statement past the return statement
