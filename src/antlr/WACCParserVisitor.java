@@ -30,18 +30,19 @@ public interface WACCParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitArrayElem(@NotNull WACCParser.ArrayElemContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link WACCParser#assignRHS}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAssignRHS(@NotNull WACCParser.AssignRHSContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code declare}
 	 * labeled alternative in {@link WACCParser#stat}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitDeclare(@NotNull WACCParser.DeclareContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code arrayLiterAssignRHS}
+	 * labeled alternative in {@link WACCParser#assignRHS}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArrayLiterAssignRHS(@NotNull WACCParser.ArrayLiterAssignRHSContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link WACCParser#assignLHS}.
 	 * @param ctx the parse tree
@@ -80,6 +81,13 @@ public interface WACCParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitType(@NotNull WACCParser.TypeContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code newPairAssignRHS}
+	 * labeled alternative in {@link WACCParser#assignRHS}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNewPairAssignRHS(@NotNull WACCParser.NewPairAssignRHSContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link WACCParser#intLiter}.
 	 * @param ctx the parse tree
@@ -150,6 +158,27 @@ public interface WACCParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPairElem(@NotNull WACCParser.PairElemContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code pairElemAssignRHS}
+	 * labeled alternative in {@link WACCParser#assignRHS}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPairElemAssignRHS(@NotNull WACCParser.PairElemAssignRHSContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code exprAssignRHS}
+	 * labeled alternative in {@link WACCParser#assignRHS}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExprAssignRHS(@NotNull WACCParser.ExprAssignRHSContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code callAssignRHS}
+	 * labeled alternative in {@link WACCParser#assignRHS}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCallAssignRHS(@NotNull WACCParser.CallAssignRHSContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link WACCParser#arrayType}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -162,6 +191,12 @@ public interface WACCParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitRead(@NotNull WACCParser.ReadContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link WACCParser#newPair}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNewPair(@NotNull WACCParser.NewPairContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link WACCParser#boolLiter}.
 	 * @param ctx the parse tree
@@ -181,12 +216,36 @@ public interface WACCParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPairElemType(@NotNull WACCParser.PairElemTypeContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link WACCParser#pairEnum}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPairEnum(@NotNull WACCParser.PairEnumContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link WACCParser#openParen}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitOpenParen(@NotNull WACCParser.OpenParenContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link WACCParser#call}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCall(@NotNull WACCParser.CallContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code exit}
 	 * labeled alternative in {@link WACCParser#stat}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitExit(@NotNull WACCParser.ExitContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link WACCParser#closeParen}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCloseParen(@NotNull WACCParser.CloseParenContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code print}
 	 * labeled alternative in {@link WACCParser#stat}.

@@ -22,6 +22,10 @@ public class ErrorListener {
         return errorPrint;
     }
 
+    public int errorCount() {
+	return errorList.size();
+    }
+
     public boolean finished(){
         boolean correctProgram = errorList.isEmpty();
 
@@ -31,4 +35,5 @@ public class ErrorListener {
 
         return correctProgram;
     }
+
 }
