@@ -181,6 +181,12 @@ public interface WACCParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPairElemType(@NotNull WACCParser.PairElemTypeContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link WACCParser#call}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCall(@NotNull WACCParser.CallContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code exit}
 	 * labeled alternative in {@link WACCParser#stat}.
 	 * @param ctx the parse tree
