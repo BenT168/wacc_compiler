@@ -250,7 +250,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         if(seenReturn && pos != ctx.stat().size() - 1) {
             //if in function, then throw syntax error
             if (inFunction)(
-                throw new SyntaxException("Function does not have a return statement.")
+                throw new SyntaxException("Function does not have a return statement.");
                 )
             throw new SemanticException("Statement after return. Unreachable statement.");
         }
