@@ -124,7 +124,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     public Type visitAssign(@NotNull WACCParser.AssignContext ctx) {
         Type t1 = visitAssignLHS(ctx.assignLHS());
         Type t2 = visitAssignRHS(ctx.assignRHS());
-        new AssignmentAST(t1, t2);
+        new AssignmentAST(t1, t2).check();
         return null;
     }
 
