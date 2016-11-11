@@ -1,68 +1,64 @@
-import SemanticAnalyser.SyntaxErrorListener;
-import antlr.WaccLexer;
-import antlr.WaccParser;
+import antlr.WACCLexer;
+import antlr.WACCParser;
+import frontEnd.visitor.TypeCheckVisitor;
 import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 public class Main {
 
-	  public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws ParseCancellationException{
 
-		  	File file = new File(args[0]);
-		  	String str = "";
-		 
-		  	BufferedReader br = new BufferedReader(new FileReader(file));
-		  	try {
-		  		StringBuilder sb = new StringBuilder();
-		  		String line = br.readLine();
-		  		
-		  		while (line != null) {
-		  			sb.append(line);
-		  			sb.append("\n");
-		  			line = br.readLine();
-		  		}
-		  		str = sb.toString();
-		  	} finally {
-		  		br.close();
-		  	}
-		  //System.out.println("FILE: " + str);
-		  	
+        /* Check if Argument is given, throw error if not the right number
+         */
+        if(args.length != 2) {
+            System.out.println("Error: One Argument Should be given.");
+            System.exit(-1);
+        }
 
-		  	
-		    // create a CharStream that reads from standard input
-		    ANTLRInputStream input = new ANTLRInputStream(str);
+        File file = new File(args[1]);
 
-		    // create a lexer that feeds off of input CharStream
-		    WaccLexer lexer = new WaccLexer(input);
-		    lexer.removeErrorListeners();
-		    lexer.addErrorListener(SyntaxErrorListener.INSTANCE);
+        /* Check if file exists
+         */
+        if(!file.exists()) {
+            System.out.println("Error: File inputed does not exist.");
+            System.exit(-1);
+        }
 
-		  	
-		    
-		    // create a buffer of tokens pulled from the lexer
-		    CommonTokenStream tokens = new CommonTokenStream(lexer);
+        FileInputStream fis;
 
-		    // create a parser that feeds off the tokens buffer
-		    WaccParser parser = new WaccParser(tokens);
-		    parser.removeErrorListeners();
-		    parser.addErrorListener(SyntaxErrorListener.INSTANCE);
+        try {
+            fis = new FileInputStream(file);
+            CharStream input = new ANTLRInputStream(fis);
+            WACCLexer lexer = new WACCLexer(input);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            WACCParser parser = new WACCParser(tokens);
+            ParseTree tree = parser.program();
 
-		    
-		    
-		    ParseTree tree = parser.program(); // begin parsing at program rule
 
-		   
-		    // build and run my custom visitor
-		    System.out.println("====");
-		    MyWaccVisitor visitor = new MyWaccVisitor();
-		    visitor.visit(tree);
-		    System.out.println("====");
-		    System.exit(0);
-		  }
-	
+            /*Check if there are any Syntatic errors
+             */
+            int syntaxErr = parser.getNumberOfSyntaxErrors();
+            if(syntaxErr > 0) {
+                System.exit(100);
+            }
+
+            TypeCheckVisitor visitor = new TypeCheckVisitor();
+            visitor.visit(tree);
+
+            fis.close();
+
+        } catch (IOException e) {
+            System.out.println("Error: InputStream does not work.");
+        } catch (NullPointerException ee) {
+            System.exit(0);
+        }
+    }
 }
+
