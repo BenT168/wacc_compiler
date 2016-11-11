@@ -24,6 +24,5 @@ public class FunctionDeclarationAST extends AST {
         System.exit(200);
       }
     return null;
-    }
   }
 }
