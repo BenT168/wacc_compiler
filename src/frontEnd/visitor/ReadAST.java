@@ -10,8 +10,11 @@ public class ReadAST extends AST {
 
   @Override
   public Object check() {
-    if (!(t.equals(new BaseType(BaseTypeCode.CHAR)) || t.equals(new BaseType(BaseTypeCode.INT)))) {
-      System.err.println("In 'Read' statement:\nExpecting type: 'INT' or 'CHAR' in expression\nActual type: " + t.toString());
+    Type temp1 = new BaseType(BaseTypeCode.CHAR);
+    Type temp2 = new BaseType(BaseTypeCode.INT);
+    if (!(t.equals(temp1) || t.equals(temp2))) {
+      System.err.println("In 'Read' statement:\nExpecting type: " + temp1.toString()
+              + " or " + temp2.toString() + "\nActual type: " + t.toString());
       System.exit(200);
     }
     return null;
