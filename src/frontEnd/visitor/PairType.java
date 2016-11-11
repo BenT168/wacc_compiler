@@ -29,7 +29,7 @@ public class PairType extends Type {
 
     @Override
     public String toString() {
-        return "PAIR";
+        return "PAIR " + type1.toString() + " " + type2.toString();
     }
 
     @Override

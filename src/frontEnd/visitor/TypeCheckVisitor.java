@@ -82,6 +82,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
             actual = visit(ctx.stat());
         } catch (NullPointerException e) {
             // do nothing
+            // TODO: if actual == null, shouldn't we exit with semantic error code 200?
         }
         if(actual != null) {
             if(!(defined.equals(actual))) {
@@ -227,7 +228,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     public Type visitAssignLHS(@NotNull WACCParser.AssignLHSContext ctx) {
         Type t = null;
         if (ctx.ident() != null) {
-            t = typeEnv.varLookup(ctx.ident().IDENTITY().getText(), typeEnv.getvTableScopes());
+            t = typeEnv.varLookup(ctx.ident().IDENTITY().getText());
         } else if (ctx.arrayElem() != null) {
             t = visitArrayElem(ctx.arrayElem());
             if(t.equals(new BaseType(BaseTypeCode.STRING))) {
@@ -350,7 +351,12 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     public Type visitArrayType(@NotNull WACCParser.ArrayTypeContext ctx) {
         Type t = null;
         if (ctx.baseType() != null) {
-            t = visitBaseType(ctx.baseType());
+            //Check if Array of an array e.g c[][]
+            if(ctx.CLOSE_SQUARE().size() > 1) {
+                t = new ArrayType(visitBaseType(ctx.baseType()));
+            } else {
+                t = visitBaseType(ctx.baseType());
+            }
         } else if (ctx.pairType() != null) {
             t = visitPairType(ctx.pairType());
         } else {
@@ -362,17 +368,24 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
     @Override
     public Type visitPairType(@NotNull WACCParser.PairTypeContext ctx) {
-        List<WACCParser.PairElemTypeContext> ctxs = ctx.pairElemType();
+
+        List<WACCParser.PairElemTypeContext> contexts = ctx.pairElemType();
+
         if (ctx.pairElemType().size() != 2) {
             System.err.println("Invalid number of parameter types in pair type constructor: " + ctx.pairElemType().size());
         }
+
         List<Type> ls = new ArrayList<>();
         Type t = null;
-        for (WACCParser.PairElemTypeContext x: ctxs) {
-            if (x.baseType() != null) {
-                t = visitBaseType(x.baseType());
-            } else if (x.arrayType() != null) {
-                t = visitArrayType(x.arrayType());
+
+        for (WACCParser.PairElemTypeContext context : contexts) {
+            if (context.baseType() != null) {
+                t = visitBaseType(context.baseType());
+            } else if (context.arrayType() != null) {
+                t = visitArrayType(context.arrayType());
+            } else if (context.PAIR() != null) {
+                // 'null' arguments signify a nested pair.
+                t = new PairType(null, null);
             } else {
                 System.err.println("Error in method 'visitPairType'");
                 System.exit(200);
@@ -406,7 +419,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         } else if(ctx.arrayElem() != null) {
             type = visitArrayElem(ctx.arrayElem());
         } else if(ctx.ident() != null) {
-            type = visitIdent(ctx.ident(), typeEnv.getvTableScopes());
+            type = visitIdent(ctx.ident());
         } else if(ctx.OPEN_PARENTHESES() != null) {
             type = visitExpr(ctx.expr(0));
         }
@@ -424,14 +437,14 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         return (Type) new BinaryExprAST(lhs, rhs, ctx).check();
     }
 
-        // We redefine the identifier visit method
-    public Type visitIdent(@NotNull WACCParser.IdentContext ctx, LinkedList<HashMap<String, Type>> symTabScopes) {
-        return typeEnv.varLookup(ctx.IDENTITY().getText(), symTabScopes);
+    @Override
+    public Type visitIdent(@NotNull WACCParser.IdentContext ctx) {
+        return typeEnv.varLookup(ctx.IDENTITY().getText());
     }
 
     @Override
     public Type visitArrayElem(@NotNull WACCParser.ArrayElemContext ctx) {
-        Type t1 = visitIdent(ctx.ident(), typeEnv.getvTableScopes());
+        Type t1 = visitIdent(ctx.ident());
         // Array element's type is determined by the type of the first
         // expression.
         Type t2 = visitExpr(ctx.expr(0));
