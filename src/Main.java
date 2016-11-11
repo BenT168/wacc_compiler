@@ -1,6 +1,5 @@
 import antlr.WACCLexer;
 import antlr.WACCParser;
-import frontEnd.ErrorHandling.Exception;
 import frontEnd.visitor.TypeCheckVisitor;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
