@@ -68,8 +68,6 @@ public class SymbolTable {
     }
 
     void removeScope() {
-        // TODO: Why do we need to check whether it equals 1?
-        // TODO: What about when we are removing the symbol table in 'visitProgram' after visiting each function context.
         if(vTableScopes.size() != 1) {
             vTableScopes.removeFirst();
         }

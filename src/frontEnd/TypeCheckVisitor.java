@@ -10,6 +10,7 @@ import frontEnd.stat.*;
 import frontEnd.type.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -455,7 +456,10 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     public Type visitExpr(@NotNull WACCParser.ExprContext ctx) {
         Type type = null;
         if(ctx.intLiter()!= null) {
-            int value = Integer.parseInt(ctx.intLiter().INTEGER().getText());
+            long value = Long.parseLong(ctx.intLiter().INTEGER().getText());
+            if (ctx.intLiter().MINUS() != null) {
+                value = 0 - value;
+            }
             if (!(Scalar.isAcceptableInt(value))) {
                 throw new SyntaxException("Integer is outside acceptable range.");
             }
