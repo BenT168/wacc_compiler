@@ -350,7 +350,12 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     public Type visitArrayType(@NotNull WACCParser.ArrayTypeContext ctx) {
         Type t = null;
         if (ctx.baseType() != null) {
-            t = visitBaseType(ctx.baseType());
+            //Check if Array of an array e.g c[][]
+            if(ctx.CLOSE_SQUARE().size() > 1) {
+                t = new ArrayType(visitBaseType(ctx.baseType()));
+            } else {
+                t = visitBaseType(ctx.baseType());
+            }
         } else if (ctx.pairType() != null) {
             t = visitPairType(ctx.pairType());
         } else {
