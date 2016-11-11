@@ -1,83 +1,25 @@
 import antlr.WACCLexer;
 import antlr.WACCParser;
 import frontEnd.ErrorHandling.Exception;
-import frontEnd.ErrorHandling.IllegalCallException;
-import frontEnd.ErrorHandling.IncompatibleTypesException;
+import frontEnd.ErrorHandling.IntOverflowException;
+import frontEnd.ErrorHandling.UnresolvedExpectationException;
 import frontEnd.visitor.myVisitor;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.apache.commons.cli.*;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-
-//import org.apache.commons.cli.CommandLine;
-//import org.apache.commons.cli.Option;
-//import org.apache.commons.cli.ParseException;
-//import org.apache.commons.cli.PosixParser;
 
 public class Main {
 
     public static void main(String[] args) throws IOException{
 
-	String inputFile = null;
-    	if (args.length > 0) {
-    		inputFile = args[0];
-    	}
-    	InputStream is = System.in;
-    	if (inputFile != null) {
-    		is = new FileInputStream(inputFile);
-    	}
-    	
-    	
-        ANTLRInputStream input = new ANTLRInputStream(is);
 
-        /* Create a lexer that feeds off of input CharStream */
-        WACCLexer lexer = new WACCLexer(input);
-
-        /* Create a buffer of tokens pulled from the lexer */
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-
-        /* Create a parser that feeds off the tokens buffer */
-        WACCParser parser = new WACCParser(tokens);
-
-        /* Generate AST, begin parsing at the program rule */
-        WACCParser.ProgramContext tree = parser.program();
-
-        /* Checking Syntax */
-        if (parser.getNumberOfSyntaxErrors() == 0) {
-
-            /* Checking Semantics */
-        	try {
-            System.out.println("The visitor visits every nodes of AST");
-            myVisitor visitor = new myVisitor(tree);
-            System.out.println("====");
-        	} catch (Exception e) {
-        		System.out.println(e.getMessage());
-        		if (e instanceof IllegalCallException){
-					System.exit(200);
-        		} else if (e instanceof IncompatibleTypesException){
-        			System.exit(100);
-        		}
-        	}
-            /*!visitor.semanticError*/
-
-        } else {
-            System.out.println("SYNTAX ERROR: "
-                    + parser.getNumberOfSyntaxErrors());
-
-            /* A compilation that fails due to one or
-                more syntax errors should return the exit status 100 */
-            System.exit(100);
-        }
-
-        /* A successful compilation should return the exit status 0 */
-        System.exit(0);
-}
-}
-    
-/*
-            CommandLine cmd = parseFlags(args);
+		CommandLine cmd = parseFlags(args);
 		
 		// We set the logging options as appropriate
 	   // myVisitor.semanticError.setOptions(cmd);
@@ -91,10 +33,10 @@ public class Main {
             ParseTree tree = getParseTree(tokens);
 
             //System.out.println(tree.toStringTree(parser));
-*/
+
             /*Check if there are any Syntatic errors
              */
-/*
+
             myVisitor visitor = checkSemanticIntegrity(tree);
 
             //System.out.println(answer);
@@ -105,8 +47,8 @@ public class Main {
                 exitSemanticFailure();
             }
 
-    }*/
-/*
+    }
+
     private static WACCLexer getLexer(InputStream input) throws IOException {
         // Create ANTLR Input stream
         WACCLexer lexer = null;
@@ -189,7 +131,7 @@ public class Main {
 		options.addOption("d", false, "debug mode");
 		options.addOption("f", true, "source file");
 		
-		CommandLineParser flagsParser = new PosixParser();
+		CommandLineParser flagsParser = (CommandLineParser) new PatternOptionBuilder();
 		CommandLine cmd = null;
 		try {
 			 cmd = flagsParser.parse(options, args);
@@ -207,4 +149,4 @@ public class Main {
     private static void exitSemanticFailure() {
         System.exit(200);
     }
-}*/
+}
