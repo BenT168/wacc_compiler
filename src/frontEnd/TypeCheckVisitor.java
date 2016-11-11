@@ -236,6 +236,10 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         isMultipleStat = true;
         boolean seenReturn = false;
         int pos = 0;
+        int lastStatementIndex = ctx.stat().size()-1;
+        if (visit(ctx.stat(lastStatementIndex)) == null) {
+            throw new SemanticException("No return statement");
+        }
 
         // looking up return statements
         for(int i = 0; i < ctx.stat().size(); i++) {
@@ -249,9 +253,9 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         // then that should cause an error
         if(seenReturn && pos != ctx.stat().size() - 1) {
             //if in function, then throw syntax error
-            if (inFunction)(
-                throw new SyntaxException("Function does not have a return statement.")
-                )
+            if (inFunction) {
+                throw new SyntaxException("Function does not have a return statement.");
+            }
             throw new SemanticException("Statement after return. Unreachable statement.");
         }
 
