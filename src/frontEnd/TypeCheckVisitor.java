@@ -20,6 +20,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     private SymbolTable typeEnv;
     private boolean inFunction = false;
     private boolean isMultipleStat = false;
+    private boolean returnCheck = false;
 
     public TypeCheckVisitor() {
         this.typeEnv = new SymbolTable();
@@ -54,10 +55,15 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
             for (WACCParser.FuncContext funcCtx : ctx.func()) {
                 typeEnv.enterScope();
+                returnCheck = false;
                 visitFunc(funcCtx);
                 typeEnv.removeScope();
             }
 
+        }
+
+        if (!returnCheck) {
+            throw new SemanticException("No return statement");
         }
 
         // Evaluate "main function" body
@@ -103,9 +109,6 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
             }
         }
         typeEnv.removeScope(); // end of new scope
-
-        //Checks if Function has a return statement
-        //new HelperFunction(inFunction, isMultipleStat).checksIfFunctionReturns(ctx.stat());
 
         return null;
     }
@@ -193,6 +196,10 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         Type ret = visitExpr(ctx.expr());
         typeEnv.removeScope();
         inFunction = false;
+
+        if (typeEnv.getvTableScopes().size() == 1) {
+            returnCheck = true;
+        }
         return ret;
     }
 
@@ -237,9 +244,6 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         boolean seenReturn = false;
         int pos = 0;
         int lastStatementIndex = ctx.stat().size()-1;
-        if (visit(ctx.stat(lastStatementIndex)) == null) {
-            throw new SemanticException("No return statement");
-        }
 
         // looking up return statements
         for(int i = 0; i < ctx.stat().size(); i++) {
