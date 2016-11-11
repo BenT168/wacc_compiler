@@ -457,8 +457,8 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         Type type = null;
         if(ctx.intLiter()!= null) {
             long value = Long.parseLong(ctx.intLiter().INTEGER().getText());
-            if (ctx.intLiter().MINUS() != null) {
-                value = 0 - value;
+            if (ctx.intLiter().PLUS() == null) {
+                value = Math.negateExact(value);
             }
             if (!(Scalar.isAcceptableInt(value))) {
                 throw new SyntaxException("Integer is outside acceptable range.");
@@ -513,7 +513,6 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         }
         Type t2 = visitExpr(ctx.expr(0));
         Type temp = new BaseType(BaseTypeEnum.INT);
-        // TODO: must check all indices
         if (!(t2.equals(temp))) {
             throw new SemanticException("In expression: " +
                     ctx.getText() + "\nExpecting type: "
