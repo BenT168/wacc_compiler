@@ -163,7 +163,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         new IfElseAST(visitExpr(ctx.expr()), ctx.expr().getText()).check();
         // Visit branches in conditional. If Statement conditional only has 2 branches
         for (int i = 0; i < 2; i++) {
-            TypeCheckVisitor.getTypeEnv().enterScope();
+            typeEnv.enterScope();
             visit(ctx.stat(i));
             typeEnv.removeScope();
         }
@@ -190,9 +190,23 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
     @Override
     public Type visitMultipleStat(@NotNull WACCParser.MultipleStatContext ctx) {
-        new MultipleStatAST(ctx.stat()).check();
-        // visit all statements sequentially
-        stat.forEach(this::visit);
+        boolean seenReturn = false;
+        int pos = 0;
+
+        // looking up return statements
+        for(int i = 0; i < ctx.stat().size(); i++) {
+            if(ctx.stat().getText().matches("return(.*)")) {
+                seenReturn = true;
+                pos = i;
+            }
+        }
+
+        // if in the top-level scope there is any statement past the return statement
+        // then that should cause an error
+        if(seenReturn && pos != ctx.stat().size() - 1) {
+            System.err.print("Statement after return. Unreachable statement.");
+            System.exit(200);
+        }
         return null;
     }
 
