@@ -243,7 +243,11 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         // then that should cause an error
         if(seenReturn && pos != ctx.stat().size() - 1) {
             System.err.print("Statement after return. Unreachable statement.");
-            System.exit(200);
+            System.exit(100);
+        }
+        if(!seenReturn) {
+            //Syntatic error
+            System.exit(100);
         }
 
         // visit all statements sequentially
