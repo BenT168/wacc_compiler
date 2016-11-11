@@ -1,5 +1,6 @@
 package frontEnd;
 
+import frontEnd.exception.SemanticException;
 import frontEnd.type.Type;
 
 public class Assignment extends Node {
@@ -15,8 +16,9 @@ public class Assignment extends Node {
   @Override
   public Object check() {
     if (!(t1.equals(t2))) {
-      System.err.println("Type mismatch error:\nExpected: " + t1.toString() + "\nActual: " + t2.toString());
-      System.exit(200);
+      throw new SemanticException("Type mismatch error:\n" +
+              "Expected: " + t1.toString() +
+              "\nActual: " + t2.toString());
     }
     return null;
   }

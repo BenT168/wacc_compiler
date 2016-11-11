@@ -1,6 +1,7 @@
 package frontEnd.stat;
 
 import frontEnd.Node;
+import frontEnd.exception.SemanticException;
 import frontEnd.type.Type;
 
 public class VarDecNode extends Node {
@@ -16,8 +17,9 @@ public class VarDecNode extends Node {
   @Override
   public Object check() {
     if (!(t1.equals(t2))) {
-      System.err.println("Type mismatch error: \nExpected: " + t1.toString() + "\nActual: " + t2.toString());
-      System.exit(200);
+      throw new SemanticException("Type mismatch error: \n" +
+              "Expected: " + t1.toString() +
+              "\nActual: " + t2.toString());
     }
     return null;
   }

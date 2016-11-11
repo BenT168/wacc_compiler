@@ -17,8 +17,9 @@ public class ExitStat extends Node {
   public Object check() {
     Type temp = new BaseType(BaseTypeEnum.INT);
     if (!(t.equals(temp))) {
-      new SemanticException("In 'Exit' statement:\nExpecting type: " + temp.toString() + "\nActual: " + t.toString());
-      System.exit(200);
+      throw new SemanticException("In 'Exit' statement:\n "+
+                "Expecting type: " + temp.toString() + "\n Actual: " + t.toString());
+
     }
     return null;
   }

@@ -18,8 +18,10 @@ public class FreeStat extends Node {
   public Object check() {
     // Nulls signify generic arrays/pairs.
     if (!(t instanceof PairType || t instanceof ArrayType)) {
-      new SemanticException("In 'Free' statement:\nExpecting type: PAIR or ARRAY\nActual type: " + t.toString());
-      System.exit(200);
+      throw new SemanticException("In 'Free' statement:\n" +
+              "Expecting type: PAIR or ARRAY\n" +
+              "Actual type: " + t.toString());
+
     }
     return null;
   }

@@ -2,6 +2,8 @@ package frontEnd;
 
 import antlr.WACCParser;
 import antlr.WACCParserBaseVisitor;
+import frontEnd.exception.SemanticException;
+import frontEnd.exception.SyntaxException;
 import frontEnd.expr.UnaryExprNode;
 import frontEnd.stat.*;
 import frontEnd.expr.BinaryExprNode;
@@ -36,8 +38,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
                 String i = funcCtx.ident().IDENTITY().getText();
 
                 if (typeEnv.fTableContainsKey(i)) {
-                    System.err.println("Function already contains key: " + i);
-                    System.exit(200);
+                    throw new SemanticException("Function already contains key: " + i);
                 }
 
                 Type t = visitType(funcCtx.type());
@@ -89,15 +90,13 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         try {
             actual = visit(ctx.stat());
         } catch (NullPointerException e) {
-            // do nothing
-            // TODO: if actual == null, shouldn't we exit with semantic error code 200?
+            throw new SyntaxException("Null pointer.");
         }
         if(actual != null) {
             if(!(defined.equals(actual))) {
-                System.err.print("Function: " + ctx.ident().getText()
+                throw new SemanticException("Function: " + ctx.ident().getText()
                         + " \nExpected return type: " + defined.toString() +
                         " \nActual return type: " + actual.toString());
-                System.exit(200);
             }
         }
         typeEnv.removeScope(); // end of new scope
@@ -242,8 +241,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         // if in the top-level scope there is any statement past the return statement
         // then that should cause an error
         if(seenReturn && pos != ctx.stat().size() - 1) {
-            System.err.print("Statement after return. Unreachable statement.");
-            System.exit(100);
+            throw new SyntaxException("Statement after return. Unreachable statement.");
         }
 
         // visit all statements sequentially
@@ -271,8 +269,9 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         } else if (ctx.pairElem() != null) {
             t = visitPairElem(ctx.pairElem());
         } else {
-            System.err.println("Error in expression:" + ctx.getText() + "\nin method 'visitAssignLHS");
-            System.exit(200);
+            throw new SemanticException("Error in expression:" +
+                    ctx.getText() + "\nin method 'visitAssignLHS");
+
         }
         return t;
     }
@@ -302,9 +301,10 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
             // TODO: Could cause null pointer exception
             if ((types.size()-1) != sizeOfExprsCxt){
-                System.err.println("Invalid number of arguments in call declaration:\nExpecting:" +
+                throw new SemanticException("Invalid number of arguments in call declaration:\n" +
+                        "Expecting:" +
                         " " + (types.size()-1) + "\nActual: " + exprCtxs.size());
-                System.exit(200);
+
             }
 
             for (int j = 1; j < types.size(); j++) {
@@ -312,9 +312,8 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
                 Type temp2 = visitExpr(exprCtxs.get(j - 1));
 
                 if (!(temp1.equals(temp2))) {
-                    System.err.println("Type mismatch error:\nExpecting: " +
+                    throw new SemanticException("Type mismatch error:\nExpecting: " +
                             temp1.toString() + "\nActual: " + temp2.toString());
-                    System.exit(200);
                 }
             }
         } else if (ctx.arrayLiter() != null) {
@@ -324,8 +323,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         } else if (ctx.expr() != null) {
             t = visitExpr(ctx.expr(0));
         } else {
-            System.err.println("Error in 'visitAssignRHS' method.");
-            System.exit(200);
+            throw new SemanticException("Error in 'visitAssignRHS' method.");
         }
         return t;
     }
@@ -339,7 +337,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     public Type visitPairElem(@NotNull WACCParser.PairElemContext ctx) {
         Type t = visitExpr(ctx.expr());
         if (!(t instanceof PairType)) {
-            System.err.println("In expression: " + ctx.getText() +
+            System.err.print("In expression: " + ctx.getText() +
                     "\nExpecting type: Pair" + "\nActual type: " + t.toString());
         }
         if (ctx.FST() != null) {
@@ -361,10 +359,8 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         } else if (ctx.pairType() != null) {
             return visitPairType(ctx.pairType());
         } else {
-            System.err.println("Error in 'visitType' method");
-            System.exit(200);
+            throw new SemanticException("Error in 'visitType' method");
         }
-        return null;
     }
 
     @Override
@@ -378,10 +374,9 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         } else if (ctx.STRING() != null) {
             return new BaseType(BaseTypeEnum.STRING);
         } else {
-            System.err.println("Error in 'visitBaseType' method");
-            System.exit(200);
+            throw new SemanticException("Error in 'visitBaseType' method");
         }
-        return null;
+
     }
 
     @Override
@@ -397,8 +392,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         } else if (ctx.pairType() != null) {
             t = visitPairType(ctx.pairType());
         } else {
-            System.err.println("Error in method 'visitArrayType'");
-            System.exit(200);
+            throw new SemanticException("Error in method 'visitArrayType'");
         }
         return new ArrayType(t);
     }
@@ -425,8 +419,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
                 // 'null' arguments signify a nested pair.
                 t = new PairType(null, null);
             } else {
-                System.err.println("Error in method 'visitPairType'");
-                System.exit(200);
+                throw new SemanticException("Error in method 'visitPairType'");
             }
             ls.add(t);
         }
@@ -498,9 +491,11 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         Type temp = new BaseType(BaseTypeEnum.INT);
         // TODO: must check all indices
         if (!(t2.equals(temp))) {
-            System.err.println("In expression: " + ctx.getText() + "\nExpecting type: "
-                    + temp.toString() +"\nActual type: " + t2.toString());
-            System.exit(200);
+            throw new SemanticException("In expression: " +
+                    ctx.getText() + "\nExpecting type: "
+                    + temp.toString() +"\nActual type: " +
+                    t2.toString());
+
         }
         return t1;
     }
