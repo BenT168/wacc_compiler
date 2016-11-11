@@ -84,7 +84,8 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         }
         if(!(defined.equals(actual))) {
             System.err.print("Function: " + ctx.ident().getText()
-                + " \nExpected return type: " + defined.toString() + " \nActual return type: " + actual.toString());
+                + " \nExpected return type: " + defined.toString() +
+                " \nActual return type: " + (actual != null ? actual.toString() : null));
             System.exit(200);
         }
         typeEnv.removeScope(); // end of new scope
@@ -112,11 +113,11 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
     @Override
     public Type visitDeclare(@NotNull WACCParser.DeclareContext ctx) {
-        String name = ctx.ident().IDENTITY().getText();
         Type type1 = visitType(ctx.type());
-        Type type2 = visitAssignRHS(ctx.assignRHS());
-        new VariableDeclarationAST(type1, name, type2).check();
+        String name = ctx.ident().IDENTITY().getText();
         typeEnv.vTableInsert(name, type1);
+        Type type2 = visitAssignRHS(ctx.assignRHS());
+        new VariableDeclarationAST(type1, type2).check();
         return null;
     }
 
