@@ -15,12 +15,11 @@ import java.util.List;
 
 public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
-    /* For Storing Variables and its information
-     */
+    /* For Storing Variables and its information */
     private SymbolTable typeEnv;
     private boolean inFunction = false;
     private boolean isMultipleStat = false;
-    private boolean returnCheck = false;
+    private boolean returnCheck = true;
 
     public TypeCheckVisitor() {
         this.typeEnv = new SymbolTable();
@@ -58,12 +57,11 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
                 returnCheck = false;
                 visitFunc(funcCtx);
                 typeEnv.removeScope();
+                if (!returnCheck) {
+                    throw new SemanticException("No return statement");
+                }
             }
 
-        }
-
-        if (!returnCheck) {
-            throw new SemanticException("No return statement");
         }
 
         // Evaluate "main function" body
@@ -197,7 +195,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         typeEnv.removeScope();
         inFunction = false;
 
-        if (typeEnv.getvTableScopes().size() == 1) {
+        if (typeEnv.getvTableScopes().size() == 2) {
             returnCheck = true;
         }
         return ret;
