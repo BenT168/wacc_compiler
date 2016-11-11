@@ -3,10 +3,9 @@ package frontEnd;
 import antlr.WACCParser;
 import antlr.WACCParserBaseVisitor;
 import frontEnd.exception.SemanticException;
-import frontEnd.exception.SyntaxException;
+import frontEnd.expr.BinaryExprNode;
 import frontEnd.expr.UnaryExprNode;
 import frontEnd.stat.*;
-import frontEnd.expr.BinaryExprNode;
 import frontEnd.type.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
@@ -241,7 +240,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         // if in the top-level scope there is any statement past the return statement
         // then that should cause an error
         if(seenReturn && pos != ctx.stat().size() - 1) {
-            throw new SyntaxException("Statement after return. Unreachable statement.");
+            throw new SemanticException("Statement after return. Unreachable statement.");
         }
 
         // visit all statements sequentially
