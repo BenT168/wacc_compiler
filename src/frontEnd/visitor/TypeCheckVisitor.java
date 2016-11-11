@@ -63,36 +63,28 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     // Function identifiers and types should already be added to ftable by time we call this method.
     @Override
     public Type visitFunc(@NotNull WACCParser.FuncContext ctx) {
-        inFunction = true;
+        inFunction = true; // start of function declaration
 
-        // Function return type
-        Type t0 = visitType(ctx.type());
-
+        // loop through and store parameters into Symbol Table
         if (ctx.paramList() != null) {
             for (WACCParser.ParamContext ctxParam: ctx.paramList().param()) {
                 String i = ctxParam.ident().IDENTITY().getText();
                 Type t = visitParam(ctxParam);
-
                 typeEnv.vTableInsert(i, t);
             }
         }
 
-        typeEnv.enterScope();
+        typeEnv.enterScope(); // new scope
         Type returntype = null;
         try {
             returntype = visit(ctx.stat());
         } catch (NullPointerException e) {
-            //do nothing
+            // do nothing
         }
-        if(returntype != null) {
-            if(!(t0.equals(returntype))) {
-                System.err.print("Function: " + ctx.ident().getText()
-                        + " \nExpected return type: " + t0.toString() + " \nActual return type: " + returntype.toString());
-                System.exit(200);
-            }
-        }
-        typeEnv.removeScope();
-        inFunction = false;
+        new FunctionDeclarationAST(visitType(ctx.type()), returntype, ctx).check();
+        typeEnv.removeScope(); // end of new scope
+
+        inFunction = false; // end of function declaration
 
         return null;
     }
@@ -115,17 +107,10 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
     @Override
     public Type visitDeclare(@NotNull WACCParser.DeclareContext ctx) {
-        Type t1 = visitType(ctx.type());
-        String i = ctx.ident().IDENTITY().getText();
-
-        typeEnv.vTableInsert(i, t1);
-
-        Type t2 = visitAssignRHS(ctx.assignRHS());
-
-        if (!(t1.equals(t2))) {
-            System.err.println("Type mismatch error:\nExpected: " + t1.toString() + "\nActual: " + t2.toString());
-            System.exit(200);
-        }
+        String name = ctx.ident().IDENTITY().getText();
+        Type type1 = visitType(ctx.type());
+        typeEnv.vTableInsert(name, type1);
+        new VariableDeclarationAST(type1, name, visitAssignRHS(ctx.assignRHS())).check();
         return null;
     }
 
@@ -133,34 +118,19 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     public Type visitAssign(@NotNull WACCParser.AssignContext ctx) {
         Type t1 = visitAssignLHS(ctx.assignLHS());
         Type t2 = visitAssignRHS(ctx.assignRHS());
-
-        if (!(t1.equals(t2))) {
-            System.err.println("Type mismatch error:\nExpected: " + t1.toString() + "\nActual: " + t2.toString());
-            System.exit(200);
-        }
+        new AssignmentAST(t1, t2);
         return null;
     }
 
     @Override
     public Type visitRead(@NotNull WACCParser.ReadContext ctx) {
-        Type t = visitAssignLHS(ctx.assignLHS());
-
-        if (!(t.equals(new BaseType(BaseTypeCode.CHAR)) || t.equals(new BaseType(BaseTypeCode.INT)))) {
-            System.err.println("In 'Read' statement:\nExpecting type: 'INT' or 'CHAR' in expression\nActual type: " + t.toString());
-            System.exit(200);
-        }
+        new ReadAST(visitAssignLHS(ctx.assignLHS())).check();
         return null;
     }
 
     @Override
     public Type visitFree(@NotNull WACCParser.FreeContext ctx) {
-        Type t = visitExpr(ctx.expr());
-
-        // Nulls signify generic arrays/pairs.
-        if (!(t instanceof PairType || t instanceof ArrayType)) {
-            System.err.println("In 'Free' statement:\nExpecting type: PAIR or ARRAY\nActual type: " + t.toString());
-            System.exit(200);
-        }
+        new FreeAST(visitExpr(ctx.expr())).check();
         return null;
     }
 
@@ -174,12 +144,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
     @Override
     public Type visitExit(@NotNull WACCParser.ExitContext ctx) {
-        Type t = visitExpr(ctx.expr());
-        Type temp = new BaseType(BaseTypeCode.INT);
-        if (!(t.equals(temp))) {
-            System.err.println("In 'Exit' statement:\nExpecting type: " + temp.toString() + "\nActual: " + t.toString());
-            System.exit(200);
-        }
+        new ExitAST(visitExpr(ctx.expr())).check();
         return null;
     }
 
@@ -195,15 +160,10 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
     @Override
     public Type visitIfElse(@NotNull WACCParser.IfElseContext ctx) {
-        Type t = visitExpr(ctx.expr());
-        Type temp = new BaseType(BaseTypeCode.BOOL);
-        if (!(t.equals(temp))) {
-            System.err.println("In expression: " + ctx.expr().getText() + "\nExpected type: " + temp.toString() + "\nActual type: " + t.toString());
-            System.exit(200);
-        }
+        new IfElseAST(visitExpr(ctx.expr()), ctx.expr().getText()).check();
         // Visit branches in conditional. If Statement conditional only has 2 branches
         for (int i = 0; i < 2; i++) {
-            typeEnv.enterScope();
+            TypeCheckVisitor.getTypeEnv().enterScope();
             visit(ctx.stat(i));
             typeEnv.removeScope();
         }
@@ -212,12 +172,8 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
     @Override
     public Type visitWhile(@NotNull WACCParser.WhileContext ctx) {
-        Type t = visitExpr(ctx.expr());
-        Type temp = new BaseType(BaseTypeCode.BOOL);
-        if (!(t.equals(temp))) {
-            System.err.println("In expression: " + ctx.expr().getText() + "\nExpected type: " + temp.toString() + "\nActual type: " + t.toString());
-            System.exit(200);
-        }
+        new WhileAST(visitExpr(ctx.expr()), ctx.expr().getText()).check();
+        // examine body of while
         typeEnv.enterScope();
         visit(ctx.stat());
         typeEnv.removeScope();
@@ -234,25 +190,9 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
     @Override
     public Type visitMultipleStat(@NotNull WACCParser.MultipleStatContext ctx) {
-        boolean seenReturn = false;
-        int pos = 0;
-
-        // looking up return statements
-        for(int i = 0; i < ctx.stat().size(); i++) {
-            if(ctx.stat(i).getText().matches("return(.*)")) {
-                seenReturn = true;
-                pos = i;
-            }
-        }
-
-        // if in the top-level scope there is any statement past the return statement
-        // then that should cause an error
-        if(seenReturn && pos != ctx.stat().size() - 1) {
-            System.err.print("Statement after return. Unreachable statement.");
-            System.exit(200);
-        }
+        new MultipleStatAST(ctx.stat()).check();
         // visit all statements sequentially
-        ctx.stat().forEach(this::visit);
+        stat.forEach(this::visit);
         return null;
     }
 
@@ -447,104 +387,14 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     }
 
     public Type visitUnaryExpr(@NotNull WACCParser.ExprContext ctx) {
-        Type type = null;
-        Type booltmp = new BaseType(BaseTypeCode.BOOL);
-        Type chartmp = new BaseType(BaseTypeCode.CHAR);
-        Type inttmp = new BaseType(BaseTypeCode.INT);
-         if(ctx.CHR() != null) {
-            //argument type = int
-            Type argType = visit(ctx.expr(0));
-            if(!argType.equals(inttmp)) {
-                System.err.println("Wrong argument type for unary operator.");
-                System.err.println("Expected type : INT ");
-                System.err.println("Actual type : " + argType.toString());
-                System.exit(200);
-            }
-            //return type = char
-            type = chartmp;
-        } else if(ctx.ORD() != null) {
-            //argument type = char
-            Type argType = visit(ctx.expr(0));
-            if(!argType.equals(chartmp)) {
-                System.err.println("Wrong argument type for unary operator.");
-                System.err.println("Expected type : Int ");
-                System.err.println("Actual type : " + argType.toString());
-                System.exit(200);
-            }
-            //return type = int
-            type = inttmp;
-        } else if(ctx.LEN() != null) {
-            //argument type = array
-            Type argType = visit(ctx.expr(0));
-            if(!(argType instanceof ArrayType)) {
-                System.err.println("Wrong argument type for unary operator.");
-                System.err.println("Expected type : Array ");
-                System.err.println("Actual type : " + argType.toString());
-                System.exit(200);
-            }
-            //return type = int
-            type = inttmp;
-        } else if(ctx.NOT() != null) {
-            //argument type = bool
-            Type argType = visit(ctx.expr(0));
-            if(!argType.equals(booltmp)) {
-                System.err.println("Wrong argument type for unary operator.");
-                System.err.println("Expected type : Bool ");
-                System.err.println("Actual type : " + argType.toString());
-                System.exit(200);
-            }
-            //return type = int
-            type = booltmp;
-        } else if(ctx.MINUS() != null) {
-            //argument type = int
-            Type argType = visit(ctx.expr(0));
-            if(!argType.equals(inttmp)) {
-                System.err.println("Wrong argument type for unary operator.");
-                System.err.println("Expected type : Int ");
-                System.err.println("Actual type : " + argType.toString());
-                System.exit(200);
-            }
-            //return type = int
-            type = inttmp;
-        }
-        return type;
+        Type argType = visit(ctx.expr(0));
+        return (Type) new UnaryExprAST(argType, ctx).check();
     }
 
     public Type visitBinaryExpr(@NotNull WACCParser.ExprContext ctx) {
-        Type expr1 = visitExpr(ctx.expr(0));
-        Type expr2 = visitExpr(ctx.expr(1));
-        Type booltmp = new BaseType(BaseTypeCode.BOOL);
-        Type inttmp = new BaseType(BaseTypeCode.INT);
-        Type type = null;
-
-        if(ctx.MUL() != null || ctx.DIV() != null || ctx.MOD() != null
-                || ctx.PLUS() != null || ctx.MINUS() != null) {
-            boolean bothNotInt = (!(expr1.equals(inttmp)) || !(expr2.equals(inttmp)));
-            if (bothNotInt) {
-                System.err.println("Wrong argument types for binary operator.");
-                System.err.println("Expected types : INT, INT ");
-                System.err.println("Actual type : " + expr1.toString() + " , " + expr2.toString());
-                System.exit(200);
-            }
-            type = new BaseType(BaseTypeCode.INT);
-        } else if(ctx.LT() != null || ctx.LTE() != null || ctx.GT() != null || ctx.GTE() != null
-                || ctx.EQ() != null || ctx.NEQ() != null) {
-            if(!expr1.equals(expr2)) {
-                System.err.println("Expected arguments to be the same type in Binary Operator");
-                System.err.println("Actual type : " + expr1.toString() + " , " + expr2.toString());
-                System.exit(200);
-            }
-            type = booltmp;
-        } else if(ctx.AND() != null || ctx.OR() != null) {
-            if(!expr1.equals(booltmp) || !expr2.equals(booltmp)) {
-                System.err.println("Wrong argument types for binary operator.");
-                System.err.println("Expected types : Bool, Bool ");
-                System.err.println("Actual type : " + expr1.toString() + " , " + expr2.toString());
-                System.exit(200);
-            }
-            type = booltmp;
-        }
-        return type;
+        Type lhs = visitExpr(ctx.expr(0));
+        Type rhs = visitExpr(ctx.expr(1));
+        return (Type) new BinaryExprAST(lhs, rhs, ctx).check();
     }
 
         // We redefine the identifier visit method
