@@ -131,7 +131,7 @@ public class Main {
 		options.addOption("d", false, "debug mode");
 		options.addOption("f", true, "source file");
 		
-		CommandLineParser flagsParser = (CommandLineParser) new PatternOptionBuilder();
+		CommandLineParser flagsParser = new PosixParser();
 		CommandLine cmd = null;
 		try {
 			 cmd = flagsParser.parse(options, args);
