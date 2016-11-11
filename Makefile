@@ -23,7 +23,7 @@ all: rules
 
 # runs the antlr build script then attempts to compile all .java files within src
 rules:
-	cd $(ANTLR_DIR) && ./$(ANTLR) 
+	cd $(ANTLR_DIR) && ./$(ANTLR)
 	$(FIND) $(SOURCE_DIR) -name '*.java' > $@
 	$(MKDIR) $(OUTPUT_DIR)
 	$(JAVAC) $(JFLAGS) @$@
@@ -33,3 +33,5 @@ clean:
 	$(RM) rules $(OUTPUT_DIR)
 
 .PHONY: all rules clean
+
+
