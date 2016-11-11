@@ -195,7 +195,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
         // looking up return statements
         for(int i = 0; i < ctx.stat().size(); i++) {
-            if(ctx.stat().getText().matches("return(.*)")) {
+            if(ctx.stat(i).getText().matches("return(.*)")) {
                 seenReturn = true;
                 pos = i;
             }
