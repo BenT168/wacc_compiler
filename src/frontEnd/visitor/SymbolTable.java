@@ -10,7 +10,19 @@ public class SymbolTable {
     private LinkedList<HashMap<String, Type>> vTableScopes = new LinkedList<>();
     private HashMap<String, List<Type>> fTable = new HashMap<>();
 
-    Type varLookup(String key, LinkedList<HashMap<String, Type>> symTabScopes) {
+    public LinkedList<HashMap<String, Type>> getvTableScopes() {
+        return vTableScopes;
+    }
+
+    public HashMap<String, List<Type>> getfTable() {
+        return fTable;
+    }
+
+    public boolean fTableContainsKey(String key) {
+        return fTable.containsKey(key);
+    }
+
+    public Type varLookup(String key, LinkedList<HashMap<String, Type>> symTabScopes) {
         Type res;
         for (HashMap<String, Type> scope: vTableScopes) {
             res = scope.get(key);
@@ -23,7 +35,7 @@ public class SymbolTable {
         return null;
     }
 
-    List<Type> funcLookup(String key) {
+    public List<Type> funcLookup(String key) {
         if (!(fTable.containsKey(key))) {
             System.err.println("Function " + key + " doesn't exist in symbol table");
             System.exit(200);

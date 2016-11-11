@@ -29,7 +29,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
             for (WACCParser.FuncContext funcCtx : ctx.func()) {
                 String i = funcCtx.ident().IDENTITY().getText();
 
-                if (typeEnv.fTable.containsKey(i)) {
+                if (typeEnv.fTableContainsKey(i)) {
                     System.err.println("Function already contains key: " + i);
                     System.exit(200);
                 }
@@ -260,7 +260,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     public Type visitAssignLHS(@NotNull WACCParser.AssignLHSContext ctx) {
         Type t = null;
         if (ctx.ident() != null) {
-            t = typeEnv.varLookup(ctx.ident().IDENTITY().getText(), typeEnv.vTableScopes);
+            t = typeEnv.varLookup(ctx.ident().IDENTITY().getText(), typeEnv.getvTableScopes());
         } else if (ctx.arrayElem() != null) {
             t = visitArrayElem(ctx.arrayElem());
             if(t.equals(new BaseType(BaseTypeCode.STRING))) {
@@ -439,7 +439,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         } else if(ctx.arrayElem() != null) {
             type = visitArrayElem(ctx.arrayElem());
         } else if(ctx.ident() != null) {
-            type = visitIdent(ctx.ident(), typeEnv.vTableScopes);
+            type = visitIdent(ctx.ident(), typeEnv.getvTableScopes());
         } else if(ctx.OPEN_PARENTHESES() != null) {
             type = visitExpr(ctx.expr(0));
         }
@@ -554,7 +554,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
     @Override
     public Type visitArrayElem(@NotNull WACCParser.ArrayElemContext ctx) {
-        Type t1 = visitIdent(ctx.ident(), typeEnv.vTableScopes);
+        Type t1 = visitIdent(ctx.ident(), typeEnv.getvTableScopes());
         // Array element's type is determined by the type of the first
         // expression.
         Type t2 = visitExpr(ctx.expr(0));
