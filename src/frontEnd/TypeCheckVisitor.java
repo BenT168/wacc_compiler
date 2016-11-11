@@ -18,8 +18,8 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     /* For Storing Variables and its information
      */
     private SymbolTable typeEnv;
-    private boolean returned = false;
     private boolean inFunction = false;
+    private boolean isMultipleStat = false;
 
     public TypeCheckVisitor() {
         this.typeEnv = new SymbolTable();
@@ -87,6 +87,10 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
         typeEnv.enterScope(); // new scope
         Type actual = null;
+
+        //Checks if Function has a return statement
+        new HelperFunction(inFunction, isMultipleStat).checksIfFunctionReturns(ctx.stat());
+
         try {
             actual = visit(ctx.stat());
         } catch (NullPointerException e) {
@@ -100,8 +104,6 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
             }
         }
         typeEnv.removeScope(); // end of new scope
-
-        inFunction = false; // end of function declaration
 
         return null;
     }
@@ -188,6 +190,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         // Knows nothing about enclosing function and hence leaves type checking to enclosing function visitor method
         Type ret = visitExpr(ctx.expr());
         typeEnv.removeScope();
+        inFunction = false;
         return ret;
     }
 
@@ -227,6 +230,8 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     /*stat ; stat*/
     @Override
     public Type visitMultipleStat(@NotNull WACCParser.MultipleStatContext ctx) {
+        //Boolean for function to check how many stats is has
+        isMultipleStat = true;
         boolean seenReturn = false;
         int pos = 0;
 
@@ -236,6 +241,11 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
                 seenReturn = true;
                 pos = i;
             }
+        }
+
+        // if in function and return isnt seen, then throw syntatic error
+        if(inFunction && !seenReturn) {
+            throw new SyntaxException("Function does not have a return statement");
         }
 
         // if in the top-level scope there is any statement past the return statement
@@ -299,7 +309,6 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
                 sizeOfExprsCxt = exprCtxs.size();
             }
 
-            // TODO: Could cause null pointer exception
             if ((types.size()-1) != sizeOfExprsCxt){
                 throw new SemanticException("Invalid number of arguments in call declaration:\n" +
                         "Expecting:" +
