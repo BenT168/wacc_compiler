@@ -58,7 +58,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
                 returnCheck = false;
                 visitFunc(funcCtx);
                 typeEnv.removeScope();
-                if (!returnCheck) {
+                if (!returnCheck && inFunction) {
                     throw new SyntaxException("No return statement");
                 }
             }
