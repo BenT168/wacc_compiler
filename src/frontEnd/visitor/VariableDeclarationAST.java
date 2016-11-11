@@ -15,7 +15,7 @@ public class VariableDeclarationAST extends AST {
   @Override
   public Object check() {
     if (!(t1.equals(t2))) {
-      System.err.println("Type mismatch error:\nExpected: " + t1.toString() + "\nActual: " + t2.toString());
+      System.err.println("Type mismatch error in variable: " + name + "\nExpected: " + t1.toString() + "\nActual: " + t2.toString());
       System.exit(200);
     }
     return null;

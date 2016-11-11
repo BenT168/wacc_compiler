@@ -64,6 +64,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     @Override
     public Type visitFunc(@NotNull WACCParser.FuncContext ctx) {
         inFunction = true; // start of function declaration
+        Type defined = visitType(ctx.type());
 
         // loop through and store parameters into Symbol Table
         if (ctx.paramList() != null) {
@@ -75,13 +76,17 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         }
 
         typeEnv.enterScope(); // new scope
-        Type returntype = null;
+        Type actual = null;
         try {
-            returntype = visit(ctx.stat());
+            actual = visit(ctx.stat());
         } catch (NullPointerException e) {
             // do nothing
         }
-        new FunctionDeclarationAST(visitType(ctx.type()), returntype, ctx).check();
+        if(!(defined.equals(actual))) {
+            System.err.print("Function: " + ctx.ident().getText()
+                + " \nExpected return type: " + defined.toString() + " \nActual return type: " + actual.toString());
+            System.exit(200);
+        }
         typeEnv.removeScope(); // end of new scope
 
         inFunction = false; // end of function declaration
@@ -109,8 +114,9 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     public Type visitDeclare(@NotNull WACCParser.DeclareContext ctx) {
         String name = ctx.ident().IDENTITY().getText();
         Type type1 = visitType(ctx.type());
+        Type type2 = visitAssignRHS(ctx.assignRHS());
+        new VariableDeclarationAST(type1, name, type2).check();
         typeEnv.vTableInsert(name, type1);
-        new VariableDeclarationAST(type1, name, visitAssignRHS(ctx.assignRHS())).check();
         return null;
     }
 
