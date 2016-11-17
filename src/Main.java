@@ -6,12 +6,11 @@ import frontEnd.exception.SyntaxException;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.atn.RangeTransition;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 
 public class Main {
 
@@ -36,21 +35,21 @@ public class Main {
         FileInputStream fis;
 
         try {
+
+            FileReader fr = new FileReader(file);
+
+            LineNumberReader lnr = new LineNumberReader(fr);
+
             fis = new FileInputStream(file);
-            CharStream input = new ANTLRInputStream(fis);
-            WACCLexer lexer = new WACCLexer(input);
-            CommonTokenStream tokens = new CommonTokenStream(lexer);
-            WACCParser parser = new WACCParser(tokens);
+
+            /*Get Parser after lexing */
+            WACCParser parser = CallLexerAndParser.start(fis, file);
             ParseTree tree = parser.program();
 
-
-            /*Check if there are any Syntax errors
-             */
+            /*Check if there are any Syntax errors */
             int syntaxErr = parser.getNumberOfSyntaxErrors();
             if(syntaxErr > 0) {
-                System.out.println("SYNTAX ERROR: "
-                        + parser.getNumberOfSyntaxErrors());
-                System.exit(100);
+               System.exit(100);
             } else {
 
                 /*Check if there are any Semantic errors*/

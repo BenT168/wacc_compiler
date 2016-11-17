@@ -2,6 +2,7 @@ package frontEnd;
 
 import antlr.WACCParser;
 import antlr.WACCParserBaseVisitor;
+import com.sun.org.apache.bcel.internal.classfile.LineNumber;
 import frontEnd.exception.SemanticException;
 import frontEnd.exception.SyntaxException;
 import frontEnd.expr.BinaryExprNode;
@@ -9,8 +10,6 @@ import frontEnd.expr.UnaryExprNode;
 import frontEnd.stat.*;
 import frontEnd.type.*;
 import org.antlr.v4.runtime.misc.NotNull;
-
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +20,8 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     private boolean inFunction = false;
     private boolean isMultipleStat = false;
     private boolean returnCheck = true;
+
+    public static LineNumber lineNumber = new LineNumber(0, 0);
 
     public TypeCheckVisitor() {
         this.typeEnv = new SymbolTable();
@@ -102,6 +103,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         }
         if(actual != null) {
             if(!(defined.equals(actual))) {
+                System.out.println("Current Line Number " +lineNumber.getLineNumber());
                 throw new SemanticException("Function: " + ctx.ident().getText()
                         + " \nExpected return type: " + defined.toString() +
                         " \nActual return type: " + actual.toString());
