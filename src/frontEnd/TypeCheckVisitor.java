@@ -5,6 +5,7 @@ import antlr.WACCParserBaseVisitor;
 import com.sun.org.apache.bcel.internal.classfile.LineNumber;
 import frontEnd.exception.SemanticException;
 import frontEnd.exception.SyntaxException;
+import frontEnd.exception.ThrowException;
 import frontEnd.expr.BinaryExprNode;
 import frontEnd.expr.UnaryExprNode;
 import frontEnd.stat.*;
@@ -31,6 +32,9 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     //................................PROGRAM.........................................
     @Override
     public Type visitProgram(@NotNull WACCParser.ProgramContext ctx) {
+        //Getting line and columns numbers for error message
+        int line = ctx.start.getLine();
+        int column = ctx.start.getCharPositionInLine();
 
         // We use two passes: one for adding the function identifiers to the symbol table,
         // another for evaluating the function bodies.
@@ -40,7 +44,8 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
                 String i = funcCtx.ident().IDENTITY().getText();
 
                 if (typeEnv.fTableContainsKey(i)) {
-                    throw new SemanticException("Function already contains key: " + i);
+                    String msg = "Function already contains key: " + i;
+                    ThrowException.callSemanticException(line, column, msg);
                 }
 
                 Type t = visitType(funcCtx.type());
@@ -60,7 +65,9 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
                 visitFunc(funcCtx);
                 typeEnv.removeScope();
                 if (!returnCheck && inFunction) {
-                    throw new SyntaxException("No return statement");
+                    //Throw Syntax Exception if no return statement in a function
+                    String msg = "No return statement";
+                    ThrowException.callSyntaxException(line, column, msg);
                 }
             }
 
@@ -103,10 +110,14 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         }
         if(actual != null) {
             if(!(defined.equals(actual))) {
-                System.out.println("Current Line Number " +lineNumber.getLineNumber());
-                throw new SemanticException("Function: " + ctx.ident().getText()
+                //Get line and column number of function and error message
+                int line = ctx.start.getLine();
+                int column = ctx.start.getCharPositionInLine();
+                String msg = "Function: " + ctx.ident().getText()
                         + " \nExpected return type: " + defined.toString() +
-                        " \nActual return type: " + actual.toString());
+                        " \nActual return type: " + actual.toString();
+                //Throw Semantic Error
+                ThrowException.callSemanticException(line, column, msg);
             }
         }
         typeEnv.removeScope(); // end of new scope
@@ -143,7 +154,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         String name = ctx.ident().IDENTITY().getText();
         typeEnv.vTableInsert(name, type1);
         Type type2 = visitAssignRHS(ctx.assignRHS());
-        new VarDecNode(type1, type2).check();
+        new VarDecNode(type1, type2, ctx).check();
         return null;
     }
 
@@ -152,7 +163,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     public Type visitAssign(@NotNull WACCParser.AssignContext ctx) {
         Type t1 = visitAssignLHS(ctx.assignLHS());
         Type t2 = visitAssignRHS(ctx.assignRHS());
-        new Assignment(t1, t2).check();
+        new Assignment(t1, t2, ctx).check();
         return null;
     }
 
@@ -172,21 +183,21 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     /*READ assignLHS */
     @Override
     public Type visitRead(@NotNull WACCParser.ReadContext ctx) {
-        new ReadStatNode(visitAssignLHS(ctx.assignLHS())).check();
+        new ReadStatNode(visitAssignLHS(ctx.assignLHS()), ctx).check();
         return null;
     }
 
     /*FREE expr */
     @Override
     public Type visitFree(@NotNull WACCParser.FreeContext ctx) {
-        new FreeStat(visitExpr(ctx.expr())).check();
+        new FreeStat(visitExpr(ctx.expr()), ctx).check();
         return null;
     }
 
     /*EXIT expr */
     @Override
     public Type visitExit(@NotNull WACCParser.ExitContext ctx) {
-        new ExitStat(visitExpr(ctx.expr())).check();
+        new ExitStat(visitExpr(ctx.expr()), ctx).check();
         return null;
     }
 
@@ -207,7 +218,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     /*IF ELSE stat*/
     @Override
     public Type visitIfElse(@NotNull WACCParser.IfElseContext ctx) {
-        new IfElseStatNode(visitExpr(ctx.expr()), ctx.expr().getText()).check();
+        new IfElseStatNode(visitExpr(ctx.expr()), ctx.expr().getText(), ctx).check();
         // Visit branches in conditional. If Statement conditional only has 2 branches
         for (int i = 0; i < 2; i++) {
             typeEnv.enterScope();
@@ -220,7 +231,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     /*WHILE stat*/
     @Override
     public Type visitWhile(@NotNull WACCParser.WhileContext ctx) {
-        new WhileStatNode(visitExpr(ctx.expr()), ctx.expr().getText()).check();
+        new WhileStatNode(visitExpr(ctx.expr()), ctx.expr().getText(), ctx).check();
         // examine body of while
         typeEnv.enterScope();
         visit(ctx.stat());
@@ -240,6 +251,10 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     /*stat ; stat*/
     @Override
     public Type visitMultipleStat(@NotNull WACCParser.MultipleStatContext ctx) {
+        //Get line and column number of stats for error message
+        int line = ctx.start.getLine();
+        int column = ctx.start.getCharPositionInLine();
+
         //Boolean for function to check how many stats is has
         isMultipleStat = true;
         boolean seenReturn = false;
@@ -256,14 +271,16 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
         // if in the top-level scope there is any statement past the return statement
         // then that should cause an error
-        if(seenReturn && pos != ctx.stat().size() - 1) {
-            //if in function, then throw syntax error
+        if(seenReturn && pos != lastStatementIndex) {
+            //if in function, then throw Syntax error
             if (inFunction) {
-                throw new SyntaxException("Function does not have a return statement.");
+                String msg = "Function does not have a return statement.";
+                ThrowException.callSyntaxException(line, column, msg);
             }
-            throw new SemanticException("Statement after return. Unreachable statement.");
+            //Throw Semantic error
+            String msg = "Statement after return. Unreachable statement.";
+            ThrowException.callSemanticException(line, column, msg);
         }
-
         // visit all statements sequentially
         ctx.stat().forEach(this::visit);
         return null;
@@ -275,9 +292,19 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     /*assign-lhs*/
     @Override
     public Type visitAssignLHS(@NotNull WACCParser.AssignLHSContext ctx) {
+        //Getting line and column number for expression for error message
+        int line = ctx.start.getLine();
+        int column = ctx.start.getCharPositionInLine();
+
         Type t = null;
         if (ctx.ident() != null) {
             t = typeEnv.varLookup(ctx.ident().IDENTITY().getText());
+            if(t == null) {
+                //Throw semantic error if variable not found in table
+                String msg = "Variable identifier: " +
+                        ctx.ident().getText() + " unbound in current scope or any enclosing scopes";
+                ThrowException.callSemanticException(line, column, msg);
+            }
         } else if (ctx.arrayElem() != null) {
             t = visitArrayElem(ctx.arrayElem());
             if(t.equals(new BaseType(BaseTypeEnum.STRING))) {
@@ -289,9 +316,9 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         } else if (ctx.pairElem() != null) {
             t = visitPairElem(ctx.pairElem());
         } else {
-            throw new SemanticException("Error in expression:" +
-                    ctx.getText() + "\nin method 'visitAssignLHS");
-
+            String msg = "Error in expression:" +
+                    ctx.getText() + "\nin method 'visitAssignLHS";
+            ThrowException.callSemanticException(line, column, msg);
         }
         return t;
     }
@@ -299,6 +326,10 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     /*assign-rhs*/
     @Override
     public Type visitAssignRHS(@NotNull WACCParser.AssignRHSContext ctx) {
+        //Getting line and column number of expression for error message
+        int line = ctx.start.getLine();
+        int column = ctx.start.getCharPositionInLine();
+
         Type t = null;
         if (ctx.NEWPAIR() != null) {
             Type t1 = visitExpr(ctx.expr(0));
@@ -307,6 +338,15 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         } else if (ctx.CALL() != null) {
             String i = ctx.ident().IDENTITY().getText();
             List<Type> types = typeEnv.funcLookup(i);
+
+            //Check if funcLookup throws an error
+            if(types == null) {
+                //Throw Semantic error as function not found
+                String msg = "Function: " +
+                        i + " doesn't exist in symbol table";
+                ThrowException.callSemanticException(line, column, msg);
+            }
+
             List<WACCParser.ExprContext> exprCtxs = null;
 
             //t is return type of function
@@ -320,10 +360,11 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
             }
 
             if ((types.size()-1) != sizeOfExprsCxt){
-                throw new SemanticException("Invalid number of arguments in call declaration:\n" +
+                //Throw Semantic Error
+                String msg = "Invalid number of arguments in call declaration:\n" +
                         "Expecting:" +
-                        " " + (types.size()-1) + "\nActual: " + exprCtxs.size());
-
+                        " " + (types.size()-1) + "\nActual: " + exprCtxs.size();
+                ThrowException.callSemanticException(line, column, msg);
             }
 
             for (int j = 1; j < types.size(); j++) {
@@ -331,8 +372,10 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
                 Type temp2 = visitExpr(exprCtxs.get(j - 1));
 
                 if (!(temp1.equals(temp2))) {
-                    throw new SemanticException("Type mismatch error:\nExpecting: " +
-                            temp1.toString() + "\nActual: " + temp2.toString());
+                    //Throw Semantic Error
+                    String msg = "Type mismatch error:\nExpecting: " +
+                            temp1.toString() + "\nActual: " + temp2.toString();
+                    ThrowException.callSemanticException(line, column, msg);
                 }
             }
         } else if (ctx.arrayLiter() != null) {
@@ -342,7 +385,9 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         } else if (ctx.expr() != null) {
             t = visitExpr(ctx.expr(0));
         } else {
-            throw new SemanticException("Error in 'visitAssignRHS' method.");
+            //Throw Semantic Error
+            String msg = "Error in 'visitAssignRHS' method.";
+            ThrowException.callSemanticException(line, column, msg);
         }
         return t;
     }
@@ -354,10 +399,15 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
     @Override
     public Type visitPairElem(@NotNull WACCParser.PairElemContext ctx) {
+        //Getting line and column number of expression for error message
+        int line = ctx.start.getLine();
+        int column = ctx.start.getCharPositionInLine();
+
         Type t = visitExpr(ctx.expr());
         if (!(t instanceof PairType)) {
-            System.err.print("In expression: " + ctx.getText() +
-                    "\nExpecting type: Pair" + "\nActual type: " + t.toString());
+            String msg = "In expression: " + ctx.getText() +
+                    "\nExpecting type: Pair" + "\nActual type: " + t.toString();
+            ThrowException.callSemanticException(line, column, msg);
         }
         if (ctx.FST() != null) {
             t = ((PairType) t).getType1();
@@ -378,8 +428,13 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         } else if (ctx.pairType() != null) {
             return visitPairType(ctx.pairType());
         } else {
-            throw new SemanticException("Error in 'visitType' method");
+            //Getting line and column number of expression for error message
+            int line = ctx.start.getLine();
+            int column = ctx.start.getCharPositionInLine();
+            String msg = "Error in 'visitType' method";
+            ThrowException.callSemanticException(line, column, msg);
         }
+        return null;
     }
 
     @Override
@@ -393,9 +448,13 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         } else if (ctx.STRING() != null) {
             return new BaseType(BaseTypeEnum.STRING);
         } else {
-            throw new SemanticException("Error in 'visitBaseType' method");
+            //Getting line and column number of expression for error message
+            int line = ctx.start.getLine();
+            int column = ctx.start.getCharPositionInLine();
+            String msg = "Error in 'visitBaseType' method";
+            ThrowException.callSemanticException(line, column, msg);
         }
-
+        return null;
     }
 
     @Override
@@ -411,7 +470,11 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         } else if (ctx.pairType() != null) {
             t = visitPairType(ctx.pairType());
         } else {
-            throw new SemanticException("Error in method 'visitArrayType'");
+            //Getting line and column number of expression for error message
+            int line = ctx.start.getLine();
+            int column = ctx.start.getCharPositionInLine();
+            String msg = "Error in method 'visitArrayType'";
+            ThrowException.callSemanticException(line, column, msg);
         }
         return new ArrayType(t);
     }
@@ -516,11 +579,14 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         Type t2 = visitExpr(ctx.expr(0));
         Type temp = new BaseType(BaseTypeEnum.INT);
         if (!(t2.equals(temp))) {
-            throw new SemanticException("In expression: " +
+            //Getting line and column number of expression for error message
+            int line = ctx.start.getLine();
+            int column = ctx.start.getCharPositionInLine();
+            String msg = "In expression: " +
                     ctx.getText() + "\nExpecting type: "
                     + temp.toString() +"\nActual type: " +
-                    t2.toString());
-
+                    t2.toString();
+            ThrowException.callSemanticException(line, column, msg);
         }
         return t1;
     }

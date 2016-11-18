@@ -1,6 +1,7 @@
 import antlr.WACCLexer;
 import antlr.WACCParser;
 import frontEnd.TypeCheckVisitor;
+import frontEnd.exception.MyErrorListener;
 import frontEnd.exception.SemanticException;
 import frontEnd.exception.SyntaxException;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -44,7 +45,10 @@ public class Main {
 
             /*Get Parser after lexing */
             WACCParser parser = CallLexerAndParser.start(fis, file);
+            parser.removeErrorListeners();
+            parser.addErrorListener(MyErrorListener.INSTANCE);
             ParseTree tree = parser.program();
+
 
             /*Check if there are any Syntax errors */
             int syntaxErr = parser.getNumberOfSyntaxErrors();
@@ -62,6 +66,8 @@ public class Main {
                         System.exit(200);
                     } else if (e instanceof SyntaxException) {
                         System.exit(100);
+//                    } else if (e instanceof ParseCancellationException) {
+//                        System.exit(100);
                     }
                 }
             }
@@ -72,6 +78,8 @@ public class Main {
             System.out.println("Error: InputStream does not work.");
         } catch (NullPointerException ee) {
             System.exit(0);
+        } catch (ParseCancellationException e) {
+
         }
 
         /* A successful compilation should return the exit status 0 */

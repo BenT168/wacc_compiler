@@ -3,6 +3,7 @@ package frontEnd.expr;
 import antlr.WACCParser;
 import frontEnd.Node;
 import frontEnd.exception.SemanticException;
+import frontEnd.exception.ThrowException;
 import frontEnd.type.BaseType;
 import frontEnd.type.BaseTypeEnum;
 import frontEnd.type.Type;
@@ -21,6 +22,10 @@ public class BinaryExprNode extends Node {
 
   @Override
   public Object check() {
+    //Getting line and column number for error message
+    int line = ctx.start.getLine();
+    int column = ctx.start.getCharPositionInLine();
+
     Type booltmp = new BaseType(BaseTypeEnum.BOOL);
     Type inttmp = new BaseType(BaseTypeEnum.INT);
 
@@ -29,23 +34,29 @@ public class BinaryExprNode extends Node {
         || ctx.PLUS() != null || ctx.MINUS() != null) {
       boolean bothNotInt = (!(lhs.equals(inttmp)) || !(rhs.equals(inttmp)));
       if (bothNotInt) {
-        throw new SemanticException("Wrong argument types for binary operator.\n" +
+        //Throw Semantic Error
+        String msg = "Wrong argument types for binary operator.\n" +
                 "Expected types : INT, INT\n" +
-                "Actual type : " + lhs.toString() + " , " + rhs.toString());
+                "Actual type : " + lhs.toString() + ", " + rhs.toString();
+        ThrowException.callSemanticException(line, column, msg);
       }
       type = new BaseType(BaseTypeEnum.INT);
     } else if(ctx.LT() != null || ctx.LTE() != null || ctx.GT() != null || ctx.GTE() != null
         || ctx.EQ() != null || ctx.NEQ() != null) {
       if(!lhs.equals(rhs)) {
-        throw new SemanticException("Expected arguments to be the same type in Binary Operator\n "+
-                "Actual type : " + lhs.toString() + " , " + rhs.toString());
+        //Throw Semantic Error
+        String msg = "Expected arguments to be the same type in Binary Operator\n "+
+                "Actual type : " + lhs.toString() + ", " + rhs.toString();
+        ThrowException.callSemanticException(line, column, msg);
       }
       type = booltmp;
     } else if(ctx.AND() != null || ctx.OR() != null) {
       if(!lhs.equals(booltmp) || !rhs.equals(booltmp)) {
-        throw new SemanticException("Wrong argument types for binary operator.\n" +
-                "Expected types : Bool, Bool\n "+
-                "Actual type : " + lhs.toString() + " , " + rhs.toString());
+        //Throw Semantic Error
+        String msg = "Wrong argument types for binary operator.\n" +
+                "Expected types : BOOL, BOOL\n"+
+                "Actual type : " + lhs.toString() + ", " + rhs.toString();
+        ThrowException.callSemanticException(line, column, msg);
       }
       type = booltmp;
     }

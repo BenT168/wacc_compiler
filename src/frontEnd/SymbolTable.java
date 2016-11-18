@@ -33,14 +33,12 @@ public class SymbolTable {
                 return res;
             }
         }
-        throw new SemanticException("Variable identifier: " +
-                key + " unbound in current scope or any enclosing scopes");
+        return null;
     }
 
     public List<Type> funcLookup(String key) {
         if (!(fTable.containsKey(key))) {
-            throw new SemanticException("Function: " +
-                    key + " doesn't exist in symbol table");
+            return null;
         }
         return fTable.get(key);
     }
