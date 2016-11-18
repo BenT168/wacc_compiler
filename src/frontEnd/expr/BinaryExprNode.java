@@ -44,12 +44,12 @@ public class BinaryExprNode extends Node {
         || ctx.EQ() != null || ctx.NEQ() != null) {
 
       //Check if lhs or rhs is an array, if so throw a semantic error
-      if(lhs.toString().length() > 5) {
+      if(lhs.toString().length() > 5 && ctx.EQ() == null || ctx.NEQ() == null) {
         if(lhs.toString().substring(0,5).equals("ARRAY")) {
           String msg = "Cannot Perform a Boolean Operator on an Array";
           ThrowException.callSemanticException(line, column, msg);
           //Check if lhs is a pair, if so throw a semantic error
-        } else if(lhs.toString().substring(0,4).equals("PAIR")) {
+        } else if(lhs.toString().substring(0,4).equals("PAIR") && ctx.EQ() == null && ctx.NEQ() == null) {
           String msg = "Cannot Perform a Boolean Operator on an Pair";
           ThrowException.callSemanticException(line, column, msg);
         }

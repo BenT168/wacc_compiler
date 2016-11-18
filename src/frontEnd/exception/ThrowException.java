@@ -16,7 +16,6 @@ public class ThrowException {
     /*Method for throwing synatax exceptions (that weren't caught in the parser) with line, column and error message*/
     public static void callSyntaxException(int line, int column, String message) {
         syntaxExceptionThrown = true;
-        System.err.println("Syntax Error: line "+line+":"+column+" "+message);
+        throw new SyntaxException("Syntax Error: line "+line+":"+column+" "+message);
     }
-
 }

@@ -70,14 +70,19 @@ public class Main {
         //Catching all the exceptions
         } catch (IOException e) {
             System.out.println("Error: InputStream does not work.");
-        } catch (NullPointerException ee) {
-            System.exit(0);
-        } catch (SemanticException e) {
-            System.err.println(e.getMessage());
-            System.exit(200);
-        } catch (SyntaxException e) {
-            System.err.println(e.getMessage());
-            System.exit(100);
+        } catch (Exception e) {
+            if (e instanceof SyntaxException) {
+                System.err.println(e.getMessage());
+                System.exit(100);
+            } else if (e instanceof SemanticException) {
+                System.err.println(e.getMessage());
+                System.exit(200);
+            }
+            if (ThrowException.semanticExceptionThrown) {
+                System.exit(200);
+            } else if(ThrowException.syntaxExceptionThrown) {
+                System.exit(100);
+            }
         }
 
 
