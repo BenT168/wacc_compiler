@@ -26,6 +26,11 @@ public class WhileStatNode extends Node {
     int line = ctx.start.getLine();
     int column = ctx.start.getCharPositionInLine();
 
+    if(t == null) {
+      //Semantic Error has been already notified
+      return null;
+    }
+
     Type temp = new BaseType(BaseTypeEnum.BOOL);
     if (!(t.equals(temp))) {
       //Throw Semantic Error

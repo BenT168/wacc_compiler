@@ -1,13 +1,10 @@
-import antlr.WACCLexer;
 import antlr.WACCParser;
 import frontEnd.TypeCheckVisitor;
 import frontEnd.exception.MyErrorListener;
 import frontEnd.exception.SemanticException;
 import frontEnd.exception.SyntaxException;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.atn.RangeTransition;
+import frontEnd.exception.ThrowException;
+
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
 
@@ -37,16 +34,16 @@ public class Main {
 
         try {
 
-            FileReader fr = new FileReader(file);
-
-            LineNumberReader lnr = new LineNumberReader(fr);
-
             fis = new FileInputStream(file);
 
             /*Get Parser after lexing */
             WACCParser parser = CallLexerAndParser.start(fis, file);
+
+            /* Add my listener so error message prints out "Syntax Error ..."*/
             parser.removeErrorListeners();
             parser.addErrorListener(MyErrorListener.INSTANCE);
+
+            /*Start parsing from program */
             ParseTree tree = parser.program();
 
 
@@ -55,32 +52,34 @@ public class Main {
             if(syntaxErr > 0) {
                System.exit(100);
             } else {
-
-                /*Check if there are any Semantic errors*/
-                try {
-                    TypeCheckVisitor visitor = new TypeCheckVisitor();
-                    visitor.visit(tree);
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                    if (e instanceof SemanticException) {
-                        System.exit(200);
-                    } else if (e instanceof SyntaxException) {
-                        System.exit(100);
-//                    } else if (e instanceof ParseCancellationException) {
-//                        System.exit(100);
-                    }
-                }
+                //Visit the tree
+                TypeCheckVisitor visitor = new TypeCheckVisitor();
+                visitor.visit(tree);
             }
 
             fis.close();
 
+            /*Check what error has been thrown in ThrowException and exit with proper code*/
+            if(ThrowException.semanticExceptionThrown) {
+                System.exit(200);
+            }
+            if(ThrowException.syntaxExceptionThrown) {
+                System.exit(100);
+            }
+
+        //Catching all the exceptions
         } catch (IOException e) {
             System.out.println("Error: InputStream does not work.");
         } catch (NullPointerException ee) {
             System.exit(0);
-        } catch (ParseCancellationException e) {
-
+        } catch (SemanticException e) {
+            System.err.println(e.getMessage());
+            System.exit(200);
+        } catch (SyntaxException e) {
+            System.err.println(e.getMessage());
+            System.exit(100);
         }
+
 
         /* A successful compilation should return the exit status 0 */
         System.exit(0);

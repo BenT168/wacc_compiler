@@ -352,6 +352,14 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
             //t is return type of function
             t = typeEnv.funcLookup(ctx.ident().getText()).get(0);
 
+            //Check if funcLookup throws an error
+            if(t == null) {
+                //Throw Semantic error as function not found
+                String msg = "Function: " +
+                        ctx.ident().getText() + " doesn't exist in symbol table";
+                ThrowException.callSemanticException(line, column, msg);
+            }
+
             int sizeOfExprsCxt = 0;
 
             if (ctx.argList() != null) {
@@ -563,7 +571,18 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
     @Override
     public Type visitIdent(@NotNull WACCParser.IdentContext ctx) {
-        return typeEnv.varLookup(ctx.IDENTITY().getText());
+        //Getting line and column number for expression for error message
+        int line = ctx.start.getLine();
+        int column = ctx.start.getCharPositionInLine();
+
+        Type t = typeEnv.varLookup(ctx.IDENTITY().getText());
+        if(t == null) {
+            //Throw semantic error if identity not found in table
+            String msg = "Variable identifier: " +
+                    ctx.getText() + " unbound in current scope or any enclosing scopes";
+            ThrowException.callSemanticException(line, column, msg);
+        }
+        return t;
     }
 
     @Override
