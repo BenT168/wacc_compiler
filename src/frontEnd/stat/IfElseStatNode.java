@@ -14,7 +14,7 @@ public class IfElseStatNode extends Node {
   private String expr;
   private WACCParser.IfElseContext ctx;
 
-  public IfElseStatNode(Type t, String expr, @NotNull WACCParser.IfElseContext ctx) {
+  public IfElseStatNode(Type t, String expr, WACCParser.IfElseContext ctx) {
     this.t = t;
     this.expr = expr;
     this.ctx = ctx;

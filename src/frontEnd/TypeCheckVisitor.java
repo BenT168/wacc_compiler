@@ -44,6 +44,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
                 String i = funcCtx.ident().IDENTITY().getText();
 
                 if (typeEnv.fTableContainsKey(i)) {
+                    //Throw Semantic Error if function already declared
                     String msg = "Function already contains key: " + i;
                     ThrowException.callSemanticException(line, column, msg);
                 }
@@ -70,7 +71,6 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
                     ThrowException.callSyntaxException(line, column, msg);
                 }
             }
-
         }
 
         // Evaluate "main function" body
@@ -100,7 +100,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         }
 
         typeEnv.enterScope(); // new scope
-        Type actual = null;
+        Type actual;
 
 
         try {
@@ -120,6 +120,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
                 ThrowException.callSemanticException(line, column, msg);
             }
         }
+
         typeEnv.removeScope(); // end of new scope
 
         return null;
@@ -268,6 +269,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
                 pos = i;
             }
         }
+
 
         // if in the top-level scope there is any statement past the return statement
         // then that should cause an error

@@ -1,4 +1,5 @@
 import antlr.WACCParser;
+import backEnd.TranslateVisitor;
 import frontEnd.TypeCheckVisitor;
 import frontEnd.exception.MyErrorListener;
 import frontEnd.exception.SemanticException;
@@ -9,6 +10,7 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.io.*;
+import java.util.LinkedList;
 
 public class Main {
 
@@ -31,6 +33,7 @@ public class Main {
         }
 
         FileInputStream fis;
+        ParseTree tree;
 
         try {
 
@@ -44,7 +47,7 @@ public class Main {
             parser.addErrorListener(MyErrorListener.INSTANCE);
 
             /*Start parsing from program */
-            ParseTree tree = parser.program();
+            tree = parser.program();
 
 
             /*Check if there are any Syntax errors */
@@ -57,15 +60,35 @@ public class Main {
                 visitor.visit(tree);
             }
 
+            /* Go through tree another time
+            Translate to assembly language and write to file.s*/
+
+            TranslateVisitor translateVisitor = new TranslateVisitor();
+
+            //Write to file.s
+            WriteFile writeFile = new WriteFile();
+            writeFile.writeToFile(args[1]);
+
+            //Visit tree
+            translateVisitor.visit(tree);
+            LinkedList<String> instructions = translateVisitor.getInstructions();
+
+            //Write each instruction in file
+            for(String i : instructions) {
+                writeFile.writer.write(i);
+                writeFile.writer.newLine();
+            }
+
             fis.close();
+            writeFile.writer.close();
 
             /*Check what error has been thrown in ThrowException and exit with proper code*/
-            if(ThrowException.semanticExceptionThrown) {
-                System.exit(200);
-            }
-            if(ThrowException.syntaxExceptionThrown) {
-                System.exit(100);
-            }
+                if (ThrowException.semanticExceptionThrown) {
+                    System.exit(200);
+                }
+                if (ThrowException.syntaxExceptionThrown) {
+                    System.exit(100);
+                }
 
         //Catching all the exceptions
         } catch (IOException e) {
@@ -89,5 +112,8 @@ public class Main {
         /* A successful compilation should return the exit status 0 */
         System.exit(0);
     }
+
+
+
 }
 
