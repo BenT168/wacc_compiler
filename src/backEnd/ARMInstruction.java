@@ -27,17 +27,27 @@ public class ARMInstruction {
         return "BL "+string;
     }
 
-    public static String mov(String reg, String val) {
+    public static String mov(String reg, int val) {
         return "MOV "+ reg +", #"+val;
     }
 
-    public static String sub(String store, String r1, String val) {
+    public static String sub(String store, String r1, int val) {
         return "SUB "+ store +", "+r1+", #"+val;
     }
 
-    public static String add(String store, String r1, String val) {
+    public static String add(String store, String r1, int val) {
         return "ADD "+ store +", "+r1+", #"+val;
     }
+
+    public static String str(String reg, String reg2) {
+        return "STR "+reg + ", ["+reg2+"]";
+    }
+
+    public static String str(String reg, String reg2, int offset) {
+        return "STR "+reg + ", ["+reg2+", "+ "#"+offset+"]";
+    }
+
+
 
 
 }
