@@ -1,17 +1,16 @@
-import antlr.WACCLexer;
 import antlr.WACCParser;
+import backEnd.TranslateVisitor;
 import frontEnd.TypeCheckVisitor;
+import frontEnd.exception.MyErrorListener;
 import frontEnd.exception.SemanticException;
 import frontEnd.exception.SyntaxException;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CommonTokenStream;
+import frontEnd.exception.ThrowException;
+
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
+import java.util.LinkedList;
 
 public class Main {
 
@@ -34,49 +33,87 @@ public class Main {
         }
 
         FileInputStream fis;
+        ParseTree tree;
 
         try {
+
             fis = new FileInputStream(file);
-            CharStream input = new ANTLRInputStream(fis);
-            WACCLexer lexer = new WACCLexer(input);
-            CommonTokenStream tokens = new CommonTokenStream(lexer);
-            WACCParser parser = new WACCParser(tokens);
-            ParseTree tree = parser.program();
+
+            /*Get Parser after lexing */
+            WACCParser parser = CallLexerAndParser.start(fis, file);
+
+            /* Add my listener so error message prints out "Syntax Error ..."*/
+            parser.removeErrorListeners();
+            parser.addErrorListener(MyErrorListener.INSTANCE);
+
+            /*Start parsing from program */
+            tree = parser.program();
 
 
-            /*Check if there are any Syntax errors
-             */
+            /*Check if there are any Syntax errors */
             int syntaxErr = parser.getNumberOfSyntaxErrors();
             if(syntaxErr > 0) {
-                System.out.println("SYNTAX ERROR: "
-                        + parser.getNumberOfSyntaxErrors());
-                System.exit(100);
+               System.exit(100);
             } else {
+                //Visit the tree
+                TypeCheckVisitor visitor = new TypeCheckVisitor();
+                visitor.visit(tree);
+            }
 
-                /*Check if there are any Semantic errors*/
-                try {
-                    TypeCheckVisitor visitor = new TypeCheckVisitor();
-                    visitor.visit(tree);
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                    if (e instanceof SemanticException) {
-                        System.exit(200);
-                    } else if (e instanceof SyntaxException) {
-                        System.exit(100);
-                    }
-                }
+            /* Go through tree another time
+            Translate to assembly language and write to file.s*/
+
+            TranslateVisitor translateVisitor = new TranslateVisitor();
+
+            //Write to file.s
+            WriteFile writeFile = new WriteFile();
+            writeFile.writeToFile(args[1]);
+
+            //Visit tree
+            translateVisitor.visit(tree);
+            LinkedList<String> instructions = translateVisitor.getInstructions();
+
+            //Write each instruction in file
+            for(String i : instructions) {
+                writeFile.writer.write(i);
+                writeFile.writer.newLine();
             }
 
             fis.close();
+            writeFile.writer.close();
 
+            /*Check what error has been thrown in ThrowException and exit with proper code*/
+                if (ThrowException.semanticExceptionThrown) {
+                    System.exit(200);
+                }
+                if (ThrowException.syntaxExceptionThrown) {
+                    System.exit(100);
+                }
+
+        //Catching all the exceptions
         } catch (IOException e) {
             System.out.println("Error: InputStream does not work.");
-        } catch (NullPointerException ee) {
-            System.exit(0);
+        } catch (Exception e) {
+            if (e instanceof SyntaxException) {
+                System.err.println(e.getMessage());
+                System.exit(100);
+            } else if (e instanceof SemanticException) {
+                System.err.println(e.getMessage());
+                System.exit(200);
+            }
+            if (ThrowException.semanticExceptionThrown) {
+                System.exit(200);
+            } else if(ThrowException.syntaxExceptionThrown) {
+                System.exit(100);
+            }
         }
+
 
         /* A successful compilation should return the exit status 0 */
         System.exit(0);
     }
+
+
+
 }
 
