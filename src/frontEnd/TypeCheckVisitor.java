@@ -10,7 +10,6 @@ import frontEnd.stat.*;
 import frontEnd.type.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,7 +92,6 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
         typeEnv.enterScope(); // new scope
         Type actual = null;
-
 
         try {
             actual = visit(ctx.stat());
