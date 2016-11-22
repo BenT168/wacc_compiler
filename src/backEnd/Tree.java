@@ -1,5 +1,5 @@
 package backEnd;
 
 public abstract class Tree {
-    public abstract String accept(TranslateVisitor visitor);
+    public abstract String accept(CodeGenVisitor visitor);
 }

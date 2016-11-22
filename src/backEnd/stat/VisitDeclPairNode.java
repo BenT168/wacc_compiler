@@ -1,6 +1,7 @@
 package backEnd.stat;
 
-import backEnd.ARMInstruction;
+import backEnd.OLDARMInstructions;
+
 import java.util.LinkedList;
 
 public class VisitDeclPairNode {
@@ -9,19 +10,19 @@ public class VisitDeclPairNode {
             "r9","r10","r11","r12","r13","r14","r15","r16"};
 
     public void mallocPair(LinkedList<String> instructions, String popr, int posPop) {
-        instructions.add(ARMInstruction.mov(reg[0], 8));
-        instructions.add(ARMInstruction.branchwlink("malloc"));
+        instructions.add(OLDARMInstructions.mov(reg[0], 8));
+        instructions.add(OLDARMInstructions.branchwlink("malloc"));
         String popPrev = popr;
         popr = reg[posPop+1];
-        instructions.add(ARMInstruction.pop(popPrev, popr));
-        instructions.add(ARMInstruction.str(popr, reg[0]));
+        instructions.add(OLDARMInstructions.pop(popPrev, popr));
+        instructions.add(OLDARMInstructions.str(popr, reg[0]));
 
         //move base pointer back
-        instructions.add(ARMInstruction.str(popPrev, reg[0], 4));
-        instructions.add(ARMInstruction.str(reg[0], "sp"));
-        instructions.add(ARMInstruction.add("sp", "sp",4));
-        instructions.add(ARMInstruction.mov(reg[0], 0));
-        instructions.add(ARMInstruction.ret());
+        instructions.add(OLDARMInstructions.str(popPrev, reg[0], 4));
+        instructions.add(OLDARMInstructions.str(reg[0], "sp"));
+        instructions.add(OLDARMInstructions.add("sp", "sp",4));
+        instructions.add(OLDARMInstructions.mov(reg[0], 0));
+        instructions.add(OLDARMInstructions.ret());
     }
 
 

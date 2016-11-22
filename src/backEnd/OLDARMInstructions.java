@@ -1,7 +1,7 @@
 package backEnd;
 
 
-public class ARMInstruction {
+public class OLDARMInstructions {
 
     public static String pushNew() {
         return "PUSH {lr}";

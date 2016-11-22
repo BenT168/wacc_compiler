@@ -1,5 +1,5 @@
 import antlr.WACCParser;
-import backEnd.TranslateVisitor;
+import backEnd.CodeGenVisitor;
 import frontEnd.TypeCheckVisitor;
 import frontEnd.exception.MyErrorListener;
 import frontEnd.exception.SemanticException;
@@ -63,7 +63,7 @@ public class Main {
             /* Go through tree another time
             Translate to assembly language and write to file.s*/
 
-            TranslateVisitor translateVisitor = new TranslateVisitor();
+            CodeGenVisitor translateVisitor = new CodeGenVisitor();
 
             //Write to file.s
             WriteFile writeFile = new WriteFile();
