@@ -2,7 +2,6 @@ package frontEnd;
 
 import antlr.WACCParser;
 import antlr.WACCParserBaseVisitor;
-import com.sun.org.apache.bcel.internal.classfile.LineNumber;
 import frontEnd.exception.SemanticException;
 import frontEnd.exception.SyntaxException;
 import frontEnd.exception.ThrowException;
@@ -24,9 +23,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
 
     //Get number of declarations
     private int numberOfDeclare = 0;
-
-    public static LineNumber lineNumber = new LineNumber(0, 0);
-
+    
     public TypeCheckVisitor() {
         this.typeEnv = new SymbolTable();
     }
