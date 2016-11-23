@@ -1,5 +1,6 @@
 package backEnd;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Instruction {
@@ -9,11 +10,12 @@ public class Instruction {
     private String strOperand1;
     private String strOperand2;
     private int intOperand1;
-    private boolean intOper1;
+    private boolean intOper1 = false;
     private int intOperand2;
-    private boolean intOper2;
+    private boolean intOper2 = false;
     private Label label;
-    private List<String> operands;
+    private List<String> callOperands = new ArrayList<>();
+    private List<String> allOperands = new ArrayList<>(); // Should not hold operands in 'callOperands'
 
     public Instruction(Label label) {
         this.label = label;
@@ -24,8 +26,12 @@ public class Instruction {
     public Instruction(OpCode opCode, String operand) {
         this.opCode = opCode;
         this.strOperand1 = operand;
-        this.intOper1 = false;
-        this.intOper2 = false;
+    }
+
+    public Instruction(OpCode opCode, int operand) {
+        this.opCode = opCode;
+        this.intOperand1 = operand;
+        this.intOper1 = true;
     }
 
     public Instruction(OpCode opCode, String dstOperand, String strOperand1, String strOperand2) {
@@ -33,8 +39,14 @@ public class Instruction {
         this.dstOperand = dstOperand;
         this.strOperand1 = strOperand1;
         this.strOperand2 = strOperand2;
-        this.intOper1 = false;
-        this.intOper2 = false;
+    }
+
+    public Instruction(OpCode opCode, String dstOperand, String strOperand1, int intOperand1) {
+        this.opCode = opCode;
+        this.dstOperand = dstOperand;
+        this.strOperand1 = strOperand1;
+        this.intOperand1 = intOperand1;
+        this.intOper1 = true;
     }
 
     public Instruction(OpCode opCode, String dstOperand, int intOperand1, int intOperand2) {
@@ -46,40 +58,75 @@ public class Instruction {
         this.intOper2 = true;
     }
 
-    public Instruction(String dstOperand, int intOperand1) {
-        this.dstOperand = dstOperand;
-        this.intOperand1 = intOperand1;
-        this.intOper1 = true;
-        this.intOper2 = false;
-    }
-
-    public Instruction(String dstOperand, String strOperand1) {
-        this.dstOperand = dstOperand;
-        this.strOperand1 = strOperand1;
-        this.intOper1 = false;
-        this.intOper2 = false;
-    }
-
     public Instruction(OpCode opCode, String dstOperand, int intOperand1) {
         this.opCode = opCode;
         this.dstOperand = dstOperand;
         this.intOperand1 = intOperand1;
         this.intOper1 = true;
-        this.intOper2 = false;
     }
 
     public Instruction(OpCode opCode, String dstOperand, String strOperand1) {
         this.opCode = opCode;
         this.dstOperand = dstOperand;
         this.strOperand1 = strOperand1;
-        this.intOper1 = false;
-        this.intOper2 = false;
     }
 
     public Instruction(OpCode opCode, String dstOperand, List<String> operands) {
         this.opCode = opCode;
         this.dstOperand = dstOperand;
-        this.operands = operands;
+        this.callOperands = operands;
+    }
+
+    public OpCode getOpCode() {
+        return opCode;
+    }
+
+    public String getDstOperand() {
+        return dstOperand;
+    }
+
+    public String getStrOperand1() {
+        return strOperand1;
+    }
+
+    public String getStrOperand2() {
+        return strOperand2;
+    }
+
+    public int getIntOperand1() {
+        return intOperand1;
+    }
+
+    public boolean isIntOper1() {
+        return intOper1;
+    }
+
+    public int getIntOperand2() {
+        return intOperand2;
+    }
+
+    public boolean isIntOper2() {
+        return intOper2;
+    }
+
+    public Label getLabel() {
+        return label;
+    }
+
+    public List<String> getCallOperands() {
+        return callOperands;
+    }
+
+    public List<String> getAllOperands() {
+        // Does not hold 'callOperands'
+        allOperands.add(dstOperand);
+        allOperands.add(strOperand1);
+        allOperands.add(strOperand2);
+        if (intOper1)
+            allOperands.add(Integer.valueOf(intOperand1).toString());
+        if (intOper2)
+            allOperands.add(Integer.valueOf(intOperand2).toString());
+        return allOperands;
     }
 
     @Override

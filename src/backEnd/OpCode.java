@@ -12,13 +12,11 @@ public enum OpCode {
     LOAD_VAR, LOAD_IMM, LOAD_ADDR, STR_ADDR,
 
     // Branching
-    JMP,
+    JMP, BR,
 
     // Comparison
-    CMP;
+    CMP,
 
-    @Override
-    public String toString() {
-        return super.toString().toLowerCase();
-    }
+    // Stack manipulation
+    PUSH, POP;
 }

@@ -3,7 +3,7 @@ package backEnd.utils;
 import antlr.WACCParser;
 import backEnd.OpCode;
 
-import static backEnd.utils.NodeType.*;
+import static backEnd.utils.LHSRHSNodeType.*;
 
 final public class Utils {
 
@@ -70,7 +70,7 @@ final public class Utils {
             return OpCode.EQ;
     }
 
-    public static NodeType getAssignRHSContext(WACCParser.AssignRHSContext ctx) {
+    public static LHSRHSNodeType getAssignRHSContext(WACCParser.AssignRHSContext ctx) {
         if (ctx.expr().size() == 1)
             return EXPR;
         else if (ctx.arrayLiter() != null)
@@ -81,5 +81,15 @@ final public class Utils {
             return CALL;
         else
             return PAIR_ELEM;
+    }
+
+
+    public static LHSRHSNodeType getAssignLHSContext(WACCParser.AssignLHSContext ctx) {
+        if (ctx.ident() != null)
+            return IDENT;
+        else if (ctx.pairElem() != null)
+            return PAIR_ELEM;
+        else /* ctx.arrayElem() != null */
+            return ARRAY_ELEM;
     }
 }

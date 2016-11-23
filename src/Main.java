@@ -2,7 +2,6 @@ import antlr.WACCParser;
 import backEnd.BackEnd;
 import backEnd.CodeGenerator;
 import backEnd.Instruction;
-import backEnd.TranslateVisitor;
 import frontEnd.TypeCheckVisitor;
 import frontEnd.exception.MyErrorListener;
 import frontEnd.exception.SemanticException;
@@ -13,7 +12,6 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.io.*;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Main {
@@ -69,20 +67,6 @@ public class Main {
 
             BackEnd backEnd = new CodeGenerator();
             backEnd.process(null, (WACCParser.ProgramContext) tree);
-            List<Instruction> instructions = ((CodeGenerator) backEnd).getInstructions();
-
-            //Write to file.s
-            WriteFile writeFile = new WriteFile();
-            writeFile.writeToFile(args[1]);
-
-            //Write each instruction in file
-            for(Instruction i : instructions) {
-                writeFile.writer.write(i.toString());
-                writeFile.writer.newLine();
-            }
-
-            fis.close();
-            writeFile.writer.close();
 
             /*Check what error has been thrown in ThrowException and exit with proper code*/
                 if (ThrowException.semanticExceptionThrown) {
