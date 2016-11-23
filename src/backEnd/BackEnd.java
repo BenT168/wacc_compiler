@@ -20,7 +20,7 @@ public abstract class BackEnd extends WACCParserBaseVisitor<Object> implements M
      * @param ctx Root node of AST.
      * @throws Exception Exception thrown if error occurs during processing.
      */
-    public abstract void process(SymbolTableStack symTabStack, WACCParser.ProgramContext ctx) throws Exception;
+    public abstract void process(String file, SymbolTableStack symTabStack, WACCParser.ProgramContext ctx) throws Exception;
 
     @Override
     public void addMessageObserver(MessageObserver observer) {

@@ -2,6 +2,7 @@ import antlr.WACCParser;
 import backEnd.BackEnd;
 import backEnd.CodeGenerator;
 import backEnd.Instruction;
+import frontEnd.SymbolTable;
 import frontEnd.TypeCheckVisitor;
 import frontEnd.exception.MyErrorListener;
 import frontEnd.exception.SemanticException;
@@ -36,6 +37,7 @@ public class Main {
 
         FileInputStream fis;
         ParseTree tree;
+        SymbolTable table = new SymbolTable();
 
         try {
 
@@ -60,13 +62,20 @@ public class Main {
                 //Visit the tree
                 TypeCheckVisitor visitor = new TypeCheckVisitor();
                 visitor.visit(tree);
+                table = visitor.getSymbolTable();
             }
 
             /* Go through tree another time
             Translate to assembly language and write to file.s*/
 
+            //Write to file.s
+            WriteFile writeFile = new WriteFile();
+            String fileName = writeFile.writeToFile(file);
+            String sfile = writeFile.getFileName(fileName);
+
             BackEnd backEnd = new CodeGenerator();
-            backEnd.process(null, (WACCParser.ProgramContext) tree);
+            ((CodeGenerator) backEnd).setSymbolTable(table);
+            backEnd.process(sfile, null, (WACCParser.ProgramContext) tree);
 
             /*Check what error has been thrown in ThrowException and exit with proper code*/
                 if (ThrowException.semanticExceptionThrown) {
@@ -92,6 +101,7 @@ public class Main {
             } else if(ThrowException.syntaxExceptionThrown) {
                 System.exit(100);
             }
+            System.out.println("EXCEPTION THROWN");
         }
 
 

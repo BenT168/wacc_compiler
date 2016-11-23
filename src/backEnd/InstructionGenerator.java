@@ -9,6 +9,7 @@ import java.util.List;
 public interface InstructionGenerator {
 
     public void generateInstruction(Label label);
+    public void generateInstruction(String popTag);
     public void generateInstruction(OpCode opCode, String operand);
     public void generateInstruction(OpCode opCode, int operand);
     public void generateInstruction(OpCode opcode, String dstOperand, String operand);

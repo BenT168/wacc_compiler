@@ -1,22 +1,24 @@
 package backEnd;
 
 import antlr.WACCParser;
+import backEnd.stat.VisitDeclPairNode;
 import backEnd.utils.ExprContext;
 import backEnd.utils.Utils;
+import frontEnd.SymbolTable;
 import intermediate.symboltable.SymbolTableStack;
 import org.antlr.v4.runtime.misc.NotNull;
-import org.stringtemplate.v4.ST;
-import org.stringtemplate.v4.compiler.Bytecode;
 
 import java.io.File;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static backEnd.OpCode.*;
 import static backEnd.RegisterName.LR_REG;
 import static backEnd.RegisterName.PC_REG;
+import static backEnd.RegisterName.SP_REG;
 
 public class CodeGenerator extends BackEnd implements InstructionGenerator {
 
@@ -27,8 +29,9 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
     private List<Instruction> instructions;
     private int instructionCount;
     private int tempVarCount;    // Count of temporary variables used
-    private final String T0_VAR = "t0";
+    private final String T0_VAR = "r0";
     private int labelCount;    // Count of labels used
+    private SymbolTable symbolTable;
 
     public CodeGenerator() {
         instructions = new ArrayList<>();
@@ -37,7 +40,7 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
     }
 
     private String newVar() {
-        String result = "t" + Integer.toString(tempVarCount);
+        String result = "r" + Integer.toString(tempVarCount);
         ++tempVarCount;
         return result;
     }
@@ -53,9 +56,9 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
     }
 
     @Override
-    public void process(SymbolTableStack symTabStack, WACCParser.ProgramContext ctx) throws Exception {
+    public void process(String file, SymbolTableStack symTabStack, WACCParser.ProgramContext ctx) throws Exception {
         this.symTabStack = symTabStack;
-        String assemblyFileName = "tmp.s";
+        String assemblyFileName = file;
 
         // Open file in which to write Assembly instructions.
         outputFileWriter = new PrintWriter(
@@ -67,132 +70,159 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
 
         // Write to file
         instructions.forEach(this::emitInstruction);
+        //outputFileWriter.write(".ltorg");
 
         // Close file
         outputFileWriter.close();
     }
 
+
     private void emitInstruction(Instruction i) {
         OpCode opCode = i.getOpCode();
-        String opCodeText;
         StringBuilder sb = new StringBuilder();
-        List<String> instrOperands = i.getAllOperands();
-        switch (opCode) {
-            case ADD:
-                opCodeText = opCode.toString();
-                sb.append("\t" + opCodeText);
-                for (int j = 0; j < instrOperands.size(); j++) {
-                    String str = instrOperands.get(j);
-                    if (str != null)
-                        sb.append("\t" + str);
-                    if (j < instrOperands.size() - 1)
-                        sb.append(",");
-                }
-                break;
-            case SUB:
-                opCodeText = opCode.toString();
-                sb.append("\t" + opCodeText);
-                for (int j = 0; j < instrOperands.size(); j++) {
-                    String str = instrOperands.get(j);
-                    if (str != null)
-                        sb.append("\t" + str);
-                    if (j < instrOperands.size() - 1)
-                        sb.append(",");
-                }
-                break;
-            case DIV:
-                opCodeText = "SDIV";
-                sb.append("\t" + opCodeText);
-                for (int j = 0; j < instrOperands.size(); j++) {
-                    String str = instrOperands.get(j);
-                    if (str != null)
-                        sb.append("\t" + str);
-                    if (j < instrOperands.size() - 1)
-                        sb.append(",");
-                }
-                break;
-            case MUL:
-                opCodeText = opCode.toString();
-                sb.append("\t" + opCodeText);
-                for (int j = 0; j < instrOperands.size(); j++) {
-                    String str = instrOperands.get(j);
-                    if (str != null)
-                        sb.append("\t" + str);
-                    if (j < instrOperands.size() - 1)
-                        sb.append(",");
-                }
-                break;
-            case MOD:
-                break;
-            case EQ:
-                opCodeText = "TEQ";
-                sb.append("\t" + opCodeText);
-                break;
-            case NEQ:
-                break;
-            case AND:
-                break;
-            case OR:
-                break;
-            case GT:
-                break;
-            case GTE:
-                break;
-            case LT:
-                break;
-            case LTE:
-                break;
-            case CALL:
-                break;
-            case RETURN:
-                break;
-            case LOAD_VAR:
-                opCodeText = "MOV";
-                sb.append("\t" + opCodeText);
-                sb.append("\t" + i.getDstOperand() + ", ");
-                sb.append(i.getStrOperand1());
-                break;
-            case LOAD_IMM:
-                opCodeText = "LDR";
-                sb.append("\t" + opCodeText);
-                sb.append("\t" + i.getDstOperand() + ", =");
-                sb.append(Integer.valueOf(i.getIntOperand1()).toString());
-                break;
-            case LOAD_ADDR:
-                break;
-            case STR_ADDR:
-                break;
-            case JMP:
-                break;
-            case BR:
-                opCodeText = "BL";
-                sb.append("\t" + opCodeText);
-                sb.append("\t" + i.getStrOperand1());
-                break;
-            case CMP:
-                break;
-            case PUSH:
-                opCodeText = opCode.toString();
-                sb.append("\t" + opCodeText);
-                sb.append("\t" + i.getStrOperand1());
-                break;
-            case POP:
-                opCodeText = opCode.toString();
-                sb.append("\t" + opCodeText);
-                sb.append("\t" + i.getStrOperand1());
-                break;
-            default: break;
+
+        if(opCode == null) {
+            //Instruction is either a label or a tag
+            if(i.getLabel() != null) {
+                String str = i.getLabel().toString();
+                sb.append(str);
+            } else {
+                sb.append("\t" + i.getTag());
+            }
+        } else {
+            String opCodeText;
+            List<String> instrOperands = i.getAllOperands();
+
+            switch (opCode) {
+                case ADD:
+                    opCodeText = opCode.toString();
+                    sb.append("\t" + opCodeText);
+                    for (int j = 0; j < instrOperands.size(); j++) {
+                        String str = instrOperands.get(j);
+                        if (str != null)
+                            sb.append("\t" + str);
+                        if (j < instrOperands.size() - 1)
+                            sb.append(",");
+                    }
+                    break;
+                case SUB:
+                    opCodeText = opCode.toString();
+                    sb.append("\t" + opCodeText);
+                    for (int j = 0; j < instrOperands.size(); j++) {
+                        String str = instrOperands.get(j);
+                        if (str != null) {
+                            if(isParsable(str)) {
+                                sb.append(" #" + str);
+
+                            } else {
+                                sb.append(" " + str);
+                            }
+                        } else {
+                            continue;
+                        }
+                        if (j < instrOperands.size() - 1)
+                            sb.append(",");
+                    }
+                    break;
+                case DIV:
+                    String prefix = "\t";
+                    opCodeText = "SDIV";
+                    sb.append("\t" + opCodeText);
+                    for (int j = 0; j < instrOperands.size(); j++) {
+                        String str = instrOperands.get(j);
+                        sb.append(prefix);
+                        prefix = ", ";
+                        sb.append(str);
+                    }
+                    break;
+                case MUL:
+                    prefix = "\t";
+                    opCodeText = opCode.toString();
+                    sb.append("\t" + opCodeText);
+                    for (int j = 0; j < instrOperands.size(); j++) {
+                        String str = instrOperands.get(j);
+                        sb.append(prefix);
+                        prefix = ", ";
+                        sb.append(str);
+                    }
+                    break;
+                case MOD: break;
+                case EQ:
+                    opCodeText = "TEQ";
+                    sb.append("\t" + opCodeText);
+                    break;
+                case NEQ:    break;
+                case AND:    break;
+                case OR:     break;
+                case GT:     break;
+                case GTE:    break;
+                case LT:     break;
+                case LTE:    break;
+                case CALL:   break;
+                case RETURN: break;
+                case LOAD_VAR:
+                    opCodeText = "MOV";
+                    sb.append("\t" + opCodeText);
+                    sb.append("\t" + i.getDstOperand() + ", ");
+                    if(i.getIntOperand1() == 0 && i.getStrOperand1() == null) {
+                        sb.append("#" + i.getIntOperand1());
+                    } else {
+                        sb.append(i.getStrOperand1());
+                    }
+                    break;
+                case LOAD_IMM:
+                    opCodeText = "LDR";
+                    sb.append("\t" + opCodeText);
+                    sb.append("\t" + i.getDstOperand() + ", =");
+                    sb.append(Integer.valueOf(i.getIntOperand1()).toString());
+                    break;
+                case LOAD_ADDR: break;
+                case STR_ADDR:
+                    opCodeText = "STR";
+                    sb.append("\t" + opCodeText);
+                    sb.append("\t" + i.getDstOperand() + ", ");
+                    sb.append("\t" +"[" + i.getStrOperand1());
+                    if (i.isIntOper1()) {
+                        sb.append(", #" + Integer.valueOf(i.getIntOperand1()).toString());
+                    }
+                    sb.append("]");
+                    break;
+                case JMP: break;
+                case BR:
+                    opCodeText = "BL";
+                    sb.append("\t" + opCodeText);
+                    sb.append("\t" + i.getStrOperand1());
+                    break;
+                case CMP: break;
+                case PUSH:
+                    opCodeText = opCode.toString();
+                    sb.append("\t" + opCodeText);
+                    sb.append("\t" + i.getStrOperand1());
+                    break;
+                case POP:
+                    opCodeText = opCode.toString();
+                    sb.append("\t" + opCodeText);
+                    sb.append("\t" + i.getStrOperand1());
+                    break;
+                default:
+                    break;
+            }
         }
         outputFileWriter.println(sb.toString());
+
     }
+
 
     /*
     ----------------------- PROGRAM TRANSLATION --------------------------------
      */
     @Override
     public Object visitProgram(@NotNull WACCParser.ProgramContext ctx) {
+        outputFileWriter.write(".text\n\n");
+        outputFileWriter.write(".global main\n");
         generateFunctions(ctx.func());
         generateMainFunction(ctx.stat());
+
         return null;
     }
 
@@ -201,15 +231,22 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
     }
 
     private void generateMainFunction(WACCParser.StatContext ctx) {
+        Label label = new Label("main");
+        generateInstruction(label);
+        generateInstruction(PUSH, LR_REG.toString());
         visit(ctx);
-    }
+        generateInstruction(LOAD_IMM, T0_VAR, 0);
+        generateInstruction(POP, LR_REG.toString());    }
 
     @Override
     public Object visitFunc(@NotNull WACCParser.FuncContext ctx) {
         Label label = new Label(ctx.ident().getText());
         generateInstruction(label);
-        final String LR_REG = "LR";
-        generateInstruction(PUSH, LR_REG);
+        generateInstruction(PUSH, LR_REG.toString());
+        visit(ctx.stat());
+//        generateInstruction(LOAD_IMM, T0_VAR, 0);
+//        generateInstruction(POP, LR_REG.toString());
+        generateInstruction(".ltorg");
         return null;
     }
 
@@ -219,12 +256,17 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
 
     @Override
     public Object visitDeclare(@NotNull WACCParser.DeclareContext ctx) {
-        generateInstruction(SUB, "sp", "sp", 4);
-
+        VisitDeclPairNode vpNode = new VisitDeclPairNode(this);
+        int offset = 1;
+        if(ctx.type().pairType() == null) {
+            offset = vpNode.checkMallocSize(ctx.type().getText());
+        }
+        generateInstruction(SUB, "sp", "sp", offset);
         String var0 = newVar();
         String i = ctx.ident().getText();
         transAssignRHS(ctx.assignRHS(), var0);
         generateInstruction(LOAD_VAR, i, var0);
+        generateInstruction(STR_ADDR, i, SP_REG.toString());
         return null;
     }
 
@@ -255,27 +297,32 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
                 break;
             case NEWPAIR:
                 String var1 = newVar();
-                String var2 = newVar();
 
-                generateInstruction(LOAD_VAR, var1, T0_VAR);
+                generateInstruction(LOAD_VAR, var, T0_VAR);
 
-                transExpr(ctx.expr(0), var2);
+                transExpr(ctx.expr(0), var1);
                 generateInstruction(LOAD_IMM, T0_VAR, 4);
                 generateInstruction(BR, "malloc");
+                generateInstruction(STR_ADDR, var1, T0_VAR);
+                generateInstruction(STR_ADDR, T0_VAR, var);
 
-                transExpr(ctx.expr(1), var2);
-                generateInstruction(STR_ADDR, var1, 0);
-                generateInstruction(STR_ADDR, var2, 4); // 4-byte offset
-                generateInstruction(LOAD_ADDR, var, 0); // Load address, of pair on heap, into 'var'
+                transExpr(ctx.expr(1), var1);
+                generateInstruction(LOAD_IMM, T0_VAR, 4);
+                generateInstruction(BR, "malloc");
+                generateInstruction(STR_ADDR, var1, T0_VAR);
+                generateInstruction(STR_ADDR, T0_VAR, var, 4);
+
+                generateInstruction(STR_ADDR, var, SP_REG.toString());
                 break;
             case CALL:
+                String funcName = ctx.ident().getText();
+                generateInstruction(BR, funcName);
                 List<String> args = new ArrayList<>();
                 for (WACCParser.ExprContext exprContext : ctx.expr()) {
                     String var0 = newVar();
                     transExpr(exprContext, var0);
                     args.add(var0);
                 }
-                String funcName = ctx.ident().getText();
                 generateInstruction(CALL, funcName, args);
                 break;
             case PAIR_ELEM:
@@ -355,6 +402,12 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
 
     @Override
     public Object visitReturn(@NotNull WACCParser.ReturnContext ctx) {
+        if(ctx.expr().intLiter() != null) {
+            String var0 = newVar();
+            generateInstruction(LOAD_IMM, var0, 0);
+            generateInstruction(LOAD_VAR, T0_VAR, var0);
+            generateInstruction(POP, PC_REG.toString());
+        }
         return super.visitReturn(ctx);
     }
 
@@ -362,13 +415,35 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
     public Object visitExit(@NotNull WACCParser.ExitContext ctx) {
         generateInstruction(PUSH, LR_REG.toString());
         String var0 = newVar();
-        int intOperand = Integer.parseInt(ctx.expr().intLiter().getText());
-        generateInstruction(LOAD_IMM, var0, intOperand);
+        if(ctx.expr().MINUS() != null && ctx.expr().getChild(2) == null) {//negative number
+            int intOperand = ifNumGetNum(ctx.expr().getText());
+            generateInstruction(LOAD_IMM, var0, intOperand);
+        } else if(ctx.expr().intLiter() != null) {
+            int intOperand = Integer.parseInt(ctx.expr().intLiter().getText());
+            generateInstruction(LOAD_IMM, var0, intOperand);
+        } else if (ctx.expr() != null) {
+            String var1 = newVar();
+            transExpr(ctx.expr(), var1);
+            generateInstruction(LOAD_VAR, var0, var1);
+        } else {
+            System.err.println("Cannot resolve exit expression: " + ctx.expr());
+        }
         generateInstruction(LOAD_VAR, T0_VAR, var0);
         generateInstruction(BR, "exit");
         generateInstruction(LOAD_IMM, T0_VAR, 0);
         generateInstruction(POP, PC_REG.toString());
+        generateInstruction(".ltorg");
         return null;
+    }
+
+    private int ifNumGetNum(String expr) {
+        if(expr.charAt(0) == '-') {
+            //This is a negative number
+            String str = expr.substring(1);
+            int i = Integer.parseInt(str);
+            return i * -1;
+        }
+        return Integer.parseInt(expr);
     }
 
     @Override
@@ -388,6 +463,9 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
 
     @Override
     public Object visitSkip(@NotNull WACCParser.SkipContext ctx) {
+        generateInstruction(PUSH, LR_REG.toString());
+        generateInstruction(LOAD_VAR, T0_VAR, 0);
+        generateInstruction(POP, PC_REG.toString());
         return super.visitSkip(ctx);
     }
 
@@ -427,6 +505,14 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
                  generateInstruction(b_opCode, var0, binaryVar1, binaryVar2);
                  break;
          }
+    }
+
+
+    @Override
+    public void generateInstruction(String popTag) {
+        Instruction i = new Instruction(popTag);
+        instructions.add(i);
+        ++instructionCount;
     }
 
     @Override
@@ -490,4 +576,18 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
         instructions.add(i);
         ++instructionCount;
     }
+
+    public void setSymbolTable(SymbolTable symbolTable) {
+        this.symbolTable = symbolTable;
+    }
+
+    private boolean isParsable(String num) {
+        try {
+            Integer.parseInt(num);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
+    }
+
 }

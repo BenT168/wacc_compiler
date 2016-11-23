@@ -14,11 +14,23 @@ public class Instruction {
     private int intOperand2;
     private boolean intOper2 = false;
     private Label label;
+    private String tag;
     private List<String> callOperands = new ArrayList<>();
     private List<String> allOperands = new ArrayList<>(); // Should not hold operands in 'callOperands'
 
+    public static final String LTORG_DIRECTIVE = "\t \t.ltorg";
+    public static final String TEXT_DIRECTIVE = "\t.text";
+    public static final String DATA_DIRECTIVE = "\t.data";
+    public static final String GLOBAL_MAIN_DIRECTIVE = ".global main";
+
     public Instruction(Label label) {
         this.label = label;
+        this.intOper1 = false;
+        this.intOper2 = false;
+    }
+
+    public Instruction(String tag) {
+        this.tag = tag;
         this.intOper1 = false;
         this.intOper2 = false;
     }
@@ -111,6 +123,10 @@ public class Instruction {
 
     public Label getLabel() {
         return label;
+    }
+
+    public String getTag() {
+        return tag;
     }
 
     public List<String> getCallOperands() {
