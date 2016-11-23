@@ -62,8 +62,8 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
 
         // Open file in which to write Assembly instructions.
         outputFileWriter = new PrintWriter(
-                                new PrintStream(
-                                        new File(assemblyFileName)));
+                new PrintStream(
+                        new File(assemblyFileName)));
 
         // Generate code
         visitProgram(ctx);
@@ -80,10 +80,9 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
     private void emitInstruction(Instruction i) {
         OpCode opCode = i.getOpCode();
         StringBuilder sb = new StringBuilder();
-
-        if(opCode == null) {
+        if (opCode == null) {
             //Instruction is either a label or a tag
-            if(i.getLabel() != null) {
+            if (i.getLabel() != null) {
                 String str = i.getLabel().toString();
                 sb.append(str);
             } else {
@@ -111,7 +110,7 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
                     for (int j = 0; j < instrOperands.size(); j++) {
                         String str = instrOperands.get(j);
                         if (str != null) {
-                            if(isParsable(str)) {
+                            if (isParsable(str)) {
                                 sb.append(" #" + str);
 
                             } else {
@@ -146,25 +145,35 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
                         sb.append(str);
                     }
                     break;
-                case MOD: break;
+                case MOD:
+                    break;
                 case EQ:
                     opCodeText = "TEQ";
                     sb.append("\t" + opCodeText);
                     break;
-                case NEQ:    break;
-                case AND:    break;
-                case OR:     break;
-                case GT:     break;
-                case GTE:    break;
-                case LT:     break;
-                case LTE:    break;
-                case CALL:   break;
-                case RETURN: break;
+                case NEQ:
+                    break;
+                case AND:
+                    break;
+                case OR:
+                    break;
+                case GT:
+                    break;
+                case GTE:
+                    break;
+                case LT:
+                    break;
+                case LTE:
+                    break;
+                case CALL:
+                    break;
+                case RETURN:
+                    break;
                 case LOAD_VAR:
                     opCodeText = "MOV";
                     sb.append("\t" + opCodeText);
                     sb.append("\t" + i.getDstOperand() + ", ");
-                    if(i.getIntOperand1() == 0 && i.getStrOperand1() == null) {
+                    if (i.getIntOperand1() == 0 && i.getStrOperand1() == null) {
                         sb.append("#" + i.getIntOperand1());
                     } else {
                         sb.append(i.getStrOperand1());
@@ -176,24 +185,27 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
                     sb.append("\t" + i.getDstOperand() + ", =");
                     sb.append(Integer.valueOf(i.getIntOperand1()).toString());
                     break;
-                case LOAD_ADDR: break;
+                case LOAD_ADDR:
+                    break;
                 case STR_ADDR:
                     opCodeText = "STR";
                     sb.append("\t" + opCodeText);
                     sb.append("\t" + i.getDstOperand() + ", ");
-                    sb.append("\t" +"[" + i.getStrOperand1());
+                    sb.append("\t" + "[" + i.getStrOperand1());
                     if (i.isIntOper1()) {
                         sb.append(", #" + Integer.valueOf(i.getIntOperand1()).toString());
                     }
                     sb.append("]");
                     break;
-                case JMP: break;
+                case JMP:
+                    break;
                 case BR:
                     opCodeText = "BL";
                     sb.append("\t" + opCodeText);
                     sb.append("\t" + i.getStrOperand1());
                     break;
-                case CMP: break;
+                case CMP:
+                    break;
                 case PUSH:
                     opCodeText = opCode.toString();
                     sb.append("\t" + opCodeText);
@@ -209,7 +221,6 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
             }
         }
         outputFileWriter.println(sb.toString());
-
     }
 
 
@@ -236,7 +247,9 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
         generateInstruction(PUSH, LR_REG.toString());
         visit(ctx);
         generateInstruction(LOAD_IMM, T0_VAR, 0);
-        generateInstruction(POP, LR_REG.toString());    }
+        generateInstruction(POP, LR_REG.toString());
+    }
+
 
     @Override
     public Object visitFunc(@NotNull WACCParser.FuncContext ctx) {
@@ -256,12 +269,6 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
 
     @Override
     public Object visitDeclare(@NotNull WACCParser.DeclareContext ctx) {
-        VisitDeclPairNode vpNode = new VisitDeclPairNode(this);
-        int offset = 1;
-        if(ctx.type().pairType() == null) {
-            offset = vpNode.checkMallocSize(ctx.type().getText());
-        }
-        generateInstruction(SUB, "sp", "sp", offset);
         String var0 = newVar();
         String i = ctx.ident().getText();
         transAssignRHS(ctx.assignRHS(), var0);
@@ -273,21 +280,6 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
     @Override
     public Object visitAssign(@NotNull WACCParser.AssignContext ctx) {
         return super.visitAssign(ctx);
-    }
-
-    private void transAssignLHS(@NotNull WACCParser.AssignLHSContext ctx, String var) {
-        switch (Utils.getAssignLHSContext(ctx)) {
-            case PAIR_ELEM:
-                generateInstruction(LOAD_IMM, T0_VAR, 8);
-                generateInstruction(BR, "malloc");
-                break;
-            case IDENT:
-                generateInstruction(LOAD_IMM, T0_VAR, 4);
-                generateInstruction(BR, "malloc");
-                break;
-            case ARRAY_ELEM:
-                break;
-        }
     }
 
     private void transAssignRHS(@NotNull WACCParser.AssignRHSContext ctx, String var) {
@@ -419,7 +411,7 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
             int intOperand = ifNumGetNum(ctx.expr().getText());
             generateInstruction(LOAD_IMM, var0, intOperand);
         } else if(ctx.expr().intLiter() != null) {
-            int intOperand = Integer.parseInt(ctx.expr().intLiter().getText());
+         int intOperand = Integer.parseInt(ctx.expr().intLiter().getText());
             generateInstruction(LOAD_IMM, var0, intOperand);
         } else if (ctx.expr() != null) {
             String var1 = newVar();
@@ -508,12 +500,17 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
     }
 
 
+
+    /*
+    --------------------------- INSTRUCTION GENERATION -------------------------
+    */
+
     @Override
     public void generateInstruction(String popTag) {
         Instruction i = new Instruction(popTag);
         instructions.add(i);
         ++instructionCount;
-    }
+        }
 
     @Override
     public void generateInstruction(Label label) {
@@ -521,6 +518,7 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
         instructions.add(i);
         ++instructionCount;
     }
+
     @Override
     public void generateInstruction(OpCode opCode, String operand) {
         Instruction i = new Instruction(opCode, operand);

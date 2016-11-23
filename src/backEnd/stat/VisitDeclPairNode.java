@@ -1,7 +1,6 @@
 package backEnd.stat;
 
 import antlr.WACCParser;
-import backEnd.ARMInstruction;
 import backEnd.CodeGenerator;
 
 import java.util.LinkedList;
