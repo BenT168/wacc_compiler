@@ -1,4 +1,7 @@
 import antlr.WACCParser;
+import backEnd.BackEnd;
+import backEnd.CodeGenerator;
+import backEnd.Instruction;
 import backEnd.TranslateVisitor;
 import frontEnd.TypeCheckVisitor;
 import frontEnd.exception.MyErrorListener;
@@ -11,6 +14,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.io.*;
 import java.util.LinkedList;
+import java.util.List;
 
 public class Main {
 
@@ -63,19 +67,17 @@ public class Main {
             /* Go through tree another time
             Translate to assembly language and write to file.s*/
 
-            TranslateVisitor translateVisitor = new TranslateVisitor();
+            BackEnd backEnd = new CodeGenerator();
+            backEnd.process(null, (WACCParser.ProgramContext) tree);
+            List<Instruction> instructions = ((CodeGenerator) backEnd).getInstructions();
 
             //Write to file.s
             WriteFile writeFile = new WriteFile();
             writeFile.writeToFile(args[1]);
 
-            //Visit tree
-            translateVisitor.visit(tree);
-            LinkedList<String> instructions = translateVisitor.getInstructions();
-
             //Write each instruction in file
-            for(String i : instructions) {
-                writeFile.writer.write(i);
+            for(Instruction i : instructions) {
+                writeFile.writer.write(i.toString());
                 writeFile.writer.newLine();
             }
 
