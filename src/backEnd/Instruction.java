@@ -1,5 +1,7 @@
 package backEnd;
 
+import java.util.List;
+
 public class Instruction {
 
     private OpCode opCode;
@@ -11,6 +13,7 @@ public class Instruction {
     private int intOperand2;
     private boolean intOper2;
     private Label label;
+    private List<String> operands;
 
     public Instruction(Label label) {
         this.label = label;
@@ -71,6 +74,12 @@ public class Instruction {
         this.strOperand1 = strOperand1;
         this.intOper1 = false;
         this.intOper2 = false;
+    }
+
+    public Instruction(OpCode opCode, String dstOperand, List<String> operands) {
+        this.opCode = opCode;
+        this.dstOperand = dstOperand;
+        this.operands = operands;
     }
 
     @Override

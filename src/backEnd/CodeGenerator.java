@@ -5,6 +5,7 @@ import backEnd.utils.ExprContext;
 import backEnd.utils.Utils;
 import intermediate.symboltable.SymbolTableStack;
 import org.antlr.v4.runtime.misc.NotNull;
+import org.stringtemplate.v4.ST;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -16,6 +17,9 @@ import static backEnd.OpCode.*;
 
 public class CodeGenerator extends BackEnd implements InstructionGenerator {
 
+    /*
+    ---------------------- TOP LEVEL FIELDS & METHODS --------------------------
+     */
     private PrintWriter outputFileWriter;
     private List<Instruction> instructions;
     private int instructionCount;
@@ -60,6 +64,9 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
         outputFileWriter.close();
     }
 
+    /*
+    ----------------------- PROGRAM TRANSLATION --------------------------------
+     */
     @Override
     public Object visitProgram(@NotNull WACCParser.ProgramContext ctx) {
         generateFunctions(ctx.func());
@@ -84,6 +91,10 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
         return null;
     }
 
+    /*
+     ------------------------ STATEMENT TRANSLATION ------------------------
+     */
+
     @Override
     public Object visitDeclare(@NotNull WACCParser.DeclareContext ctx) {
         String var0 = newVar();
@@ -99,45 +110,40 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
                 transExpr(ctx.expr(0), var);
                 break;
             case NEWPAIR:
+                String var1 = newVar();
+                String var2 = newVar();
+                transExpr(ctx.expr(0), var1);
+                transExpr(ctx.expr(1), var2);
+                generateInstruction(STR_ADDR, var1, 0);
+                generateInstruction(STR_ADDR, var2, 4); // 4-byte offset
+                generateInstruction(LOAD_ADDR, var, 0); // Load address, of pair on heap, into 'var'
                 break;
             case CALL:
+                List<String> args = new ArrayList<>();
+                for (WACCParser.ExprContext exprContext : ctx.expr()) {
+                    String var0 = newVar();
+                    transExpr(exprContext, var0);
+                    args.add(var0);
+                }
+                String funcName = ctx.ident().getText();
+                generateInstruction(CALL, funcName, args);
                 break;
             case PAIR_ELEM:
+                if (ctx.ident() == null) {
+                    System.err.println("Identifier not passed to pairElem, in expression: " + ctx.pairElem().getText());
+                    System.exit(-1);
+                }
+                String p_var1 = newVar();
+                transExpr(ctx.pairElem().expr(), p_var1);
+                if (ctx.pairElem().FST() != null) {
+                    generateInstruction(LOAD_ADDR, var, p_var1);
+                }
                 break;
             case ARRAY_LITER:
                 break;
             default: break;
         }
 
-    }
-
-    @Override
-    public Object visitIfElse(@NotNull WACCParser.IfElseContext ctx) {
-        Label label1 = newLabel();
-        Label label2 = newLabel();
-        Label label3 = newLabel();
-        transCond(label1, label2, ctx.expr());
-        generateInstruction(label1);
-        visit(ctx.stat(0));
-        generateInstruction(JMP, label3.toString());
-        generateInstruction(label2);
-        visit(ctx.stat(1));
-        generateInstruction(label3);
-        return null;
-    }
-
-    @Override
-    public Object visitWhile(@NotNull WACCParser.WhileContext ctx) {
-        Label label1 = newLabel();
-        Label label2 = newLabel();
-        Label label3 = newLabel();
-        generateInstruction(label1);
-        transCond(label2, label3, ctx.expr());
-        generateInstruction(label2);
-        visit(ctx.stat());
-        generateInstruction(JMP, label1.toString());
-        generateInstruction(label3);
-        return null;
     }
 
     private void transCond(Label label1, Label label2, WACCParser.ExprContext ctx) {
@@ -156,13 +162,37 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
     }
 
     @Override
-    public Object visitAssignLHS(@NotNull WACCParser.AssignLHSContext ctx) {
-        return super.visitAssignLHS(ctx);
+    public Object visitWhile(@NotNull WACCParser.WhileContext ctx) {
+        Label label1 = newLabel();
+        Label label2 = newLabel();
+        Label label3 = newLabel();
+        generateInstruction(label1);
+        transCond(label2, label3, ctx.expr());
+        generateInstruction(label2);
+        visit(ctx.stat());
+        generateInstruction(JMP, label1.toString());
+        generateInstruction(label3);
+        return null;
     }
 
-    /*
-     ------------------------ STATEMENT TRANSLATION ------------------------
-     */
+    public Object visitIfElse(@NotNull WACCParser.IfElseContext ctx) {
+        Label label1 = newLabel();
+        Label label2 = newLabel();
+        Label label3 = newLabel();
+        transCond(label1, label2, ctx.expr());
+        generateInstruction(label1);
+        visit(ctx.stat(0));
+        generateInstruction(JMP, label3.toString());
+        generateInstruction(label2);
+        visit(ctx.stat(1));
+        generateInstruction(label3);
+        return null;
+    }
+
+    @Override
+    public Object visitAssignLHS(@NotNull WACCParser.AssignLHSContext ctx) {
+        return null;
+    }
 
     @Override
     public Object visitRead(@NotNull WACCParser.ReadContext ctx) {
@@ -279,6 +309,13 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
     @Override
     public void generateInstruction(OpCode opcode, String dstOperand, int operand1, int operand2) {
         Instruction i = new Instruction(opcode, dstOperand, operand1, operand2);
+        instructions.add(i);
+        ++instructionCount;
+    }
+
+    @Override
+    public void generateInstruction(OpCode opCode, String dstOperand, List<String> operands) {
+        Instruction i = new Instruction(opCode, dstOperand, operands);
         instructions.add(i);
         ++instructionCount;
     }
