@@ -5,8 +5,6 @@ import backEnd.utils.ExprContext;
 import backEnd.utils.Utils;
 import intermediate.symboltable.SymbolTableStack;
 import org.antlr.v4.runtime.misc.NotNull;
-import org.stringtemplate.v4.ST;
-import org.stringtemplate.v4.compiler.Bytecode;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -17,6 +15,7 @@ import java.util.List;
 import static backEnd.OpCode.*;
 import static backEnd.RegisterName.LR_REG;
 import static backEnd.RegisterName.PC_REG;
+import static backEnd.RegisterName.SP_REG;
 
 public class CodeGenerator extends BackEnd implements InstructionGenerator {
 
@@ -27,7 +26,7 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
     private List<Instruction> instructions;
     private int instructionCount;
     private int tempVarCount;    // Count of temporary variables used
-    private final String T0_VAR = "t0";
+    private final String T0_VAR = "r0";
     private int labelCount;    // Count of labels used
 
     public CodeGenerator() {
@@ -37,7 +36,7 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
     }
 
     private String newVar() {
-        String result = "t" + Integer.toString(tempVarCount);
+        String result = "r" + Integer.toString(tempVarCount);
         ++tempVarCount;
         return result;
     }
@@ -78,50 +77,54 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
         StringBuilder sb = new StringBuilder();
         List<String> instrOperands = i.getAllOperands();
         switch (opCode) {
-            case ADD:
+            case ADD: {
+                String prefix = "\t";
                 opCodeText = opCode.toString();
                 sb.append("\t" + opCodeText);
                 for (int j = 0; j < instrOperands.size(); j++) {
                     String str = instrOperands.get(j);
-                    if (str != null)
-                        sb.append("\t" + str);
-                    if (j < instrOperands.size() - 1)
-                        sb.append(",");
+                    sb.append(prefix);
+                    prefix = ", ";
+                    sb.append(str);
                 }
                 break;
-            case SUB:
+            }
+            case SUB: {
+                String prefix = "\t";
                 opCodeText = opCode.toString();
                 sb.append("\t" + opCodeText);
                 for (int j = 0; j < instrOperands.size(); j++) {
                     String str = instrOperands.get(j);
-                    if (str != null)
-                        sb.append("\t" + str);
-                    if (j < instrOperands.size() - 1)
-                        sb.append(",");
+                    sb.append(prefix);
+                    prefix = ", ";
+                    sb.append(str);
                 }
                 break;
-            case DIV:
+            }
+            case DIV: {
+                String prefix = "\t";
                 opCodeText = "SDIV";
                 sb.append("\t" + opCodeText);
                 for (int j = 0; j < instrOperands.size(); j++) {
                     String str = instrOperands.get(j);
-                    if (str != null)
-                        sb.append("\t" + str);
-                    if (j < instrOperands.size() - 1)
-                        sb.append(",");
+                    sb.append(prefix);
+                    prefix = ", ";
+                    sb.append(str);
                 }
                 break;
-            case MUL:
+            }
+            case MUL: {
+                String prefix = "\t";
                 opCodeText = opCode.toString();
                 sb.append("\t" + opCodeText);
                 for (int j = 0; j < instrOperands.size(); j++) {
                     String str = instrOperands.get(j);
-                    if (str != null)
-                        sb.append("\t" + str);
-                    if (j < instrOperands.size() - 1)
-                        sb.append(",");
+                    sb.append(prefix);
+                    prefix = ", ";
+                    sb.append(str);
                 }
                 break;
+            }
             case MOD:
                 break;
             case EQ:
@@ -150,7 +153,10 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
                 opCodeText = "MOV";
                 sb.append("\t" + opCodeText);
                 sb.append("\t" + i.getDstOperand() + ", ");
-                sb.append(i.getStrOperand1());
+                if (i.isIntOper1())
+                    sb.append(i.getIntOperand1());
+                else
+                    sb.append(i.getStrOperand1());
                 break;
             case LOAD_IMM:
                 opCodeText = "LDR";
@@ -161,6 +167,14 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
             case LOAD_ADDR:
                 break;
             case STR_ADDR:
+                opCodeText = "STR";
+                sb.append("\t" + opCodeText);
+                sb.append("\t" + i.getDstOperand() + ", ");
+                sb.append("\t" +"[" + i.getStrOperand1());
+                if (i.isIntOper1()) {
+                    sb.append(", #" + Integer.valueOf(i.getIntOperand1()).toString());
+                }
+                sb.append("]");
                 break;
             case JMP:
                 break;
@@ -201,15 +215,20 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
     }
 
     private void generateMainFunction(WACCParser.StatContext ctx) {
+        generateInstruction(PUSH, LR_REG.toString());
         visit(ctx);
+        generateInstruction(LOAD_IMM, T0_VAR, 0);
+        generateInstruction(POP, LR_REG.toString());
     }
 
     @Override
     public Object visitFunc(@NotNull WACCParser.FuncContext ctx) {
         Label label = new Label(ctx.ident().getText());
         generateInstruction(label);
-        final String LR_REG = "LR";
-        generateInstruction(PUSH, LR_REG);
+        generateInstruction(PUSH, LR_REG.toString());
+        visit(ctx.stat());
+        generateInstruction(LOAD_IMM, T0_VAR, 0);
+        generateInstruction(POP, LR_REG.toString());
         return null;
     }
 
@@ -219,33 +238,17 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
 
     @Override
     public Object visitDeclare(@NotNull WACCParser.DeclareContext ctx) {
-        generateInstruction(SUB, "sp", "sp", 4);
-
         String var0 = newVar();
         String i = ctx.ident().getText();
         transAssignRHS(ctx.assignRHS(), var0);
         generateInstruction(LOAD_VAR, i, var0);
+        generateInstruction(STR_ADDR, i, SP_REG.toString());
         return null;
     }
 
     @Override
     public Object visitAssign(@NotNull WACCParser.AssignContext ctx) {
         return super.visitAssign(ctx);
-    }
-
-    private void transAssignLHS(@NotNull WACCParser.AssignLHSContext ctx, String var) {
-        switch (Utils.getAssignLHSContext(ctx)) {
-            case PAIR_ELEM:
-                generateInstruction(LOAD_IMM, T0_VAR, 8);
-                generateInstruction(BR, "malloc");
-                break;
-            case IDENT:
-                generateInstruction(LOAD_IMM, T0_VAR, 4);
-                generateInstruction(BR, "malloc");
-                break;
-            case ARRAY_ELEM:
-                break;
-        }
     }
 
     private void transAssignRHS(@NotNull WACCParser.AssignRHSContext ctx, String var) {
@@ -255,18 +258,22 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
                 break;
             case NEWPAIR:
                 String var1 = newVar();
-                String var2 = newVar();
 
-                generateInstruction(LOAD_VAR, var1, T0_VAR);
+                generateInstruction(LOAD_VAR, var, T0_VAR);
 
-                transExpr(ctx.expr(0), var2);
+                transExpr(ctx.expr(0), var1);
                 generateInstruction(LOAD_IMM, T0_VAR, 4);
                 generateInstruction(BR, "malloc");
+                generateInstruction(STR_ADDR, var1, T0_VAR);
+                generateInstruction(STR_ADDR, T0_VAR, var);
 
-                transExpr(ctx.expr(1), var2);
-                generateInstruction(STR_ADDR, var1, 0);
-                generateInstruction(STR_ADDR, var2, 4); // 4-byte offset
-                generateInstruction(LOAD_ADDR, var, 0); // Load address, of pair on heap, into 'var'
+                transExpr(ctx.expr(1), var1);
+                generateInstruction(LOAD_IMM, T0_VAR, 4);
+                generateInstruction(BR, "malloc");
+                generateInstruction(STR_ADDR, var1, T0_VAR);
+                generateInstruction(STR_ADDR, T0_VAR, var, 4);
+
+                generateInstruction(STR_ADDR, var, SP_REG.toString());
                 break;
             case CALL:
                 List<String> args = new ArrayList<>();
@@ -362,8 +369,16 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
     public Object visitExit(@NotNull WACCParser.ExitContext ctx) {
         generateInstruction(PUSH, LR_REG.toString());
         String var0 = newVar();
-        int intOperand = Integer.parseInt(ctx.expr().intLiter().getText());
-        generateInstruction(LOAD_IMM, var0, intOperand);
+        if (ctx.expr().intLiter() != null) {
+            int intOperand = Integer.parseInt(ctx.expr().intLiter().getText());
+            generateInstruction(LOAD_IMM, var0, intOperand);
+        } else if (ctx.expr() != null) {
+            String var1 = newVar();
+            transExpr(ctx.expr(), var1);
+            generateInstruction(LOAD_VAR, var0, var1);
+        } else {
+            System.err.println("Cannot resolve exit expression: " + ctx.expr());
+        }
         generateInstruction(LOAD_VAR, T0_VAR, var0);
         generateInstruction(BR, "exit");
         generateInstruction(LOAD_IMM, T0_VAR, 0);
@@ -429,12 +444,17 @@ public class CodeGenerator extends BackEnd implements InstructionGenerator {
          }
     }
 
+
+    /*
+    --------------------------- INSTRUCTION GENERATION -------------------------
+    */
     @Override
     public void generateInstruction(Label label) {
         Instruction i = new Instruction(label);
         instructions.add(i);
         ++instructionCount;
     }
+
     @Override
     public void generateInstruction(OpCode opCode, String operand) {
         Instruction i = new Instruction(opCode, operand);

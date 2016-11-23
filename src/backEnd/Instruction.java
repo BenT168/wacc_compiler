@@ -6,9 +6,9 @@ import java.util.List;
 public class Instruction {
 
     private OpCode opCode;
-    private String dstOperand;
-    private String strOperand1;
-    private String strOperand2;
+    private String dstOperand = null;
+    private String strOperand1 = null;
+    private String strOperand2 = null;
     private int intOperand1;
     private boolean intOper1 = false;
     private int intOperand2;
@@ -19,8 +19,6 @@ public class Instruction {
 
     public Instruction(Label label) {
         this.label = label;
-        this.intOper1 = false;
-        this.intOper2 = false;
     }
 
     public Instruction(OpCode opCode, String operand) {
