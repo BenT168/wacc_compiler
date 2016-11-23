@@ -1,35 +1,36 @@
 lexer grammar WACCLexer;
 
-
-//binary-operators
+//binary integer operators
 PLUS: '+' ;
 MINUS: '-' ;
+EQUAL: '=' ;
 MUL: '*' ;
 DIV: '/' ;
 MOD: '%' ;
-EQUALS : '=' ;
 
-//relational-operators
-LT : '<' ;
-GT : '>' ;
-LTE : '<=' ;
-GTE : '>=' ;
-EQ : '==' ;
-NEQ : '!=' ;
+//binary equality opearators
+GREATER_EQUAL: '>=' ;
+GREATER: '>' ;
+LESS_EQUAL: '<=' ;
+LESS: '<' ;
+DOUBLE_EQUALS: '==' ;
+NOT_EQUAL: '!=' ;
 
-//conditional-operators
-AND : '&&' ;
-OR : '||' ;
+//binary boolean operators
+AND: '&&' ;
+OR: '||' ;
 
-//unary-operators
+//unary boolean operators
+NOT: '!' ;
+
+//unary operators
 LEN: 'len' ;
-ORD : 'ord' ;
-CHR : 'chr' ;
-NOT : '!' ;
+ORD: 'ord' ;
+CHR: 'chr' ;
 
-//bools
-TRUE : 'true';
-FALSE : 'false' ;
+//boolean literals
+TRUE: 'true' ;
+FALSE: 'false' ;
 
 //BASE TYPES
 INT: 'int' ;
@@ -45,7 +46,7 @@ OPEN_SQUARE: '[' ;
 CLOSE_SQUARE: ']' ;
 
 //numbers
-fragment DIGIT : '0'..'9' ;
+fragment DIGIT : '0'..'9' ; 
 INTEGER: DIGIT+ ;
 
 //program keywords
@@ -121,4 +122,3 @@ IDENTITY: ID_BEGIN_CHAR ID_CHAR* ;
 
 //char literal:
 CHAR_LITER : APOSTROPHE ANY_CHAR APOSTROPHE ;
-

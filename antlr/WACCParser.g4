@@ -4,106 +4,109 @@ options {
   tokenVocab=WACCLexer;
 }
 
+// functions
+func : type ident OPEN_PARENTHESES 
+	  (param_list)? CLOSE_PARENTHESES IS stat END;
 
-program	: BEGIN (func)* stat END EOF ;
+param_list: param (COMMA param)*;
 
-func 	: type ident OPEN_PARENTHESES (paramList)? CLOSE_PARENTHESES IS stat END ;
+param: type ident;
 
-paramList
-    	: param (COMMA param)* ;
+// statements
+stat : SKIP							# skip_stat
+| type ident EQUAL assign_rhs		# variable_declaration
+| assign_lhs EQUAL assign_rhs		# variable_assigment
+| READ assign_lhs					# read_stat
+| FREE expr							# free_stat
+| RETURN expr						# return_stat
+| EXIT expr							# exit_stat
+| PRINT expr						# print_stat
+| PRINTLN expr 						# println_expr
+| IF expr THEN stat ELSE stat ENDIF	# if_stat
+| WHILE expr DO stat DONE			# while_stat
+| BEGIN stat END 					# block_stat
+| stat SEMI_COLON stat 				# sequential_stat
+;
 
-param 	: type ident ;
+// Assignments
+assign_lhs : ident
+| array_elem
+| pair_elem
+;
+assign_rhs : expr                                             # expr_arhs
+| array_liter                                                 # array_liter_arhs
+| NEWPAIR OPEN_PARENTHESES expr COMMA expr CLOSE_PARENTHESES  # newpair_assignment
+| pair_elem                                                   # pair_elem_arhs
+| CALL ident OPEN_PARENTHESES (arg_list)? CLOSE_PARENTHESES   # func_call_assignment
+;
+arg_list : expr (COMMA (expr))* ;
 
-stat 	: SKIP  				                # skip
-    	| type ident EQUALS assignRHS  		    # declare
-    	| assignLHS EQUALS assignRHS  		    # assign
-    	| READ assignLHS  			            # read
-    	| FREE expr  				            # free
-    	| RETURN expr  				            # return
-    	| EXIT expr  				            # exit
-    	| PRINT expr  				            # print
-    	| PRINTLN expr  			            # println
-    	| IF expr THEN stat ELSE stat ENDIF  	# ifElse
-    	| WHILE expr DO stat DONE  		        # while
-    	| BEGIN stat END  			            # begin
-    	| stat SEMI_COLON stat  		        # multipleStat
-    	;
+// Pairs. There can be pairs of pairs but when nested the inside type is not declared.
+pair_type: PAIR OPEN_PARENTHESES pair_elem_type COMMA pair_elem_type CLOSE_PARENTHESES ;
 
-assignLHS
-	    : ident | arrayElem | pairElem ;
+pair_elem: FST expr     
+| SND expr                     
+;
 
-assignRHS
-	    : expr
-	    | arrayLiter
-	    | NEWPAIR OPEN_PARENTHESES expr COMMA expr CLOSE_PARENTHESES
-	    | pairElem
-	    | CALL ident OPEN_PARENTHESES (argList)? CLOSE_PARENTHESES
-	    ;
+pair_elem_type : base_type
+| array_type
+| PAIR
+;
 
-argList : expr (COMMA expr)* ;
+// Arrays
+array_type: ( base_type | pair_type ) (OPEN_SQUARE CLOSE_SQUARE)+ ;
 
-pairElem
-	    : FST expr
-	    | SND expr
-	    ;
+// WACC Types
+type: base_type
+| array_type
+| pair_type
+;
 
-type 	: baseType
-	    | arrayType
-	    | pairType ;
+base_type: INT
+| BOOL
+| CHAR
+| STRING
+;
 
-baseType
-	    : INT
-	    | BOOL
-	    | CHAR
-	    | STRING ;
+// Expressions.
+// Unary expressions bind the tightest.
+expr : (NOT | MINUS | LEN | ORD | CHR) expr
+// binary expressions with order of precedence
+| expr (MUL | DIV | MOD) expr
+| expr (PLUS | MINUS) expr
+| expr (GREATER | GREATER_EQUAL | LESS | LESS_EQUAL) expr
+| expr (DOUBLE_EQUALS | NOT_EQUAL) expr
+// binary boolean expressions
+| expr AND expr
+| expr OR expr
+// atomic expressions
+| OPEN_PARENTHESES expr CLOSE_PARENTHESES
+// expression literals
+| (int_liter | bool_liter | char_liter | str_liter | pair_liter | ident | array_elem )
+;
 
-arrayType
-	    : ( baseType | pairType ) (OPEN_SQUARE CLOSE_SQUARE)+ ;
+array_elem : ident (OPEN_SQUARE expr CLOSE_SQUARE)+ ;
 
-pairType
-	    : PAIR OPEN_PARENTHESES pairElemType COMMA pairElemType CLOSE_PARENTHESES ;
+int_liter : (PLUS | MINUS) INTEGER
+| INTEGER
+;
 
-pairElemType
-	    : baseType
-	    | arrayType
-	    | PAIR ;
+bool_liter : TRUE
+| FALSE
+;
 
-expr 	: ( NOT | MINUS | LEN | ORD | CHR ) expr
-	    | expr ( MUL | DIV | MOD ) expr
-	    | expr ( PLUS | MINUS ) expr
-	    | expr ( LT | GT | LTE | GTE ) expr
-	    | expr ( EQ | NEQ ) expr
-	    | expr AND expr
-	    | expr OR expr
-	    | OPEN_PARENTHESES expr CLOSE_PARENTHESES
-	    | arrayElem
-	    | (intLiter | boolLiter | charLiter | stringLiter | pairLiter )
-	    | ident
-	    ;
+char_liter : CHAR_LITER ;
 
-intLiter
-	    : (PLUS | MINUS) INTEGER
-	    | INTEGER ;
+str_liter : STRING_LITER ;
 
-arrayElem
-	    : ident (OPEN_SQUARE expr CLOSE_SQUARE)+ ;
+array_liter : OPEN_SQUARE (expr (COMMA (expr))*)? CLOSE_SQUARE ;
 
-boolLiter
-	    : TRUE
-	    | FALSE ;
+// There is no such thing as a pair literal
+pair_liter : NULL ;
 
-charLiter
-	    : CHAR_LITER ;
+// This is here for legacy purposes
+ident: IDENTITY;
 
-stringLiter
-	    : STRING_LITER;
 
-arrayLiter
-	    : OPEN_SQUARE (expr (COMMA (expr))* )? CLOSE_SQUARE ;
-
-pairLiter
-	    : NULL ;
-
-call	: CALL;
-
-ident   : IDENTITY;
+// Program
+prog: BEGIN func* stat END EOF;
