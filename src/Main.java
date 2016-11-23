@@ -1,5 +1,7 @@
 import antlr.WACCParser;
-import backEnd.CodeGenVisitor;
+import backEnd.BackEnd;
+import backEnd.CodeGenerator;
+import backEnd.Instruction;
 import frontEnd.SymbolTable;
 import frontEnd.TypeCheckVisitor;
 import frontEnd.exception.MyErrorListener;
@@ -11,7 +13,7 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.io.*;
-import java.util.LinkedList;
+import java.util.List;
 
 public class Main {
 
@@ -35,11 +37,7 @@ public class Main {
 
         FileInputStream fis;
         ParseTree tree;
-
-        //Number of declarations used to allocate space - Used in backend
-        int numberOfDeclarations = 0;
-        //SymbolTable for checking variables in backend
-        SymbolTable symbolTable = null;
+        SymbolTable table = new SymbolTable();
 
         try {
 
@@ -59,51 +57,35 @@ public class Main {
             /*Check if there are any Syntax errors */
             int syntaxErr = parser.getNumberOfSyntaxErrors();
             if(syntaxErr > 0) {
-                System.exit(100);
+               System.exit(100);
             } else {
                 //Visit the tree
                 TypeCheckVisitor visitor = new TypeCheckVisitor();
                 visitor.visit(tree);
-
-                //Set number of declarations and symbolTable
-                numberOfDeclarations = visitor.getNumberOfDeclare();
-                symbolTable = visitor.getTypeEnv();
+                table = visitor.getSymbolTable();
             }
 
             /* Go through tree another time
             Translate to assembly language and write to file.s*/
 
-            CodeGenVisitor translateVisitor = new CodeGenVisitor();
-
             //Write to file.s
             WriteFile writeFile = new WriteFile();
-            writeFile.writeToFile(file);
+            String fileName = writeFile.writeToFile(file);
+            String sfile = writeFile.getFileName(fileName);
 
-            //Visit tree
-            translateVisitor.setNumberOfDeclare(numberOfDeclarations);
-            translateVisitor.setTable(symbolTable);
-            translateVisitor.visit(tree);
-            LinkedList<String> instructions = translateVisitor.getInstructions();
-
-
-            //Write each instruction in file
-            for(String i : instructions) {
-                writeFile.writer.write(i);
-                writeFile.writer.newLine();
-            }
-
-            fis.close();
-            writeFile.writer.close();
+            BackEnd backEnd = new CodeGenerator();
+            ((CodeGenerator) backEnd).setSymbolTable(table);
+            backEnd.process(sfile, null, (WACCParser.ProgramContext) tree);
 
             /*Check what error has been thrown in ThrowException and exit with proper code*/
-            if (ThrowException.semanticExceptionThrown) {
-                System.exit(200);
-            }
-            if (ThrowException.syntaxExceptionThrown) {
-                System.exit(100);
-            }
+                if (ThrowException.semanticExceptionThrown) {
+                    System.exit(200);
+                }
+                if (ThrowException.syntaxExceptionThrown) {
+                    System.exit(100);
+                }
 
-            //Catching all the exceptions
+        //Catching all the exceptions
         } catch (IOException e) {
             System.out.println("Error: InputStream does not work.");
         } catch (Exception e) {
@@ -119,6 +101,7 @@ public class Main {
             } else if(ThrowException.syntaxExceptionThrown) {
                 System.exit(100);
             }
+            System.out.println("EXCEPTION THROWN");
         }
 
 

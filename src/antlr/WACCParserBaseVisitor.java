@@ -26,7 +26,7 @@ public class WACCParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitArrayLiter(@NotNull WACCParser.ArrayLiterContext ctx) { return visitChildren(ctx); }
-	/**void
+	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling

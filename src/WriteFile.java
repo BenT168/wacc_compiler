@@ -5,19 +5,13 @@ public class WriteFile {
 
     public BufferedWriter writer = null;
 
-    public void writeToFile(File file) throws IOException {
+    public String writeToFile(File file) throws IOException {
 
         String argfile = file.getName();
         //Get file name without extension
         String temp = getFileName(argfile);
         String writeFile = temp.trim();
-
-
-        //Write to file.s
-        File wFile = new File(writeFile);
-        FileOutputStream fos = new FileOutputStream(wFile);
-        OutputStreamWriter out = new OutputStreamWriter(fos, "utf-8");
-        writer = new BufferedWriter(out);
+        return writeFile;
     }
 
 
