@@ -5,8 +5,9 @@ public class WriteFile {
 
     public BufferedWriter writer = null;
 
-    public void writeToFile(String argfile) throws IOException {
+    public void writeToFile(File file) throws IOException {
 
+        String argfile = file.getName();
         //Get file name without extension
         String temp = getFileName(argfile);
         String writeFile = temp.trim();

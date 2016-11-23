@@ -22,6 +22,9 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     private boolean isMultipleStat = false;
     private boolean returnCheck = true;
 
+    //Get number of declarations
+    private int numberOfDeclare = 0;
+
     public static LineNumber lineNumber = new LineNumber(0, 0);
 
     public TypeCheckVisitor() {
@@ -150,6 +153,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     /* type IDENTITY EQUALS assignRHS */
     @Override
     public Type visitDeclare(@NotNull WACCParser.DeclareContext ctx) {
+        numberOfDeclare++;
         Type type1 = visitType(ctx.type());
         String name = ctx.ident().IDENTITY().getText();
         typeEnv.vTableInsert(name, type1);
@@ -649,5 +653,13 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
     @Override
     public Type visitPairLiter(@NotNull WACCParser.PairLiterContext ctx) {
         return new PairType(null, null);
+    }
+
+    public SymbolTable getTypeEnv() {
+        return typeEnv;
+    }
+
+    public int getNumberOfDeclare() {
+        return numberOfDeclare;
     }
 }

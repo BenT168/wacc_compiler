@@ -11,10 +11,18 @@ public class SymbolTable {
 
     // Identifiers are strings
     private LinkedList<HashMap<String, Type>> vTableScopes = new LinkedList<>();
+
+    //Accumulates the variables, so getFirst returns lit of all variables seen so far
+    private LinkedList<HashMap<String, Type>> totalVTable = new LinkedList<>();
+
     private HashMap<String, List<Type>> fTable = new HashMap<>();
 
     public LinkedList<HashMap<String, Type>> getvTableScopes() {
         return vTableScopes;
+    }
+
+    public LinkedList<HashMap<String, Type>> getTotalVTable() {
+        return totalVTable;
     }
 
     public HashMap<String, List<Type>> getfTable() {
@@ -59,11 +67,30 @@ public class SymbolTable {
             throw new SemanticException("Variable identifier: " + key + " already in scope");
         }
         vTableScopes.getFirst().put(key, value);
+        totalVTable.getFirst().put(key, value);
     }
 
     void enterScope() {
         vTableScopes.addFirst(new HashMap<String, Type>());
+        //Set totalvTable
+        if(totalVTable.isEmpty()) {
+            totalVTable.addFirst(new HashMap<>());
+        } else {
+            HashMap<String, Type> v = totalVTable.getFirst();
+            totalVTable.addFirst(v);
+        }
     }
+
+    //Check if key is in totalVTable
+    public boolean intotalVTable(String var) {
+        for(HashMap<String, Type> table : totalVTable) {
+            if(table.containsKey(var)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     void removeScope() {
         if(vTableScopes.size() != 1) {

@@ -13,7 +13,7 @@ public enum ARMInstructions {
     public static final String LTORG_DIRECTIVE = "\t \t.ltorg";
     public static final String TEXT_DIRECTIVE = "\t.text";
     public static final String DATA_DIRECTIVE = "\t.data";
-    public static final String GLOBAL_MAIN_DIRECTIVE = "\t.global main";
+    public static final String GLOBAL_MAIN_DIRECTIVE = ".global main";
 
     public String printWithReg(String register) {
         switch(this){
@@ -21,7 +21,7 @@ public enum ARMInstructions {
             case POP:
             case BR:
             case BL:
-                return "\t\t" + this + "{" + register + "}";
+                return "\t\t" + this + " {" + register + "}";
             default:
                 return "printWithReg(" + register + ")";
         }
@@ -29,11 +29,15 @@ public enum ARMInstructions {
 
     public String printWithReg(String reg1, String reg2) {
         switch(this){
+            case STRB:
+            case STR:
+                return "\t\t" + this + " " + reg1 + ", [" + reg2 + "]";
             case MOV:
             case LDR:
-            case STR:
             case CMP:
                 return "\t\t" + this + " " + reg1 + ", " + reg2 ;
+            case POP:
+                return "\t\t" + this + " {" + reg1 + ", " + reg2 + "}";
             default:
                 return "printWithReg(" +  reg1 + ", " + reg2 + ")";
         }
@@ -41,12 +45,13 @@ public enum ARMInstructions {
 
     public String printWithReg(String reg1, String reg2, String reg3) {
         switch(this){
+            case SUBS:
+                return "\t\t" + this + " " + reg1 + ", " + reg2 +  ", #" + reg3;
             case AND:
             case ORR:
             case ADD:
             case EOR:
             case ADDS:
-            case SUBS:
             case CMP:
                 return "\t\t" + this + " " + reg1 + ", " + reg2 +  ", " + reg3 ;
             default:

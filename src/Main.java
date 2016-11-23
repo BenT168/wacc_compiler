@@ -1,5 +1,6 @@
 import antlr.WACCParser;
 import backEnd.CodeGenVisitor;
+import frontEnd.SymbolTable;
 import frontEnd.TypeCheckVisitor;
 import frontEnd.exception.MyErrorListener;
 import frontEnd.exception.SemanticException;
@@ -35,6 +36,11 @@ public class Main {
         FileInputStream fis;
         ParseTree tree;
 
+        //Number of declarations used to allocate space - Used in backend
+        int numberOfDeclarations = 0;
+        //SymbolTable for checking variables in backend
+        SymbolTable symbolTable = null;
+
         try {
 
             fis = new FileInputStream(file);
@@ -53,11 +59,15 @@ public class Main {
             /*Check if there are any Syntax errors */
             int syntaxErr = parser.getNumberOfSyntaxErrors();
             if(syntaxErr > 0) {
-               System.exit(100);
+                System.exit(100);
             } else {
                 //Visit the tree
                 TypeCheckVisitor visitor = new TypeCheckVisitor();
                 visitor.visit(tree);
+
+                //Set number of declarations and symbolTable
+                numberOfDeclarations = visitor.getNumberOfDeclare();
+                symbolTable = visitor.getTypeEnv();
             }
 
             /* Go through tree another time
@@ -67,11 +77,14 @@ public class Main {
 
             //Write to file.s
             WriteFile writeFile = new WriteFile();
-            writeFile.writeToFile(args[1]);
+            writeFile.writeToFile(file);
 
             //Visit tree
+            translateVisitor.setNumberOfDeclare(numberOfDeclarations);
+            translateVisitor.setTable(symbolTable);
             translateVisitor.visit(tree);
             LinkedList<String> instructions = translateVisitor.getInstructions();
+
 
             //Write each instruction in file
             for(String i : instructions) {
@@ -83,14 +96,14 @@ public class Main {
             writeFile.writer.close();
 
             /*Check what error has been thrown in ThrowException and exit with proper code*/
-                if (ThrowException.semanticExceptionThrown) {
-                    System.exit(200);
-                }
-                if (ThrowException.syntaxExceptionThrown) {
-                    System.exit(100);
-                }
+            if (ThrowException.semanticExceptionThrown) {
+                System.exit(200);
+            }
+            if (ThrowException.syntaxExceptionThrown) {
+                System.exit(100);
+            }
 
-        //Catching all the exceptions
+            //Catching all the exceptions
         } catch (IOException e) {
             System.out.println("Error: InputStream does not work.");
         } catch (Exception e) {

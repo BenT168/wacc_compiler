@@ -4,6 +4,7 @@ import antlr.WACCParser;
 import antlr.WACCParserBaseVisitor;
 import backEnd.helper.*;
 import backEnd.stat.VisitDeclPairNode;
+import frontEnd.SymbolTable;
 import frontEnd.expr.BinaryExprNode;
 import frontEnd.expr.UnaryExprNode;
 import org.antlr.v4.runtime.misc.NotNull;
@@ -16,16 +17,25 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
     private LinkedList<String> instructions = new LinkedList<>();
     private String[] reg = {"r0", "r1","r2","r3","r4","r5","r6","r7","r8",
                                   "r9","r10","r11","r12","r13","r14","r15","r16"};
+    //Number of declarations to set initial store
+    private int numberOfDeclare = 0;
+
+    //SymbolTable made in TypeCheckVisitor
+    private SymbolTable table;
+
+    //For functions
     private boolean inFunction = false;
     private int posOfnewpair = 0;
     private int mainSeen = 0;
+    private int PositionToPop = 0;
+    private int countDeclarations = 0;
 
     // CONSTANTS
     private static final int MAX_BYTE_OFFSET = 1024;
 
-    private ArrayList<ArrayList<String>> functionsCodeGen = new ArrayList<ArrayList<String>>();
+    private ArrayList<ArrayList<String>> functionsCodeGen = new ArrayList<>();
     private ArrayList<Function> listOfFunctions;
-    private ArrayList<String> stringsInProgram = new ArrayList<String>();
+    private ArrayList<String> stringsInProgram = new ArrayList<>();
     private ArrayList<Integer> beginOffsets;
 
     private Function currentFunction = null;
@@ -48,13 +58,14 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
     //................................PROGRAM.........................................
     @Override
     public LinkedList<String> visitProgram(@NotNull WACCParser.ProgramContext ctx) {
-        for (int i = 0; i < ctx.func().size(); i++) {
-            visitFunc(ctx.func().get(i));
-        }
-        initiateFunction("main", true);
+//        for (int i = 0; i < ctx.func().size(); i++) {
+//            visitFunc(ctx.func().get(i));
+//        }
+//        initiateFunction("main", true);
+        instructions.add(ARMInstructions.GLOBAL_MAIN_DIRECTIVE);
         visit(ctx.stat());
 
-        return null;
+        return instructions;
     }
 
     //....................................FUNCTION......................................
@@ -173,52 +184,84 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
         //If not in funtion then return label main:
         checkMainSeen();
 
-        //push{lr}
-        instructions.add(OLDARMInstructions.pushNew());
+        //System.out.println(ctx.getText());
 
+        //Get type in declaration
         String type = ctx.type().getText();
 
         //Check if pair type
         if(type.length() > 4) {
             //Check if pair
             if(type.substring(0, 4).compareTo("pair") == 0) {
-
-                //move base pointer
-                instructions.add(OLDARMInstructions.sub("sp", "sp", 4));
-
-                VisitDeclPairNode vpnode = new VisitDeclPairNode();
-
-                //start popping registers at 1
-                int posPop = 1;
-                //Popr is first register to pop reg[1]
-                String popr = reg[posPop];
-
-                //Malloc the types in pair
-                int[] mallocs = vpnode.spaceMalloc(type);
-                for(int i = 0; i < 2; i++) {
-                    posOfnewpair = i;
-                    visit(ctx.assignRHS());
-                    instructions.add(OLDARMInstructions.mov(reg[0], mallocs[i]));
-                    instructions.add(OLDARMInstructions.branchwlink("malloc"));
-                    instructions.add(OLDARMInstructions.pop(popr));
-                    if(mallocs[i] == 1) {
-                        //store in STRB
-                        instructions.add(OLDARMInstructions.strb(popr, reg[0]));
+                VisitDeclPairNode vpnode = new VisitDeclPairNode(this);
+                countDeclarations++;
+                if(numberOfDeclare == 1) {
+                    visitDeclareNewpair(ctx);
+                    //STR
+                } else if(numberOfDeclare > 1) {
+                    //Check that assignRHS is newpair
+                    if(ctx.assignRHS().NEWPAIR() != null) {
+                        visitDeclareNewpair(ctx);
                     } else {
-                        instructions.add(OLDARMInstructions.str(popr, reg[0]));
+                        String expr = ctx.assignRHS().expr(0).getText();
+                        //Check if expression and if variable is in symboltable
+                        if (expr != null && table.intotalVTable(expr)) { // assigned to an expression
+                            instructions.add(ARMInstructions.STR.printWithAddr(reg[0], 4));
+                            instructions.add(ARMInstructions.LDR.printWithAddr(reg[0], 4));
+                        }
                     }
-                    instructions.add(OLDARMInstructions.push(reg[0]));
                 }
-
-                //malloc pair itself
-                vpnode.mallocPair(instructions, popr, posPop);
+                instructions.add(ARMInstructions.STR.printWithAddr(reg[0], 0));
+                //Check at end of declarations
+                if(countDeclarations == numberOfDeclare) {
+                    vpnode.endMalloc(instructions);
+                }
             }
         }
         return instructions;
     }
 
+
+    private void visitDeclareNewpair(@NotNull WACCParser.DeclareContext ctx) {
+        VisitDeclPairNode vpnode = new VisitDeclPairNode(this);
+
+        //start popping registers at 1
+        int posPop = 1;
+
+        //Update PositionToPop
+        PositionToPop = posPop;
+        //Popr is first register to pop reg[1]
+        String popr = reg[posPop];
+
+        //Malloc the types in pair
+        int[] mallocs = vpnode.spaceMalloc(ctx);
+        for(int i = 0; i < 2; i++) {
+            posOfnewpair = i;
+            visit(ctx.assignRHS());
+            instructions.add(ARMInstructions.MOV.printWithImm(reg[0], String.valueOf(mallocs[i])));
+            instructions.add(ARMInstructions.BL.printWithString("malloc"));
+            instructions.add(ARMInstructions.POP.printWithReg(popr));
+            //malloc byte if necessary
+            vpnode.mallocByte(mallocs, i, popr, instructions);
+        }
+        //malloc pair itself
+        vpnode.mallocPair(instructions, popr, posPop);
+    }
+
     public LinkedList<String> getInstructions() {
         return instructions;
+    }
+
+    public void setNumberOfDeclare(int numberOfDeclare) {
+        this.numberOfDeclare = numberOfDeclare;
+    }
+
+    public int getNumberOfDeclare() {
+        return numberOfDeclare;
+    }
+
+    public void setTable(SymbolTable table) {
+        this.table = table;
     }
 
 
@@ -227,13 +270,20 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
         if(mainSeen == 0 && !inFunction) {
             instructions.add("main:");
             mainSeen++;
+
+            //push{lr}
+            instructions.add(ARMInstructions.PUSH_LINK_REG);
+
+            //move base pointer -> SUB sp sp #offset
+            int offset = 4 * numberOfDeclare; //calculates size of offset
+            instructions.add(ARMInstructions.SUBS.printWithReg("sp", "sp", String.valueOf(offset)));
         }
     }
 
     /* assignLHS EQUALS assignRHS  */
     @Override
     public LinkedList<String> visitAssign(@NotNull WACCParser.AssignContext ctx) {
-        return null;
+        return instructions;
     }
 
     /*PRINT expr*/
@@ -412,7 +462,9 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
     /*FREE expr */
     @Override
     public LinkedList<String> visitFree(@NotNull WACCParser.FreeContext ctx) {
-        return null;
+        instructions.add(ARMInstructions.LDR.printWithAddr(reg[0], 0));
+        instructions.add(ARMInstructions.BL.printWithString("p_free_pair"));
+        return visitChildren(ctx);
     }
 
     /*EXIT expr */
@@ -448,7 +500,10 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
     /*stat ; stat*/
     @Override
     public LinkedList<String> visitMultipleStat(@NotNull WACCParser.MultipleStatContext ctx) {
-        return null;
+        for(WACCParser.StatContext stat : ctx.stat()) {
+            visit(stat);
+        }
+        return instructions;
     }
 
 
@@ -463,21 +518,24 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
     /*assign-rhs*/
     @Override
     public LinkedList<String> visitAssignRHS(@NotNull WACCParser.AssignRHSContext ctx) {
+        //Check if newpair
         if(ctx.NEWPAIR() !=  null) {
-            VisitDeclPairNode vpnode = new VisitDeclPairNode();
+            VisitDeclPairNode vpnode = new VisitDeclPairNode(this);
 
             //Get elements of newpair (fst, snd)
-            String[] newpairElems = vpnode.getElementsNewpair(ctx.getText(), 8);
+            String[] newpairElems = vpnode.getElementsNewpair(ctx);
 
             //If element is an int - then ldr, otherwise use mov instruction
-            if(OLDARMInstructions.isParsable(newpairElems[posOfnewpair].trim())) {
-                instructions.add(OLDARMInstructions.ldr(reg[0], newpairElems[posOfnewpair]));
+            if(ARMInstructions.isParsable(newpairElems[posOfnewpair].trim())) {
+                //LDR
+                instructions.add(ARMInstructions.LDR.printWithImm(reg[0], newpairElems[posOfnewpair]));
             } else {
-                instructions.add(OLDARMInstructions.mov(reg[0], newpairElems[posOfnewpair]));
+                //MOV
+                instructions.add(ARMInstructions.MOV.printWithImm(reg[0], newpairElems[posOfnewpair]));
             }
-            instructions.add(OLDARMInstructions.push(reg[0]));
+            //PUSH
+            instructions.add(ARMInstructions.PUSH.printWithReg(reg[0]));
         }
-
         return instructions;
     }
 
@@ -531,7 +589,7 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
     @Override
     public LinkedList<String> visitIdent(@NotNull WACCParser.IdentContext ctx) {
         //TODO
-        return null;
+        return instructions;
     }
 
     @Override
@@ -654,7 +712,7 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
     @Override
     public LinkedList<String> visitPairLiter(@NotNull WACCParser.PairLiterContext ctx) {
         //TODO
-        return null;
+        return instructions;
     }
 }
 
