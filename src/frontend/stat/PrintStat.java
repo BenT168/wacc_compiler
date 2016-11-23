@@ -1,8 +1,8 @@
-package tree.stat;
+package frontend.stat;
 
-import tree.expr.ExprNode;
-import assembly.Register;
-import assembly.TokenSequence;
+import frontend.expr.ExprNode;
+import backend.Register;
+import backend.TokenSequence;
 
 
 /**

@@ -1,4 +1,4 @@
-package tree.func;
+package frontend.func;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -6,12 +6,12 @@ import java.util.Iterator;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import tree.WACCTree;
-import tree.type.WACCType;
+import frontend.WACCTree;
+import frontend.type.WACCType;
 import WACCExceptions.NotUniqueIdentifierException;
-import assembly.Register;
-import assembly.StackPosition;
-import assembly.TokenSequence;
+import backend.Register;
+import backend.StackPosition;
+import backend.TokenSequence;
 
 /* Represents a list of parameter that can be compared to check equality
  * and checks for functionality 

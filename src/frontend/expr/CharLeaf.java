@@ -1,13 +1,13 @@
-package tree.expr;
+package frontend.expr;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import tree.type.WACCType;
-import assembly.InstrToken;
-import assembly.Register;
-import assembly.TokenSequence;
-import assembly.tokens.MovImmToken;
+import frontend.type.WACCType;
+import backend.InstrToken;
+import backend.Register;
+import backend.TokenSequence;
+import backend.tokens.move.MovImmToken;
 
 /* Represents the value of a Character
  * Constructed with a String (e.g "A")

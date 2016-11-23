@@ -1,7 +1,7 @@
-package tree.assignments;
+package frontend.assignments;
 
-import assembly.Register;
-import assembly.TokenSequence;
+import backend.Register;
+import backend.TokenSequence;
 
 
 public interface AssignLhsNode {

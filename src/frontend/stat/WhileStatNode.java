@@ -1,18 +1,18 @@
-package tree.stat;
+package frontend.stat;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import tree.expr.ExprNode;
-import tree.type.WACCType;
+import frontend.expr.ExprNode;
+import frontend.type.WACCType;
 import WACCExceptions.InvalidTypeException;
-import assembly.ImmValue;
-import assembly.LabelCounter;
-import assembly.Register;
-import assembly.TokenSequence;
-import assembly.tokens.BranchToken;
-import assembly.tokens.CompareToken;
-import assembly.tokens.LabelToken;
+import backend.ImmValue;
+import backend.LabelCounter;
+import backend.Register;
+import backend.TokenSequence;
+import backend.tokens.branch.BranchToken;
+import backend.tokens.operator.CompareToken;
+import backend.tokens.general.LabelToken;
 
 /**
  * Class to represent while statements.

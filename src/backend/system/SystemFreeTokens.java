@@ -1,6 +1,6 @@
-package assembly.system;
+package backend.system;
 
-import assembly.InstrToken;
+import backend.InstrToken;
 
 public class SystemFreeTokens {
 	public static InstrToken FREE_PAIR = new InstrToken() {

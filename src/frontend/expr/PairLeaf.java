@@ -1,12 +1,12 @@
-package tree.expr;
+package frontend.expr;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import tree.type.PairType;
-import tree.type.WACCType;
-import assembly.Register;
-import assembly.TokenSequence;
+import frontend.type.PairType;
+import frontend.type.WACCType;
+import backend.Register;
+import backend.TokenSequence;
 
 /** Represents a declared pair
  * Contains type information for 1st and 2nd elements of pair

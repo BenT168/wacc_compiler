@@ -1,7 +1,7 @@
-package tree.stat;
+package frontend.stat;
 
-import assembly.Register;
-import assembly.TokenSequence;
+import backend.Register;
+import backend.TokenSequence;
 
 /**
  * Class to represent block statements

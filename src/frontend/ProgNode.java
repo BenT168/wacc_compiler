@@ -1,22 +1,22 @@
-package tree;
+package frontend;
 
 import java.util.List;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import tree.func.FuncDecNode;
-import tree.stat.StatNode;
-import tree.type.WACCType;
-import assembly.InstrToken;
-import assembly.Register;
-import assembly.StackAllocator;
-import assembly.TokenSequence;
-import assembly.tokens.EasyToken;
-import assembly.tokens.LabelToken;
-import assembly.tokens.LoadToken;
-import assembly.tokens.PopToken;
-import assembly.tokens.PushToken;
+import frontend.func.FuncDecNode;
+import frontend.stat.StatNode;
+import frontend.type.WACCType;
+import backend.InstrToken;
+import backend.Register;
+import backend.StackAllocator;
+import backend.TokenSequence;
+import backend.tokens.general.EasyToken;
+import backend.tokens.general.LabelToken;
+import backend.tokens.load.LoadToken;
+import backend.tokens.general.PopToken;
+import backend.tokens.general.PushToken;
 
 public class ProgNode extends WACCTree {
 	

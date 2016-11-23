@@ -1,10 +1,10 @@
-package tree.assignments;
+package frontend.assignments;
 
-import assembly.Register;
-import assembly.TokenSequence;
-import assembly.tokens.BranchLinkToken;
-import assembly.tokens.LoadToken;
-import tree.WACCTree;
+import backend.Register;
+import backend.TokenSequence;
+import backend.tokens.branch.BranchLinkToken;
+import backend.tokens.load.LoadToken;
+import frontend.WACCTree;
 
 public abstract class Assignable extends WACCTree {
 	

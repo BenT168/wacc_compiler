@@ -1,19 +1,19 @@
-package tree.func;
+package frontend.func;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import tree.WACCTree;
-import tree.stat.StatNode;
-import tree.type.WACCType;
-import assembly.InstrToken;
-import assembly.Register;
-import assembly.StackAllocator;
-import assembly.TokenSequence;
-import assembly.tokens.EasyToken;
-import assembly.tokens.LabelToken;
-import assembly.tokens.MovRegToken;
-import assembly.tokens.PushToken;
+import frontend.WACCTree;
+import frontend.stat.StatNode;
+import frontend.type.WACCType;
+import backend.InstrToken;
+import backend.Register;
+import backend.StackAllocator;
+import backend.TokenSequence;
+import backend.tokens.general.EasyToken;
+import backend.tokens.general.LabelToken;
+import backend.tokens.move.MovRegToken;
+import backend.tokens.general.PushToken;
 
 /* Represents a Function declaration
  * Contains information of the function name, return type, function parameters, 

@@ -1,13 +1,13 @@
-package tree.type;
+package frontend.type;
 
-import assembly.InstrToken;
-import assembly.Register;
-import assembly.StackPosition;
-import assembly.TokenSequence;
-import assembly.tokens.LoadAddressToken;
-import assembly.tokens.PrintReferenceToken;
-import assembly.tokens.StorePreIndexToken;
-import assembly.tokens.StoreToken;
+import backend.InstrToken;
+import backend.Register;
+import backend.StackPosition;
+import backend.TokenSequence;
+import backend.tokens.load.LoadAddressToken;
+import backend.tokens.print.PrintReferenceToken;
+import backend.tokens.store.StorePreIndexToken;
+import backend.tokens.store.StoreToken;
 import WACCExceptions.IncompatibleTypesException;
 
 /* Class for the Pair Type

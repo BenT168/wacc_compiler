@@ -1,4 +1,4 @@
-package tree.stat;
+package frontend.stat;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
@@ -8,8 +8,8 @@ import org.antlr.v4.runtime.ParserRuleContext;
  */
 
 import symboltable.SymbolTable;
-import tree.WACCTree;
-import tree.type.WACCType;
+import frontend.WACCTree;
+import frontend.type.WACCType;
 
 public abstract class StatNode extends WACCTree {
 

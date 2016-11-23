@@ -1,13 +1,13 @@
-package tree;
+package frontend;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import tree.type.WACCType;
+import frontend.type.WACCType;
 import WACCExceptions.ErrorListener;
 import WACCExceptions.WACCException;
-import assembly.Register;
-import assembly.TokenSequence;
+import backend.Register;
+import backend.TokenSequence;
 
 public abstract class WACCTree {
 	

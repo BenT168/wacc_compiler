@@ -1,10 +1,10 @@
-package tree.stat;
+package frontend.stat;
 
-import tree.expr.ExprNode;
-import assembly.InstrToken;
-import assembly.Register;
-import assembly.TokenSequence;
-import assembly.tokens.PrintLnToken;
+import frontend.expr.ExprNode;
+import backend.InstrToken;
+import backend.Register;
+import backend.TokenSequence;
+import backend.tokens.print.PrintLnToken;
 
 /**
  * Class to represent println statements

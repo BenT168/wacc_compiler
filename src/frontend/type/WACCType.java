@@ -1,22 +1,22 @@
-package tree.type;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+package frontend.type;
 
 import WACCExceptions.InvalidTypeException;
 import antlr.WACCParser.TypeContext;
-import assembly.InstrToken;
-import assembly.Register;
-import assembly.StackPosition;
-import assembly.TokenSequence;
-import assembly.tokens.LoadAddressToken;
-import assembly.tokens.PrintBoolToken;
-import assembly.tokens.PrintCharToken;
-import assembly.tokens.PrintIntToken;
-import assembly.tokens.PrintReferenceToken;
-import assembly.tokens.PrintStringToken;
-import assembly.tokens.StorePreIndexToken;
-import assembly.tokens.StoreToken;
+import backend.InstrToken;
+import backend.Register;
+import backend.StackPosition;
+import backend.TokenSequence;
+import backend.tokens.print.PrintReferenceToken;
+import backend.tokens.store.StorePreIndexToken;
+import backend.tokens.store.StoreToken;
+import backend.tokens.load.LoadAddressToken;
+import backend.tokens.print.PrintBoolToken;
+import backend.tokens.print.PrintCharToken;
+import backend.tokens.print.PrintIntToken;
+import backend.tokens.print.PrintStringToken;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public abstract class WACCType {

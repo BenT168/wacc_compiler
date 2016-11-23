@@ -1,16 +1,16 @@
-package tree.stat;
+package frontend.stat;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import tree.expr.ExprNode;
-import tree.type.WACCType;
+import frontend.expr.ExprNode;
+import frontend.type.WACCType;
 import WACCExceptions.IncompatibleTypesException;
-import assembly.Register;
-import assembly.StackAllocator;
-import assembly.TokenSequence;
-import assembly.tokens.MovRegToken;
-import assembly.tokens.PopToken;
+import backend.Register;
+import backend.StackAllocator;
+import backend.TokenSequence;
+import backend.tokens.move.MovRegToken;
+import backend.tokens.general.PopToken;
 
 /**
  * Class to represent return statements for functions

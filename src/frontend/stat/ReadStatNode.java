@@ -1,16 +1,16 @@
-package tree.stat;
+package frontend.stat;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import tree.WACCTree;
-import tree.assignments.AssignLhsNode;
-import tree.type.WACCType;
+import frontend.WACCTree;
+import frontend.assignments.AssignLhsNode;
+import frontend.type.WACCType;
 import WACCExceptions.IncompatibleTypesException;
-import assembly.Register;
-import assembly.TokenSequence;
-import assembly.tokens.MovRegToken;
-import assembly.tokens.ReadToken;
+import backend.Register;
+import backend.TokenSequence;
+import backend.tokens.move.MovRegToken;
+import backend.tokens.general.ReadToken;
 
 /**
  * Class to represent read statements  

@@ -1,7 +1,7 @@
-package assembly.system;
+package backend.system;
 
-import assembly.InstrToken;
-import assembly.TokenSequence;
+import backend.InstrToken;
+import backend.TokenSequence;
 
 public class SystemPrintTokens {
 public static InstrToken PRINT_STRING = new InstrToken() {

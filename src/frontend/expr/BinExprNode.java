@@ -1,13 +1,13 @@
-package tree.expr;
+package frontend.expr;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import tree.type.WACCBinOp;
-import tree.type.WACCType;
+import frontend.type.WACCBinOp;
+import frontend.type.WACCType;
 import WACCExceptions.InvalidTypeException;
-import assembly.Register;
-import assembly.TokenSequence;
+import backend.Register;
+import backend.TokenSequence;
 
 /* Represents a Binary Operator expression
  * Holds the operator and the expressions

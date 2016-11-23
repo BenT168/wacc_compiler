@@ -1,4 +1,4 @@
-package assembly;
+package backend;
 
 public class TokenCollector {
 	private TokenSequence top;

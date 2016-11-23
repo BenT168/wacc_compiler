@@ -1,22 +1,22 @@
-package tree.type;
+package frontend.type;
 
-import tree.expr.ExprNode;
-import assembly.InstrToken;
-import assembly.Register;
-import assembly.TokenSequence;
-import assembly.tokens.AddToken;
-import assembly.tokens.AndToken;
-import assembly.tokens.BranchLinkToken;
-import assembly.tokens.CompareToken;
-import assembly.tokens.DivideByZeroErrorToken;
-import assembly.tokens.MovImmToken;
-import assembly.tokens.MovRegToken;
-import assembly.tokens.MultiplySignedLongToken;
-import assembly.tokens.OrToken;
-import assembly.tokens.OverflowToken;
-import assembly.tokens.PrintBoolToken;
-import assembly.tokens.PrintIntToken;
-import assembly.tokens.SubToken;
+import frontend.expr.ExprNode;
+import backend.InstrToken;
+import backend.Register;
+import backend.TokenSequence;
+import backend.tokens.operator.AddToken;
+import backend.tokens.operator.AndToken;
+import backend.tokens.branch.BranchLinkToken;
+import backend.tokens.operator.CompareToken;
+import backend.tokens.operator.DivideByZeroErrorToken;
+import backend.tokens.move.MovImmToken;
+import backend.tokens.move.MovRegToken;
+import backend.tokens.operator.MultiplySignedLongToken;
+import backend.tokens.operator.OrToken;
+import backend.tokens.check.OverflowToken;
+import backend.tokens.print.PrintBoolToken;
+import backend.tokens.print.PrintIntToken;
+import backend.tokens.operator.SubToken;
 
 /*
  * This class is used to represent the behaviour of WACC Binary Operators.

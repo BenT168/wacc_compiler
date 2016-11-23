@@ -1,16 +1,16 @@
-package tree.expr;
+package frontend.expr;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import tree.assignments.AssignLhsNode;
-import tree.type.WACCType;
+import frontend.assignments.AssignLhsNode;
+import frontend.type.WACCType;
 import WACCExceptions.UndeclaredIdentifierException;
-import assembly.Register;
-import assembly.StackPosition;
-import assembly.TokenSequence;
-import assembly.tokens.AddImmToken;
-import assembly.tokens.LoadAddressToken;
+import backend.Register;
+import backend.StackPosition;
+import backend.TokenSequence;
+import backend.tokens.operator.AddImmToken;
+import backend.tokens.load.LoadAddressToken;
 
 /* Represents an Identifier and its declared type
  * Constructed with and type and string (e.g BOOL, "myBool")

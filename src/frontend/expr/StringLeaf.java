@@ -1,12 +1,12 @@
-package tree.expr;
+package frontend.expr;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import tree.type.WACCType;
-import assembly.Register;
-import assembly.TokenSequence;
-import assembly.tokens.LoadStringToken;
+import frontend.type.WACCType;
+import backend.Register;
+import backend.TokenSequence;
+import backend.tokens.load.LoadStringToken;
 
 /* Represents the value of a String
  * Constructed with a String (e.g "hello")

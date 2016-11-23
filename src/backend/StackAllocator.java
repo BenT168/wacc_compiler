@@ -1,11 +1,10 @@
-package assembly;
+package backend;
+
+import backend.tokens.operator.AddImmToken;
+import backend.tokens.operator.SubToken;
 
 import java.util.Stack;
 
-import assembly.tokens.AddImmToken;
-import assembly.tokens.AddToken;
-import assembly.tokens.EmptyToken;
-import assembly.tokens.SubToken;
 
 public class StackAllocator {
 	

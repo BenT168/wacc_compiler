@@ -1,22 +1,22 @@
-package tree.assignments;
+package frontend.assignments;
 
 import java.util.ArrayList;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import tree.expr.ExprNode;
-import tree.expr.VarNode;
-import tree.type.ArrayType;
-import tree.type.WACCType;
+import frontend.expr.ExprNode;
+import frontend.expr.VarNode;
+import frontend.type.ArrayType;
+import frontend.type.WACCType;
 import WACCExceptions.InvalidTypeException;
-import assembly.Register;
-import assembly.TokenSequence;
-import assembly.tokens.AddImmToken;
-import assembly.tokens.AddToken;
-import assembly.tokens.CheckArrayBoundsToken;
-import assembly.tokens.LoadAddressToken;
-import assembly.tokens.MovRegToken;
+import backend.Register;
+import backend.TokenSequence;
+import backend.tokens.operator.AddImmToken;
+import backend.tokens.operator.AddToken;
+import backend.tokens.check.CheckArrayBoundsToken;
+import backend.tokens.load.LoadAddressToken;
+import backend.tokens.move.MovRegToken;
 
 public class ArrayElemNode extends ExprNode implements AssignLhsNode {
 	

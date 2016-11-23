@@ -1,19 +1,19 @@
-package tree.stat;
+package frontend.stat;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import tree.expr.ExprNode;
-import tree.expr.VarNode;
-import tree.type.ArrayType;
-import tree.type.PairType;
+import frontend.expr.ExprNode;
+import frontend.expr.VarNode;
+import frontend.type.ArrayType;
+import frontend.type.PairType;
 import WACCExceptions.InvalidTypeException;
-import assembly.Register;
-import assembly.TokenSequence;
-import assembly.tokens.FreeArrayToken;
-import assembly.tokens.FreePairToken;
-import assembly.tokens.LoadAddressToken;
-import assembly.tokens.MovRegToken;
+import backend.Register;
+import backend.TokenSequence;
+import backend.tokens.free.FreeArrayToken;
+import backend.tokens.free.FreePairToken;
+import backend.tokens.load.LoadAddressToken;
+import backend.tokens.move.MovRegToken;
 
 /**
  * Class to represent free statements used to free array or pair variables

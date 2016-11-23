@@ -1,11 +1,11 @@
-package tree.func;
+package frontend.func;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import tree.expr.VarNode;
-import tree.type.WACCType;
-import assembly.StackPosition;
+import frontend.expr.VarNode;
+import frontend.type.WACCType;
+import backend.StackPosition;
 
 /* Represents a single parameter of a function
  * Contains information of the type and identifier * 

@@ -2,7 +2,7 @@ package symboltable;
 
 import WACCExceptions.IncompatibleTypesException;
 import WACCExceptions.UnresolvedExpectationException;
-import tree.type.WACCType;
+import frontend.type.WACCType;
 
 /*
  * Expectation represents a scope such as the program body of a function body.

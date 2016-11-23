@@ -1,7 +1,7 @@
-package assembly;
+package backend;
 
-import assembly.tokens.LoadAddressToken;
-import assembly.tokens.StoreToken;
+import backend.tokens.load.LoadAddressToken;
+import backend.tokens.store.StoreToken;
 
 public class StackPosition {
 	private static final int WORD_SIZE = 4;

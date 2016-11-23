@@ -1,15 +1,15 @@
-package tree.assignments;
+package frontend.assignments;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import tree.expr.ExprNode;
-import tree.type.PairType;
-import tree.type.WACCType;
-import assembly.Register;
-import assembly.TokenSequence;
-import assembly.tokens.MovRegToken;
-import assembly.tokens.StoreToken;
+import frontend.expr.ExprNode;
+import frontend.type.PairType;
+import frontend.type.WACCType;
+import backend.Register;
+import backend.TokenSequence;
+import backend.tokens.move.MovRegToken;
+import backend.tokens.store.StoreToken;
 
 public class NewPairNode extends Assignable {
 	

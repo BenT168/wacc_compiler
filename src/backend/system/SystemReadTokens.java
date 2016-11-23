@@ -1,7 +1,7 @@
-package assembly.system;
+package backend.system;
 
-import assembly.InstrToken;
-import assembly.TokenSequence;
+import backend.InstrToken;
+import backend.TokenSequence;
 
 public class SystemReadTokens {
 	public static InstrToken READ_INT = new InstrToken() {

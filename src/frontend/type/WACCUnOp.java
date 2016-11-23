@@ -1,14 +1,12 @@
-package tree.type;
+package frontend.type;
 
-import tree.expr.ExprNode;
-import assembly.InstrToken;
-import assembly.Register;
-import assembly.TokenSequence;
-import assembly.tokens.BranchLinkToken;
-import assembly.tokens.EorToken;
-import assembly.tokens.LoadAddressToken;
-import assembly.tokens.MovRegToken;
-import assembly.tokens.OverflowToken;
+import frontend.expr.ExprNode;
+import backend.InstrToken;
+import backend.Register;
+import backend.TokenSequence;
+import backend.tokens.operator.EorToken;
+import backend.tokens.load.LoadAddressToken;
+import backend.tokens.check.OverflowToken;
 
 public abstract class WACCUnOp {
 	

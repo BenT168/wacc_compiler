@@ -1,6 +1,6 @@
-package tree.type;
+package frontend.type;
 
-import tree.expr.ExprNode;
+import frontend.expr.ExprNode;
 
 /* Contains specific behavior for Equals and Not Equals Binary Expressions
  * See WACCBinOp.java for more 

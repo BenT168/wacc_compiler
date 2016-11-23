@@ -1,0 +1,23 @@
+package backend.tokens.general;
+
+import backend.InstrToken;
+
+public class LabelToken extends InstrToken {
+	
+	private String label;
+	
+	public LabelToken(String label) {
+		this.label = label;
+	}
+	
+	@Override
+	public String toString() {
+		return label + ": ";
+	}
+	
+	@Override
+	public boolean requiresTab() {
+		return false;
+	}
+
+}

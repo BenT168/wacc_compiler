@@ -1,18 +1,18 @@
-package tree.stat;
+package frontend.stat;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import tree.assignments.Assignable;
-import tree.expr.VarNode;
-import tree.func.FuncDecNode;
-import tree.type.WACCType;
+import frontend.assignments.Assignable;
+import frontend.expr.VarNode;
+import frontend.func.FuncDecNode;
+import frontend.type.WACCType;
 import WACCExceptions.IncompatibleTypesException;
 import WACCExceptions.NotUniqueIdentifierException;
-import assembly.Register;
-import assembly.StackAllocator;
-import assembly.StackPosition;
-import assembly.TokenSequence;
+import backend.Register;
+import backend.StackAllocator;
+import backend.StackPosition;
+import backend.TokenSequence;
 
 /**
  * Class to represent variable declaration statements

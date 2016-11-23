@@ -1,13 +1,13 @@
-package tree.expr;
+package frontend.expr;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import tree.type.WACCType;
+import frontend.type.WACCType;
 import WACCExceptions.IntOverflowException;
-import assembly.Register;
-import assembly.TokenSequence;
-import assembly.tokens.LoadToken;
+import backend.Register;
+import backend.TokenSequence;
+import backend.tokens.load.LoadToken;
 
 /* Represents the value of an Integer
  * Constructed with a String (e.g "42") 

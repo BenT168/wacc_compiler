@@ -1,15 +1,17 @@
-package tree.assignments;
+package frontend.assignments;
 
-import org.antlr.v4.runtime.ParserRuleContext;
-
-import assembly.Register;
-import assembly.TokenSequence;
-import assembly.tokens.*;
-import symboltable.SymbolTable;
-import tree.expr.ExprNode;
-import tree.type.PairType;
-import tree.type.WACCType;
 import WACCExceptions.InvalidTypeException;
+import backend.Register;
+import backend.TokenSequence;
+import backend.tokens.check.CheckNullPointerToken;
+import backend.tokens.store.StoreToken;
+import backend.tokens.load.LoadAddressToken;
+import backend.tokens.move.MovRegToken;
+import frontend.expr.ExprNode;
+import frontend.type.PairType;
+import frontend.type.WACCType;
+import org.antlr.v4.runtime.ParserRuleContext;
+import symboltable.SymbolTable;
 
 /*
  * 

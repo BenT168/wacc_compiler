@@ -1,16 +1,17 @@
-package tree.assignments;
+package frontend.assignments;
+
+import backend.Register;
+import backend.TokenSequence;
+import backend.tokens.store.StoreToken;
+import backend.tokens.load.LoadToken;
+import backend.tokens.move.MovRegToken;
+import frontend.expr.ExprNode;
+import frontend.type.ArrayType;
+import frontend.type.WACCType;
+import org.antlr.v4.runtime.ParserRuleContext;
+import symboltable.SymbolTable;
 
 import java.util.ArrayList;
-
-import org.antlr.v4.runtime.ParserRuleContext;
-
-import assembly.Register;
-import assembly.TokenSequence;
-import assembly.tokens.*;
-import symboltable.SymbolTable;
-import tree.expr.ExprNode;
-import tree.type.ArrayType;
-import tree.type.WACCType;
 
 public class ArrayLiterNode extends Assignable {
 

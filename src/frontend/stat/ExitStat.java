@@ -1,16 +1,16 @@
-package tree.stat;
+package frontend.stat;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import tree.expr.ExprNode;
-import tree.type.WACCType;
+import frontend.expr.ExprNode;
+import frontend.type.WACCType;
 import WACCExceptions.InvalidTypeException;
-import assembly.InstrToken;
-import assembly.Register;
-import assembly.TokenSequence;
-import assembly.tokens.BranchLinkToken;
-import assembly.tokens.MovRegToken;
+import backend.InstrToken;
+import backend.Register;
+import backend.TokenSequence;
+import backend.tokens.branch.BranchLinkToken;
+import backend.tokens.move.MovRegToken;
 
 /**
  * Class to represent exit statements for exiting a program

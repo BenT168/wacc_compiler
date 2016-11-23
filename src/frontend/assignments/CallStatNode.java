@@ -1,25 +1,25 @@
-package tree.assignments;
+package frontend.assignments;
 
 import java.util.Iterator;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import tree.expr.ExprNode;
-import tree.func.FuncDecNode;
-import tree.func.ParamListNode;
-import tree.type.WACCType;
+import frontend.expr.ExprNode;
+import frontend.func.FuncDecNode;
+import frontend.func.ParamListNode;
+import frontend.type.WACCType;
 import WACCExceptions.IllegalCallException;
 import WACCExceptions.IncompatibleTypesException;
 import WACCExceptions.UndeclaredIdentifierException;
-import assembly.Register;
-import assembly.TokenSequence;
-import assembly.tokens.AddImmToken;
-import assembly.tokens.BranchLinkToken;
-import assembly.tokens.MovRegToken;
-import assembly.tokens.PopToken;
-import assembly.tokens.PushToken;
-import assembly.tokens.StorePreIndexToken;
+import backend.Register;
+import backend.TokenSequence;
+import backend.tokens.operator.AddImmToken;
+import backend.tokens.branch.BranchLinkToken;
+import backend.tokens.move.MovRegToken;
+import backend.tokens.general.PopToken;
+import backend.tokens.general.PushToken;
+import backend.tokens.store.StorePreIndexToken;
 
 
 public class CallStatNode extends Assignable {

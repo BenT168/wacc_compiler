@@ -1,16 +1,16 @@
-package tree.stat;
+package frontend.stat;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import tree.WACCTree;
-import tree.assignments.AssignLhsNode;
-import tree.assignments.Assignable;
-import tree.expr.VarNode;
-import tree.func.FuncDecNode;
+import frontend.WACCTree;
+import frontend.assignments.AssignLhsNode;
+import frontend.assignments.Assignable;
+import frontend.expr.VarNode;
+import frontend.func.FuncDecNode;
 import WACCExceptions.IncompatibleTypesException;
-import assembly.Register;
-import assembly.TokenSequence;
+import backend.Register;
+import backend.TokenSequence;
 
 /**
  * Class to represent variable assignment statements

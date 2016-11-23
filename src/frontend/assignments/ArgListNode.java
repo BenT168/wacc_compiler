@@ -1,4 +1,4 @@
-package tree.assignments;
+package frontend.assignments;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -7,13 +7,13 @@ import java.util.Iterator;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import tree.WACCTree;
-import tree.expr.ExprNode;
-import tree.func.ParamListNode;
-import tree.func.ParamNode;
-import tree.type.WACCType;
-import assembly.Register;
-import assembly.TokenSequence;
+import frontend.WACCTree;
+import frontend.expr.ExprNode;
+import frontend.func.ParamListNode;
+import frontend.func.ParamNode;
+import frontend.type.WACCType;
+import backend.Register;
+import backend.TokenSequence;
 
 /* Represents a list of arguments for the call to a function
  * Used to perform checks on provided arguments with the parameter list
