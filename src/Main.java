@@ -1,16 +1,17 @@
 import antlr.WACCParser;
-import backEnd.TranslateVisitor;
+import backEnd.CodeGenVisitor;
 import frontEnd.SymbolTable;
 import frontEnd.TypeCheckVisitor;
 import frontEnd.exception.MyErrorListener;
 import frontEnd.exception.SemanticException;
 import frontEnd.exception.SyntaxException;
 import frontEnd.exception.ThrowException;
-
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.LinkedList;
 
 public class Main {
@@ -73,17 +74,17 @@ public class Main {
             /* Go through tree another time
             Translate to assembly language and write to file.s*/
 
-            TranslateVisitor translateVisitor = new TranslateVisitor();
+            CodeGenVisitor codeGenVisitor = new CodeGenVisitor();
 
             //Write to file.s
             WriteFile writeFile = new WriteFile();
             writeFile.writeToFile(file);
 
             //Visit tree
-            translateVisitor.setNumberOfDeclare(numberOfDeclarations);
-            translateVisitor.setTable(symbolTable);
-            translateVisitor.visit(tree);
-            LinkedList<String> instructions = translateVisitor.getInstructions();
+            codeGenVisitor.setNumberOfDeclare(numberOfDeclarations);
+            codeGenVisitor.setTable(symbolTable);
+            codeGenVisitor.visit(tree);
+            LinkedList<String> instructions = codeGenVisitor.getInstructions();
 
             //Write each instruction in file
             for(String i : instructions) {

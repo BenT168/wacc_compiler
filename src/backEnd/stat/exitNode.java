@@ -1,12 +1,12 @@
 package backEnd.stat;
 
-import backEnd.TranslateVisitor;
+import backEnd.CodeGenVisitor;
 import backEnd.Tree;
 
 public class exitNode extends Tree {
 
     @Override
-    public String accept(TranslateVisitor visitor) {
+    public String accept(CodeGenVisitor visitor) {
         return null;
 
     }

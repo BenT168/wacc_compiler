@@ -1,9 +1,8 @@
 package backEnd.stat;
 
 import antlr.WACCParser;
-import backEnd.ARMInstruction;
-import backEnd.TranslateVisitor;
-import frontEnd.TypeCheckVisitor;
+import backEnd.ARMInstructions;
+import backEnd.CodeGenVisitor;
 
 import java.util.LinkedList;
 
@@ -11,9 +10,10 @@ public class VisitDeclPairNode {
 
     private String[] reg = {"r0", "r1","r2","r3","r4","r5","r6","r7","r8",
             "r9","r10","r11","r12","r13","r14","r15","r16"};
-    private TranslateVisitor visitor;
+    private CodeGenVisitor visitor;
 
-    public VisitDeclPairNode(TranslateVisitor visitor) {
+
+    public VisitDeclPairNode(CodeGenVisitor visitor) {
         this.visitor = visitor;
     }
 
@@ -21,29 +21,29 @@ public class VisitDeclPairNode {
     public void mallocPair(LinkedList<String> instructions, String popr, int posPop) {
         //Space for the pair itself
         //MOV
-        instructions.add(ARMInstruction.mov(reg[0], 8));
+        instructions.add(ARMInstructions.MOV.printWithImm(reg[0], "8"));
         //BL
-        instructions.add(ARMInstruction.branchwlink("malloc"));
+        instructions.add(ARMInstructions.BL.printWithString("malloc"));
         String popPrev = popr;
         popr = reg[posPop+1];
         //POP
-        instructions.add(ARMInstruction.pop(popPrev, popr));
+        instructions.add(ARMInstructions.POP.printWithReg(popPrev, popr));
         //STR
-        instructions.add(ARMInstruction.str(popr, reg[0]));
+        instructions.add(ARMInstructions.STR.printWithReg(popr, reg[0]));
 
         //move base pointer back
         //STR
-        instructions.add(ARMInstruction.str(popPrev, reg[0], 4));
+        instructions.add(ARMInstructions.STR.printWithAddrReg(popPrev, reg[0], 4));
     }
 
     public void endMalloc(LinkedList<String> instructions) {
         //ADD
         int offset = 4 * visitor.getNumberOfDeclare();
-        instructions.add(ARMInstruction.add("sp", "sp", offset));
+        instructions.add(ARMInstructions.ADD.printWithOffset("sp", offset));
         //MOV
-        instructions.add(ARMInstruction.mov(reg[0], 0));
+        instructions.add(ARMInstructions.MOV.printWithImm(reg[0], "0"));
         //POP
-        instructions.add(ARMInstruction.ret());
+        instructions.add(ARMInstructions.POP_PC);
     }
 
 
@@ -51,13 +51,13 @@ public class VisitDeclPairNode {
     public void mallocByte(int[] mallocs, int i, String popr, LinkedList<String> instructions) {
         if(mallocs[i] == 1) {
             //store in STRB
-            instructions.add(ARMInstruction.strb(popr, reg[0]));
+            instructions.add(ARMInstructions.STRB.printWithReg(popr, reg[0]));
         } else {
             //STR
-            instructions.add(ARMInstruction.str(popr, reg[0]));
+            instructions.add(ARMInstructions.STR.printWithReg(popr, reg[0]));
         }
         //PUSH
-        instructions.add(ARMInstruction.push(reg[0]));
+        instructions.add(ARMInstructions.PUSH.printWithReg(reg[0]));
     }
 
 

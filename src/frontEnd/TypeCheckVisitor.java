@@ -217,7 +217,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         return ret;
     }
 
-    /*IF ELSE stat*/
+    /*IF ELSE backEnd.stat*/
     @Override
     public Type visitIfElse(@NotNull WACCParser.IfElseContext ctx) {
         new IfElseStatNode(visitExpr(ctx.expr()), ctx.expr().getText(), ctx).check();
@@ -230,7 +230,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         return null;
     }
 
-    /*WHILE stat*/
+    /*WHILE backEnd.stat*/
     @Override
     public Type visitWhile(@NotNull WACCParser.WhileContext ctx) {
         new WhileStatNode(visitExpr(ctx.expr()), ctx.expr().getText(), ctx).check();
@@ -241,7 +241,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         return null;
     }
 
-    /*BEGIN stat END*/
+    /*BEGIN backEnd.stat END*/
     @Override
     public Type visitBegin(@NotNull WACCParser.BeginContext ctx) {
         typeEnv.enterScope();
@@ -250,7 +250,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Type> {
         return null;
     }
 
-    /*stat ; stat*/
+    /*backEnd.stat ; backEnd.stat*/
     @Override
     public Type visitMultipleStat(@NotNull WACCParser.MultipleStatContext ctx) {
         //Get line and column number of stats for error message
