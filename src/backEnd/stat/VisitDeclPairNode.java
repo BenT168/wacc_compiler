@@ -1,3 +1,4 @@
+/*
 package backEnd.stat;
 
 import antlr.WACCParser;
@@ -108,3 +109,4 @@ public class VisitDeclPairNode {
         return typeElements;
     }
 }
+*/

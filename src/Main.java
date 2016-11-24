@@ -1,6 +1,5 @@
 import antlr.WACCParser;
 import backEnd.CodeGenVisitor;
-import frontEnd.SymbolTable;
 import frontEnd.TypeCheckVisitor;
 import frontEnd.exception.MyErrorListener;
 import frontEnd.exception.SemanticException;
@@ -8,11 +7,10 @@ import frontEnd.exception.SyntaxException;
 import frontEnd.exception.ThrowException;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 public class Main {
 
@@ -37,10 +35,6 @@ public class Main {
         FileInputStream fis;
         ParseTree tree;
 
-        //Number of declarations used to allocate space - Used in backend
-        int numberOfDeclarations = 0;
-        //SymbolTable for checking variables in backend
-        SymbolTable symbolTable = null;
 
         try {
 
@@ -66,30 +60,24 @@ public class Main {
                 TypeCheckVisitor visitor = new TypeCheckVisitor();
                 visitor.visit(tree);
 
-                //Set number of declarations and symbolTable
-                numberOfDeclarations = visitor.getNumberOfDeclare();
-                symbolTable = visitor.getTypeEnv();
             }
 
             /* Go through tree another time
             Translate to assembly language and write to file.s*/
+            CodeGenVisitor codeGenVisitor = new CodeGenVisitor((WACCParser.ProgramContext) tree);
 
-            CodeGenVisitor codeGenVisitor = new CodeGenVisitor();
 
-            //Write to file.s
+            //Generate file.s
             WriteFile writeFile = new WriteFile();
             writeFile.writeToFile(file);
 
             //Visit tree
-            codeGenVisitor.setNumberOfDeclare(numberOfDeclarations);
-            codeGenVisitor.setTable(symbolTable);
             codeGenVisitor.visit(tree);
-            LinkedList<String> instructions = codeGenVisitor.getInstructions();
 
             //Write each instruction in file
-            for(String i : instructions) {
-                writeFile.writer.write(i);
-                writeFile.writer.newLine();
+            for(int i = 0; i < codeGenVisitor.buffer.size(); i++) {
+                    writeFile.writer.write(codeGenVisitor.buffer.get(i));
+                    writeFile.writer.newLine();
             }
 
             fis.close();
@@ -107,6 +95,10 @@ public class Main {
         } catch (IOException e) {
             System.out.println("Error: InputStream does not work.");
         } catch (Exception e) {
+            System.out.println("Exception Thrown!");
+            if(e instanceof NullPointerException) {
+                System.out.println("NullPointerException");
+            }
             if (e instanceof SyntaxException) {
                 System.err.println(e.getMessage());
                 System.exit(100);
@@ -124,6 +116,14 @@ public class Main {
 
         /* A successful compilation should return the exit status 0 */
         System.exit(0);
+    }
+
+    private static String[] loopArrayListString(ArrayList<String> list) {
+        String[] resultToAppend = new String[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            resultToAppend[i] = list.get(i);
+        }
+        return resultToAppend;
     }
 
 

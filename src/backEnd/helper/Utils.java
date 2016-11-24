@@ -1,6 +1,7 @@
 package backEnd.helper;
 
 import antlr.WACCParser;
+import jdk.nashorn.internal.objects.NativeUint8Array;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 public class Utils {
@@ -8,6 +9,7 @@ public class Utils {
     public static final String BOOL = "bool";
     public static final String CHAR = "char";
     public static final String STRING = "string";
+    public static final String DEFAULT_RETURN_REG_VALUE = "0";
 
     public static int getNumOfBytesForTypeArrayLiter(ParseTree ctx) {
         if (ctx.getChild(0) instanceof WACCParser.BaseTypeContext) {
@@ -80,6 +82,50 @@ public class Utils {
         } else {
             //TODO: Need to take into account the other expressions, binary oper, unary oper and brackets shit
             return 4;
+        }
+    }
+
+    public static boolean isUnaryOper(WACCParser.ExprContext ctx) {
+        return (ctx.NOT() != null || ctx.MINUS() != null || ctx.LEN() != null || ctx.ORD() != null||
+                ctx.CHR() != null);
+    }
+
+    public static boolean isBinaryOper(ParseTree parseTree) {
+        WACCParser.ExprContext ctx = (WACCParser.ExprContext) parseTree;
+        return (ctx.MUL() != null || ctx.DIV() != null || ctx.MOD() != null || ctx.PLUS() != null||
+                ctx.MINUS() != null || ctx.LT() != null || ctx.LTE() != null || ctx.GT() != null || ctx.GTE() != null||
+                ctx.EQ() != null || ctx.NEQ() != null || ctx.AND() != null ||ctx.OR() != null);
+    }
+
+    public static boolean isLiter(ParseTree parseTree) {
+        WACCParser.ExprContext ctx = (WACCParser.ExprContext) parseTree;
+        return(ctx.intLiter() != null || ctx.stringLiter() != null || ctx.pairLiter() != null || ctx.stringLiter() != null
+        || ctx.arrayElem() != null || ctx.boolLiter()!= null || ctx.ident()!= null);
+    }
+
+    public static Variable getVariable(WACCParser.DeclareContext ctx) {
+        int o = Utils.getNumOfBytesForType(ctx.type());
+        Variable v = new Variable(ctx.getChild(1).getText(), o, ctx.type());
+        return v;
+    }
+
+    public static int getDepth(WACCParser.TypeContext type) {
+        int count = 1;
+        if (type.getChild(0) instanceof WACCParser.BaseTypeContext ||
+                type.getChild(0) instanceof WACCParser.PairTypeContext) {
+            return count;
+        } else {
+            count++;
+        }
+        return count;
+
+    }
+
+    public static ParseTree getActualTypeOfArray(WACCParser.TypeContext ctx) {
+        if (!(ctx.getChild(0) instanceof  WACCParser.BaseTypeContext || ctx.getChild(0) instanceof WACCParser.PairTypeContext)) {
+            return getActualTypeOfArray((WACCParser.TypeContext) ctx.getChild(0));
+        } else {
+            return ctx;
         }
     }
 
