@@ -111,6 +111,7 @@ public class Main {
             } else if(ThrowException.syntaxExceptionThrown) {
                 System.exit(100);
             }
+            e.printStackTrace();
         }
 
 

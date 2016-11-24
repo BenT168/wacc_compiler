@@ -97,8 +97,7 @@ public class Utils {
                 ctx.EQ() != null || ctx.NEQ() != null || ctx.AND() != null ||ctx.OR() != null);
     }
 
-    public static boolean isLiter(ParseTree parseTree) {
-        WACCParser.ExprContext ctx = (WACCParser.ExprContext) parseTree;
+    public static boolean isLiter(WACCParser.ExprContext ctx) {
         return(ctx.intLiter() != null || ctx.stringLiter() != null || ctx.pairLiter() != null || ctx.stringLiter() != null
         || ctx.arrayElem() != null || ctx.boolLiter()!= null || ctx.ident()!= null);
     }

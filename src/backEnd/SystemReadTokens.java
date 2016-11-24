@@ -45,6 +45,7 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
     private boolean seenInt = false;
     private boolean seenPrint = false;
     private boolean seenCalc = false;
+    private boolean isident = false;
 
     private boolean seenDivorMod = false;
     private boolean seenArrayElem = false;
@@ -473,8 +474,9 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
             functions.add(main);
         }
 
-        sortOutBeginVariables(ctx.stat());
         getVariablesForFunction(ctx.stat(), main);
+        sortOutBeginVariables(ctx.stat());
+        //getVariablesForFunction(ctx.stat(), main);
         visit(ctx.stat());
         addAllMessages();
         writeP_Prints();
@@ -496,16 +498,16 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
      */
     public void sortOutBeginVariables(WACCParser.StatContext stat) {
         if (stat instanceof WACCParser.DeclareContext) {
-            Variable v = Utils.getVariable((WACCParser.DeclareContext) stat.getChild(0));
+            Variable v = Utils.getVariable((WACCParser.DeclareContext) stat);
             int current = 0;
-            if (scopeVariablesOffsetCount.size() > beginCount - 1) {
-                current = scopeVariablesOffsetCount.get(beginCount - 1);
+            if (scopeVariablesOffsetCount.size() > beginCount) {
+                current = scopeVariablesOffsetCount.get(beginCount);
             }
             current += v.getOffset();
-            if (scopeVariablesOffsetCount.size() > beginCount - 1) {
-                scopeVariablesOffsetCount.remove(beginCount - 1);
+            if (scopeVariablesOffsetCount.size() > beginCount) {
+                scopeVariablesOffsetCount.remove(beginCount);
             }
-            scopeVariablesOffsetCount.add(beginCount - 1, current);
+            scopeVariablesOffsetCount.add(beginCount , current);
         } else if (stat instanceof WACCParser.MultipleStatContext) {
             WACCParser.MultipleStatContext stats = (WACCParser.MultipleStatContext) stat;
             for(int i = 0; i < stats.stat().size(); i++) {
@@ -520,18 +522,19 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
     /*
      * Method: getVariablesForFunction Usage: ?
      */
-    private void getVariablesForFunction(ParseTree stat, Function f) {
+    private void getVariablesForFunction(WACCParser.StatContext stat, Function f) {
         if (stat instanceof WACCParser.DeclareContext) {
-            Variable v = Utils.getVariable((WACCParser.DeclareContext) stat.getChild(0));
+            Variable v = Utils.getVariable((WACCParser.DeclareContext) stat);
             f.addVariable(v);
-        } else if (stat instanceof WACCParser.DeclareContext){
-            Variable v= Utils.getVariable((WACCParser.DeclareContext) stat);
-            f.addVariable(v);
-        } else if (stat instanceof WACCParser.StatContext) {
-            getVariablesForFunction(stat.getChild(0), f);
-            getVariablesForFunction(stat.getChild(2), f);
+        } else if (stat instanceof WACCParser.MultipleStatContext) {
+            WACCParser.MultipleStatContext mul = (WACCParser.MultipleStatContext) stat;
+            for(int i = 0; i < mul.stat().size(); i++) {
+                getVariablesForFunction(mul.stat(i), f);
+            }
+           /* getVariablesForFunction(stat.getChild(0), f);
+            getVariablesForFunction(stat.getChild(2), f);*/
         } else if (stat instanceof WACCParser.BeginContext) {
-            getVariablesForFunction(stat.getChild(1), f);
+            getVariablesForFunction(((WACCParser.BeginContext) stat).stat(), f);
         }
 
     }
@@ -645,6 +648,12 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
         return null;
     }
 
+    @Override
+    public Void visitIdent(WACCParser.IdentContext ctx) {
+        isident = true;
+        return null;
+    }
+
 
 
     @Override
@@ -695,19 +704,20 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
                 defaultStrings.add(defaultInt);
             seenInt = true;
         } else if (ctx.AND() != null || ctx.OR() != null ) {
-            visit(ctx.getChild(1));
-            visitPrintHelper((WACCParser.ExprContext) ctx.getChild(0));
+            //visit(ctx.expr(1));
+            visit(ctx.expr(0));
+            visitPrintHelper(ctx.expr(0));
         } else if (Utils.isBinaryOper(ctx)) {
             // recurse on one side only
             // visitPrintHelper((ExprContext) ctx.getChild(0));
-            visit(ctx.getChild(1));
+            //visit(ctx.AND());
             // visitPrintHelper((ExprContext) ctx.getChild(0));
 
         } else if (ctx.PLUS() != null || ctx.MINUS() != null
                 || ctx.MUL() != null || ctx.DIV() != null || ctx.MOD() != null) {
-            visit(ctx.getChild(1));
-            visitPrintHelper((WACCParser.ExprContext) ctx.getChild(0));
-        } else if (ctx.ident() != null) {
+            //visit(ctx.getChild(1));
+            visitPrintHelper(ctx.expr(0));
+        } else if (isident || ctx.ident() != null) {
             Function currentFunction = functions.get(functions.size() - 1);
             Variable v = currentFunction.getVariable(ctx.getText());
             visitPrintHelperType(v.getType());
@@ -715,7 +725,7 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
             visitPrintUnary(ctx);
         } else if (ctx.arrayElem() != null) {
             Function currentFunction = functions.get(functions.size() - 1);
-            Variable v = currentFunction.getVariable(ctx.getChild(0).getChild(0).getText());
+            Variable v = currentFunction.getVariable(ctx.expr(0).getChild(0).getText());
             WACCParser.TypeContext type = (WACCParser.TypeContext) v.getType().getChild(0);
             visit(ctx);
             int depthCount = (ctx.getChild(0).getChildCount() - 1) / 3;
