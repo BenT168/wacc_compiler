@@ -6,6 +6,7 @@ options {
 
 
 program	: BEGIN (func)* stat END EOF ;
+end     : END ;
 
 func 	: type ident OPEN_PARENTHESES (paramList)? CLOSE_PARENTHESES IS stat END ;
 

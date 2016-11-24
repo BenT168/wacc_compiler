@@ -38,6 +38,10 @@ public class Function {
         }
     }
 
+    public void setOffsetFromParameters(int offsetFromParameters) {
+        this.offsetFromParameters = offsetFromParameters;
+    }
+
     public int getCumulativeVariableOffset(int indexOfVar) {
         int count = offsetFromParameters;
         if (indexOfVar > paramCount && indexOfVar == variables.size()-1) {
@@ -107,5 +111,6 @@ public class Function {
     public void setParamCount(int paramCount) {
         this.paramCount = paramCount;
     }
+
 }
 
