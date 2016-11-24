@@ -84,6 +84,10 @@ public class Utils {
     }
 
 
-
+    public static Variable getVariable(WACCParser.DeclareContext node) {
+        int o = Utils.getNumOfBytesForType(node.type());
+        Variable v = new Variable(node.getChild(1).getText(), o, node.type());
+        return v;
+    }
 }
 

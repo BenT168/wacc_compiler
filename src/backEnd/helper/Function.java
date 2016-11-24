@@ -100,5 +100,12 @@ public class Function {
         }
     }
 
+    public void addVariable(Variable v) {
+        variables.add(v);
+    }
+
+    public void setParamCount(int paramCount) {
+        this.paramCount = paramCount;
+    }
 }
 
