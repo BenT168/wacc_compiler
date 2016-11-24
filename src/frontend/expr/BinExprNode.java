@@ -1,13 +1,12 @@
 package frontend.expr;
 
-import org.antlr.v4.runtime.ParserRuleContext;
-
-import symboltable.SymbolTable;
-import frontend.type.WACCBinOp;
-import frontend.type.WACCType;
-import WACCExceptions.InvalidTypeException;
 import backend.Register;
 import backend.TokenSequence;
+import frontend.exception.ThrowException;
+import frontend.type.WACCBinOp;
+import frontend.type.WACCType;
+import org.antlr.v4.runtime.ParserRuleContext;
+import symboltable.SymbolTable;
 
 /* Represents a Binary Operator expression
  * Holds the operator and the expressions
@@ -30,8 +29,14 @@ public class BinExprNode extends ExprNode {
 
 	@Override
 	public boolean check(SymbolTable st, ParserRuleContext ctx) {
+		//Getting line and column number for error message
+		int line = ctx.start.getLine();
+		int column = ctx.start.getCharPositionInLine();
 		if (!operator.check(lhs, rhs)) {
-			new InvalidTypeException("The types in the Binary expression are not compatible.", ctx);
+				//Throw Semantic Error
+			String msg = "Expected arguments to be the same type in Binary Operator\n "+
+					"Actual type : " + lhs.toString() + ", " + rhs.toString();
+			ThrowException.callSemanticException(line, column, msg);
 			return false;
 		}
 		return true;

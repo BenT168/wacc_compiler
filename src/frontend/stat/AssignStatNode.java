@@ -1,9 +1,9 @@
 package frontend.stat;
 
+import frontend.tree;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import frontend.WACCTree;
 import frontend.assignments.AssignLhsNode;
 import frontend.assignments.Assignable;
 import frontend.expr.VarNode;
@@ -20,12 +20,12 @@ import backend.TokenSequence;
 
 public class AssignStatNode extends StatNode {
 	
-	private WACCTree lhs;
-	private WACCTree rhs;
+	private tree lhs;
+	private tree rhs;
 	
 	public AssignStatNode(AssignLhsNode lhs, Assignable rhs) {
-		this.lhs = (WACCTree) lhs;
-		this.rhs = (WACCTree) rhs;
+		this.lhs = (tree) lhs;
+		this.rhs = (tree) rhs;
 	}
 	
 	@Override

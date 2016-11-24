@@ -9,7 +9,7 @@ import WACCExceptions.WACCException;
 import backend.Register;
 import backend.TokenSequence;
 
-public abstract class WACCTree {
+public abstract class tree {
 	
 	public static ErrorListener el = WACCException.ERROR_LISTENER;	
 	
@@ -18,14 +18,14 @@ public abstract class WACCTree {
 	 * @param ctx The parser rule context associated with the object on which
 	 * the method is called.
 	 * @return Returns a boolean value which returns false is any semantic errors
-	 * are detected in the WACCTree node on which this function is called.
+	 * are detected in the tree node on which this function is called.
 	 * Returns true otherwise.
 	 */
 	public abstract boolean check( SymbolTable st, ParserRuleContext ctx );
 	
 	
 	/**
-	 * @return Returns the WACCType associated with the WACCTree node. 
+	 * @return Returns the WACCType associated with the tree node.
 	 * In cases where there is no clear associated type, this will return WACCType.NULL
 	 */
 	public abstract WACCType getType();

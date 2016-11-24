@@ -1,13 +1,12 @@
 package frontend.expr;
 
-import org.antlr.v4.runtime.ParserRuleContext;
-
-import symboltable.SymbolTable;
-import frontend.type.WACCType;
-import WACCExceptions.IntOverflowException;
 import backend.Register;
 import backend.TokenSequence;
 import backend.tokens.load.LoadToken;
+import frontend.exception.ThrowException;
+import frontend.type.WACCType;
+import org.antlr.v4.runtime.ParserRuleContext;
+import symboltable.SymbolTable;
 
 /* Represents the value of an Integer
  * Constructed with a String (e.g "42") 
@@ -32,9 +31,14 @@ public class IntLeaf extends ExprNode {
 
 	@Override
 	public boolean check( SymbolTable st, ParserRuleContext ctx ) {
+		//Getting line and column number for error message
+		int line = ctx.start.getLine();
+		int column = ctx.start.getCharPositionInLine();
+
 		long integer = Long.valueOf(value);
 		if (integer < - (Math.pow(2, 31)) || integer > (Math.pow(2, 31) + 1)) {
-			throw new IntOverflowException("The absolute value, " + value + " is too large", ctx);
+			String msg = "Integer, "+ value + "is outside acceptable range.";
+			ThrowException.callSyntaxException(line, column, msg);
 		}
 		return true;
 	}

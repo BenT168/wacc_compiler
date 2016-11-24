@@ -1,14 +1,14 @@
 package symboltable;
 
 import WACCExceptions.UnresolvedExpectationException;
-import frontend.WACCTree;
+import frontend.tree;
 import frontend.type.WACCType;
 
 import java.util.HashMap;
 
 public class SymbolTable {
 	
-	HashMap<String, WACCTree> dictionary;
+	HashMap<String, tree> dictionary;
 	SymbolTable parentTable;
 	final boolean isTopSymbolTable;
 	private Expectation expectation;
@@ -58,7 +58,7 @@ public class SymbolTable {
 		return dictionary.containsKey(identifier);
 	}
 
-	public void add(String name, WACCTree node) {
+	public void add(String name, tree node) {
 		dictionary.put(name, node);
 	}
 
@@ -66,7 +66,7 @@ public class SymbolTable {
 		return this.parentTable;
 	}
 	
-	public WACCTree get(String key) {
+	public tree get(String key) {
 		if (this.isTopSymbolTable) {
 			return dictionary.get(key);
 		}

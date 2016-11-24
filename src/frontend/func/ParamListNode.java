@@ -1,23 +1,22 @@
 package frontend.func;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import org.antlr.v4.runtime.ParserRuleContext;
-
-import symboltable.SymbolTable;
-import frontend.WACCTree;
-import frontend.type.WACCType;
 import WACCExceptions.NotUniqueIdentifierException;
 import backend.Register;
 import backend.StackPosition;
 import backend.TokenSequence;
+import frontend.tree;
+import frontend.type.WACCType;
+import org.antlr.v4.runtime.ParserRuleContext;
+import symboltable.SymbolTable;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /* Represents a list of parameter that can be compared to check equality
  * and checks for functionality 
  */
 
-public class ParamListNode extends WACCTree implements Iterable<ParamNode>{
+public class ParamListNode extends tree implements Iterable<ParamNode>{
 	ArrayList<ParamNode> params;
 	
 	public ParamListNode() {

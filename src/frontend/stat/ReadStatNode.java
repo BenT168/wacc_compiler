@@ -1,9 +1,9 @@
 package frontend.stat;
 
+import frontend.tree;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import frontend.WACCTree;
 import frontend.assignments.AssignLhsNode;
 import frontend.type.WACCType;
 import WACCExceptions.IncompatibleTypesException;
@@ -19,10 +19,10 @@ import backend.tokens.general.ReadToken;
 
 public class ReadStatNode extends StatNode {
 
-	private WACCTree lhs;
+	private tree lhs;
 	
 	public ReadStatNode(AssignLhsNode lhs) {
-		this.lhs = (WACCTree) lhs;
+		this.lhs = (tree) lhs;
 	}
 	
 	@Override

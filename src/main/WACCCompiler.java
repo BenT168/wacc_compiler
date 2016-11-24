@@ -1,16 +1,15 @@
 package main;
 
-import frontend.WACCTree;
 import backend.Register;
 import backend.TokenCollector;
 import backend.TokenSequence;
 
 public class WACCCompiler {
 	
-	private WACCTree tree;
+	private frontend.tree tree;
 	private TokenSequence progSequence;
 	
-	public WACCCompiler(WACCTree t){
+	public WACCCompiler(frontend.tree t){
 		this.tree = t;
 	}
 	
@@ -24,5 +23,7 @@ public class WACCCompiler {
 	public String toString() {
 		return progSequence.toString();
 	}
+
+
 
 }

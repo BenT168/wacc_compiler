@@ -17,7 +17,7 @@ public class WACCLexer extends Lexer {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		PLUS=1, MINUS=2, EQUAL=3, MUL=4, DIV=5, MOD=6, GREATER_EQUAL=7, GREATER=8, 
+		PLUS=1, MINUS=2, MUL=3, DIV=4, MOD=5, EQUAL=6, GREATER_EQUAL=7, GREATER=8, 
 		LESS_EQUAL=9, LESS=10, DOUBLE_EQUALS=11, NOT_EQUAL=12, AND=13, OR=14, 
 		NOT=15, LEN=16, ORD=17, CHR=18, TRUE=19, FALSE=20, INT=21, BOOL=22, CHAR=23, 
 		STRING=24, PAIR=25, OPEN_PARENTHESES=26, CLOSE_PARENTHESES=27, OPEN_SQUARE=28, 
@@ -45,7 +45,7 @@ public class WACCLexer extends Lexer {
 		"'F'"
 	};
 	public static final String[] ruleNames = {
-		"PLUS", "MINUS", "EQUAL", "MUL", "DIV", "MOD", "GREATER_EQUAL", "GREATER", 
+		"PLUS", "MINUS", "MUL", "DIV", "MOD", "EQUAL", "GREATER_EQUAL", "GREATER", 
 		"LESS_EQUAL", "LESS", "DOUBLE_EQUALS", "NOT_EQUAL", "AND", "OR", "NOT", 
 		"LEN", "ORD", "CHR", "TRUE", "FALSE", "INT", "BOOL", "CHAR", "STRING", 
 		"PAIR", "OPEN_PARENTHESES", "CLOSE_PARENTHESES", "OPEN_SQUARE", "CLOSE_SQUARE", 
@@ -146,8 +146,8 @@ public class WACCLexer extends Lexer {
 		"\2\2\u008b\u01aa\3\2\2\2\u008d\u01b7\3\2\2\2\u008f\u01b9\3\2\2\2\u0091"+
 		"\u01bd\3\2\2\2\u0093\u01bf\3\2\2\2\u0095\u01c6\3\2\2\2\u0097\u0098\7-"+
 		"\2\2\u0098\4\3\2\2\2\u0099\u009a\7/\2\2\u009a\6\3\2\2\2\u009b\u009c\7"+
-		"?\2\2\u009c\b\3\2\2\2\u009d\u009e\7,\2\2\u009e\n\3\2\2\2\u009f\u00a0\7"+
-		"\61\2\2\u00a0\f\3\2\2\2\u00a1\u00a2\7\'\2\2\u00a2\16\3\2\2\2\u00a3\u00a4"+
+		",\2\2\u009c\b\3\2\2\2\u009d\u009e\7\61\2\2\u009e\n\3\2\2\2\u009f\u00a0"+
+		"\7\'\2\2\u00a0\f\3\2\2\2\u00a1\u00a2\7?\2\2\u00a2\16\3\2\2\2\u00a3\u00a4"+
 		"\7@\2\2\u00a4\u00a5\7?\2\2\u00a5\20\3\2\2\2\u00a6\u00a7\7@\2\2\u00a7\22"+
 		"\3\2\2\2\u00a8\u00a9\7>\2\2\u00a9\u00aa\7?\2\2\u00aa\24\3\2\2\2\u00ab"+
 		"\u00ac\7>\2\2\u00ac\26\3\2\2\2\u00ad\u00ae\7?\2\2\u00ae\u00af\7?\2\2\u00af"+

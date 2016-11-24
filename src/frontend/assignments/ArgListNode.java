@@ -7,7 +7,7 @@ import java.util.Iterator;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import frontend.WACCTree;
+import frontend.tree;
 import frontend.expr.ExprNode;
 import frontend.func.ParamListNode;
 import frontend.func.ParamNode;
@@ -20,7 +20,7 @@ import backend.TokenSequence;
  * declared for the given functions
  */
 
-public class ArgListNode extends WACCTree implements Iterable<ExprNode>{
+public class ArgListNode extends tree implements Iterable<ExprNode>{
 	Deque<ExprNode> args;
 	
 	public ArgListNode() {

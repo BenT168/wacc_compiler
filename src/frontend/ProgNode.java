@@ -1,24 +1,23 @@
 package frontend;
 
-import java.util.List;
-
-import org.antlr.v4.runtime.ParserRuleContext;
-
-import symboltable.SymbolTable;
-import frontend.func.FuncDecNode;
-import frontend.stat.StatNode;
-import frontend.type.WACCType;
 import backend.InstrToken;
 import backend.Register;
 import backend.StackAllocator;
 import backend.TokenSequence;
 import backend.tokens.general.EasyToken;
 import backend.tokens.general.LabelToken;
-import backend.tokens.load.LoadToken;
 import backend.tokens.general.PopToken;
 import backend.tokens.general.PushToken;
+import backend.tokens.load.LoadToken;
+import frontend.func.FuncDecNode;
+import frontend.stat.StatNode;
+import frontend.type.WACCType;
+import org.antlr.v4.runtime.ParserRuleContext;
+import symboltable.SymbolTable;
 
-public class ProgNode extends WACCTree {
+import java.util.List;
+
+public class ProgNode extends tree {
 	
 	private List<FuncDecNode> functions;
 	private StatNode progBody;

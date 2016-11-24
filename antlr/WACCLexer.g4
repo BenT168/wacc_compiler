@@ -3,12 +3,12 @@ lexer grammar WACCLexer;
 //binary integer operators
 PLUS: '+' ;
 MINUS: '-' ;
-EQUAL: '=' ;
 MUL: '*' ;
 DIV: '/' ;
 MOD: '%' ;
+EQUAL: '=' ;
 
-//binary equality opearators
+//relational-operator
 GREATER_EQUAL: '>=' ;
 GREATER: '>' ;
 LESS_EQUAL: '<=' ;
@@ -16,19 +16,19 @@ LESS: '<' ;
 DOUBLE_EQUALS: '==' ;
 NOT_EQUAL: '!=' ;
 
-//binary boolean operators
+//conditional-operators
 AND: '&&' ;
 OR: '||' ;
 
-//unary boolean operators
+//unary-boolean-operators
 NOT: '!' ;
 
-//unary operators
+//unary-operators
 LEN: 'len' ;
 ORD: 'ord' ;
 CHR: 'chr' ;
 
-//boolean literals
+//boolean-literals
 TRUE: 'true' ;
 FALSE: 'false' ;
 

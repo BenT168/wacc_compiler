@@ -20,7 +20,7 @@ public class Main {
 		CommandLine cmd = parseFlags(args);
 		
 		// We set the logging options as appropriate
-		SemanticChecker.dbh.setOptions(cmd);
+		TypeCheckVisitor.dbh.setOptions(cmd);
 		
 		// Get WACC source File
 		String waccFilePath = cmd.getOptionValue("f");
@@ -35,7 +35,7 @@ public class Main {
 		ParseTree tree = getParseTree(tokens);
 		
 		// Check for semantic errors
-		SemanticChecker sc = checkSemanticIntegrity(tree);
+		TypeCheckVisitor sc = checkSemanticIntegrity(tree);
 		
 		// Check that the Error Listener has not recorded any exceptions
 		if ( !sc.terminate() ) {
@@ -113,8 +113,8 @@ public class Main {
 	 * @return
 	 * 		The Semantic Checker object
 	 */
-	private static SemanticChecker checkSemanticIntegrity(ParseTree tree) {
-		SemanticChecker semantic = new SemanticChecker(tree);
+	private static TypeCheckVisitor checkSemanticIntegrity(ParseTree tree) {
+		TypeCheckVisitor semantic = new TypeCheckVisitor(tree);
 		try {
 			semantic.init();
 		} catch (UnresolvedExpectationException e) {
@@ -143,7 +143,7 @@ public class Main {
 			// Create Parser from Tokens
 			parser = new WACCParser(tokens);
 			// Set tree to null for the moment
-			tree = parser.prog();
+			tree = parser.program();
 		} catch (Exception e) {
 			System.err.println(e.toString());
 			exitSyntaxError();

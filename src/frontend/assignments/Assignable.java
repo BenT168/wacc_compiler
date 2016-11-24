@@ -4,9 +4,9 @@ import backend.Register;
 import backend.TokenSequence;
 import backend.tokens.branch.BranchLinkToken;
 import backend.tokens.load.LoadToken;
-import frontend.WACCTree;
+import frontend.tree;
 
-public abstract class Assignable extends WACCTree {
+public abstract class Assignable extends tree {
 	
 	//forms allocation token sequence (refactors)
 	TokenSequence mallocSequence(int size, int varSize) {

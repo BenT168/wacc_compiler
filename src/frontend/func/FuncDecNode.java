@@ -3,7 +3,7 @@ package frontend.func;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
-import frontend.WACCTree;
+import frontend.tree;
 import frontend.stat.StatNode;
 import frontend.type.WACCType;
 import backend.InstrToken;
@@ -20,7 +20,7 @@ import backend.tokens.general.PushToken;
  * function body and a Bool that becomes true once the function body has been added.
  */
 
-public class FuncDecNode extends WACCTree {
+public class FuncDecNode extends tree {
 
 	public final WACCType returnType;
 	private String funcName;
