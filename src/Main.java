@@ -10,61 +10,34 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.security.Permission;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
 
-    public static List<File> getFilesInFolder(final File folder) {
-        List<File> files = new ArrayList<>();
-        for (final File file : folder.listFiles()) {
-            if (file.isDirectory()) {
-                files.addAll(getFilesInFolder(file));
-            } else {
-                files.add(file);
-            }
-        }
-        return files;
-    }
+    public static void main(String[] args) throws ParseCancellationException{
 
-    public static void main(String[] args) throws ParseCancellationException {
-
-        NoExitSecurityManager securityManager = new NoExitSecurityManager();
-        System.setSecurityManager(securityManager);
         /* Check if Argument is given, throw error if not the right number
          */
-        if (args.length != 2) {
-            System.out.println("Error: Please supply a file path or file directory path.");
+        if(args.length != 2) {
+            System.out.println("Error: One Argument Should be given.");
             System.exit(-1);
         }
+
         File file = new File(args[1]);
-        if (!file.exists()) {
-            System.out.println("Error: File in path\n" + args[1] + "does not exist.");
+
+        /* Check if file exists
+         */
+        if(!file.exists()) {
+            System.out.println("Error: File input does not exist.");
             System.exit(-1);
         }
-        List<File> files = getFilesInFolder(file);
-        File dir = new File("test_out/" + file.getName());
-        dir.mkdirs();
-
-        for (File f : files) {
-            try {
-                System.out.println("Processing file: " + f.getAbsolutePath());
-                process(dir, f);
-            } catch (SecurityException e) {
-                e.toString();
-                e.printStackTrace();
-            }
-        }
-        System.exit(0);
-    }
-
-    private static void process(final File dir, final File file) {
 
         FileInputStream fis;
         ParseTree tree;
 
+
         try {
+
             fis = new FileInputStream(file);
 
             /*Get Parser after lexing */
@@ -77,6 +50,7 @@ public class Main {
             /*Start parsing from program */
             tree = parser.program();
 
+
             /*Check if there are any Syntax errors */
             int syntaxErr = parser.getNumberOfSyntaxErrors();
             if(syntaxErr > 0) {
@@ -87,13 +61,15 @@ public class Main {
                 visitor.visit(tree);
 
             }
+
             /* Go through tree another time
             Translate to assembly language and write to file.s*/
             CodeGenVisitor codeGenVisitor = new CodeGenVisitor((WACCParser.ProgramContext) tree);
 
+
             //Generate file.s
             WriteFile writeFile = new WriteFile();
-            writeFile.writeToFile(dir, file);
+            writeFile.writeToFile(file);
 
             //Visit tree
             codeGenVisitor.visit(tree);
@@ -103,6 +79,7 @@ public class Main {
                 writeFile.writer.write(codeGenVisitor.buffer.get(i));
                 writeFile.writer.newLine();
             }
+
             fis.close();
             writeFile.writer.close();
 
@@ -113,7 +90,8 @@ public class Main {
             if (ThrowException.syntaxExceptionThrown) {
                 System.exit(100);
             }
-            // Catching all the exceptions
+
+            //Catching all the exceptions
         } catch (IOException e) {
             System.out.println("Error: InputStream does not work.");
         } catch (Exception e) {
@@ -135,7 +113,10 @@ public class Main {
             }
             e.printStackTrace();
         }
+
+
         /* A successful compilation should return the exit status 0 */
+        System.exit(0);
     }
 
     private static String[] loopArrayListString(ArrayList<String> list) {
@@ -146,21 +127,6 @@ public class Main {
         return resultToAppend;
     }
 
-    private static class NoExitSecurityManager extends SecurityManager {
-        @Override
-        public void checkPermission(Permission permission) {
-            // Allow anything
-        }
 
-        @Override
-        public void checkPermission(Permission permission, Object o) {
-            // Allow anything
-        }
 
-        @Override
-        public void checkExit(int status) {
-            throw new SecurityException("Exited with error code: "  + status);
-        }
-    }
 }
-

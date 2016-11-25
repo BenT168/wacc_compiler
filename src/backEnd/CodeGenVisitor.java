@@ -239,6 +239,7 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
         }
 
         ArrayList<ArrayList<String>> p_prints = systemReadTokens.getP_Prints();
+        System.out.println(p_prints.size());
         ArrayList<String> codes = new ArrayList<>();
 
 
@@ -409,7 +410,6 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
     /*PRINTLN expr*/
     @Override
     public LinkedList<String> visitPrintln(@NotNull WACCParser.PrintlnContext ctx) {
-        System.out.println(ctx.getText());
         visitChildren(ctx);
         visitPrintHelper(ctx.expr(), true, false);
         return null;
@@ -858,10 +858,6 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
         } else if(ctx.arrayElem() != null) {
             visitArrayElem_expr(ctx);
         } else if(Utils.isBinaryOper(ctx)) {
-            visitExpr(ctx.expr(0));
-            visitExpr(ctx.expr(1));
-            //visit(ctx.expr(0));
-            //visit(ctx.expr(1));
             ArrayList<String> codeGen = functionsCodeGen.get(functionsCodeGen.size() - 1);
             visitBinaryOper(ctx);
             if(ctx.expr(0).ident() == null && ctx.expr(1).ident() == null) {

@@ -5,7 +5,7 @@ public class WriteFile {
 
     public BufferedWriter writer = null;
 
-    public void writeToFile(File dir, File file) throws IOException {
+    public void writeToFile(File file) throws IOException {
 
         String argfile = file.getName();
         //Get file name without extension
@@ -14,7 +14,7 @@ public class WriteFile {
 
 
         //Write to file.s
-        File wFile = new File(dir, writeFile);
+        File wFile = new File(writeFile);
         FileOutputStream fos = new FileOutputStream(wFile);
         OutputStreamWriter out = new OutputStreamWriter(fos, "utf-8");
         writer = new BufferedWriter(out);
@@ -37,3 +37,4 @@ public class WriteFile {
         return String.valueOf(temp);
     }
 }
+

@@ -79,44 +79,10 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
         return p_prints;
     }
 
-
-   /* *//*
-     * Method: sortOutBeginVariables Usage: gets variables for the current scope
-     * using the stat context
-     *//*
-    public void sortOutBeginVariables(ParseTree stat) {
-        if (stat instanceof WACCParser.DeclareContext) {
-            Variable v = Utils.getVariable((WACCParser.DeclareContext) stat.getChild(0));
-            int current = 0;
-            if (scopeVariablesOffsetCount.size() > beginCount - 1) {
-                current = scopeVariablesOffsetCount.get(beginCount - 1);
-            }
-            current += v.getOffset();
-            if (scopeVariablesOffsetCount.size() > beginCount - 1) {
-                scopeVariablesOffsetCount.remove(beginCount - 1);
-            }
-            scopeVariablesOffsetCount.add(beginCount - 1, current);
-        } else if (stat instanceof WACCParser.StatContext) {
-            sortOutBeginVariables((WACCParser.StatContext) stat.getChild(0));
-            sortOutBeginVariables((WACCParser.StatContext) stat.getChild(2));
-        } else {
-            // begin
-            visit(stat);
-        }
-    }*/
-
-
-
-    /*
-     * Method: getListOfFunctions Usage: ?
-     */
     public ArrayList<Function> getListOfFunctions() {
         return functions;
     }
 
-    /*
-     * Method: addAllMessages Usage: ?
-     */
     private void addAllMessages() {
         // nub(stringsInProgram);
 
@@ -150,13 +116,12 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
         if (s.equals(defaultDivideByZero) || s.equals(defaultArrayNegativeIndex)
                 || s.equals(defaultArrayIndexOutOfBounds) || s.equals(defaultFree))
             length -= 1;
-        defaultMessages.add(WORD + (length - 3));// adrian has this
+        defaultMessages.add(WORD + (length - 3));
         defaultMessages.add(ASCII + s);
     }
 
 
     private void writeP_Prints() {
-
         for (int i = 2; i < defaultMessages.size(); i += 3) {
             String messageLabel = defaultMessages.get(i - 2);
             messageLabel = messageLabel.substring(1, messageLabel.length() - 1);
@@ -195,19 +160,11 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
                     break;
                 case defaultDivideByZero:
                     p_check_divide_by_zero(messageLabel);
-                    // if ((seenDivorMod || seenCalc || seenArrayElem) &&
-                    // seenString) {
-                    // p_print_runtimeError();
-                    // }
                     break;
                 case defaultArrayNegativeIndex:
                     String messageLabel2 = defaultMessages.get(i + 1);
                     messageLabel2 = messageLabel2.substring(1, messageLabel2.length() - 1);
                     p_check_array_bounds(messageLabel, messageLabel2);
-                    // if ((seenDivorMod || seenCalc || seenArrayElem) &&
-                    // seenString) {
-                    // p_print_runtimeError();
-                    // }
                     break;
                 case defaultPrintAddress:
                     p_print_reference(messageLabel);
@@ -242,7 +199,7 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
      * Method: p_check_null_pointer Usage: ?
      */
     private void p_check_null_pointer(String messageLabel) {
-        ArrayList<String> codeGen = new ArrayList<String>();
+        ArrayList<String> codeGen = new ArrayList<>();
         codeGen.add("\tp_check_null_pointer:");
         codeGen.add(ARMInstructions.PUSH_LINK_REG);
         codeGen.add(ARMInstructions.CMP.printWithReg("r0", "#0"));
@@ -372,7 +329,7 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
      * Method: p_print_runtimeError Usage: ?
      */
     private void p_print_runtimeError() {
-        ArrayList<String> codeGen = new ArrayList<String>();
+        ArrayList<String> codeGen = new ArrayList<>();
         codeGen.add("\tp_throw_runtime_error:");
         codeGen.add(ARMInstructions.BL.printWithString("p_print_string"));
         codeGen.add(ARMInstructions.MOV.printWithImm("r0", "-1"));
@@ -395,9 +352,7 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
      * Method: p_print_int Usage: ?
      */
     private void p_print_int(String messageLabel) {
-        ArrayList<String> codeGen = new ArrayList<String>();
-        // TODO: r0 needs to have the correct message, so if there is something
-        // there, move it to the next available register.
+        ArrayList<String> codeGen = new ArrayList<>();
         codeGen.add("\tp_print_int:");
         codeGen.add(ARMInstructions.PUSH_LINK_REG);
         codeGen.add(ARMInstructions.MOV.printWithReg("r1", "r0"));
@@ -414,7 +369,7 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
      * Method: p_print_bool Usage: ?
      */
     private void p_print_bool(String messageLabel, String falseMessage) {
-        ArrayList<String> codeGen = new ArrayList<String>();
+        ArrayList<String> codeGen = new ArrayList<>();
         codeGen.add("\tp_print_bool:");
         codeGen.add(ARMInstructions.PUSH_LINK_REG);
         codeGen.add(ARMInstructions.CMP.printWithImm("r0", "0"));
@@ -432,7 +387,7 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
      * Method: p_print_ln Usage: ?
      */
     private void p_print_ln(String messageLabel) {
-        ArrayList<String> codeGen = new ArrayList<String>();
+        ArrayList<String> codeGen = new ArrayList<>();
         codeGen.add("\tp_print_ln:");
         codeGen.add(ARMInstructions.PUSH_LINK_REG);
         codeGen.add(ARMInstructions.LDR.printWithImm("r0", messageLabel));
@@ -448,7 +403,7 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
      * Method: p_print_string Usage: ?
      */
     private void p_print_string(String messageLabel) {
-        ArrayList<String> codeGen = new ArrayList<String>();
+        ArrayList<String> codeGen = new ArrayList<>();
         codeGen.add("\tp_print_string:");
         codeGen.add(ARMInstructions.PUSH_LINK_REG);
         codeGen.add(ARMInstructions.LDR.printWithAddrReg("r1", "r0", 0));
@@ -666,6 +621,7 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
 
    @Override
     public Void visitPrintln(WACCParser.PrintlnContext ctx) {
+       visitChildren(ctx);
         visitPrintHelper(ctx.expr());
         if (!seenPrint)
             defaultStrings.add(defaultPrint);
@@ -747,9 +703,6 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
         return null;
     }
 
-    /*
-     * Method: visitPrintUnary Usage: ?
-     */
 
     public void visitPrintUnary(ParseTree parseTree) {
         WACCParser.ExprContext ctx = (WACCParser.ExprContext) parseTree;
@@ -774,7 +727,7 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
     }
 
     /*
-     * Method: visitPrintHelperType Usage: ?
+     * Method: visitPrintHelperType
      */
 
     private void visitPrintHelperType(WACCParser.TypeContext type) {
@@ -817,6 +770,25 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
         stringsInProgram.add(ctx.getText());
         return null;
     }
+
+    @Override public Void visitExpr(WACCParser.ExprContext ctx) {
+        if(ctx.DIV() != null || ctx.MOD() != null) {
+            visitDivorMod();
+        }
+        if(Utils.isBinaryOper(ctx)) {
+            if(ctx.MINUS() != null || ctx.PLUS()!= null  || ctx.MUL() != null ) {
+                visitCalcOperator();
+            } else if(ctx.DIV() == null) {//if div == null then must be a boolean function
+                visitBinaryOperOther(ctx);
+            }
+        } else if(Utils.isUnaryOper(ctx)) {
+            if(ctx.MINUS() != null) {
+                visitMinus_unary(ctx);
+            }
+        }
+        return visitChildren(ctx);
+    }
+
 
     /*
      * Method: visitDivorMod Usage: ?

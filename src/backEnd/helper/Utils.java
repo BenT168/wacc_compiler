@@ -24,7 +24,6 @@ public class Utils {
                 return 4;
             }
         } else if (ctx.getChild(0) instanceof WACCParser.PairTypeContext) {
-            // TODO: NUMBER OF BYTES FOR PAIR
             return 4;
         } else if (ctx.getChild(0) instanceof WACCParser.PairElemTypeContext) {
             return 4;
@@ -48,7 +47,6 @@ public class Utils {
                 return 4;
             }
         } else if (ctx.getChild(0) instanceof WACCParser.PairTypeContext) {
-            // TODO: NUMBER OF BYTES FOR PAIR
             return 4;
         } else if (ctx.getChild(0) instanceof WACCParser.PairElemTypeContext) {
             return 4;
@@ -80,7 +78,6 @@ public class Utils {
                 instanceof WACCParser.CharLiterContext) {
             return 1;
         } else {
-            //TODO: Need to take into account the other expressions, binary oper, unary oper and brackets shit
             return 4;
         }
     }
