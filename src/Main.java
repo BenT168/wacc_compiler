@@ -44,7 +44,7 @@ public class Main {
             System.exit(-1);
         }
         List<File> files = getFilesInFolder(file);
-        File dir = new File("test/" + file.getName());
+        File dir = new File("test_out/" + file.getName());
         dir.mkdirs();
 
         for (File f : files) {
