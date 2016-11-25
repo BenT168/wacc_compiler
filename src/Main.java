@@ -1,133 +1,111 @@
+import antlr.WACCLexer;
 import antlr.WACCParser;
-import backEnd.CodeGenVisitor;
-import frontEnd.TypeCheckVisitor;
-import frontEnd.exception.MyErrorListener;
-import frontEnd.exception.SemanticException;
-import frontEnd.exception.SyntaxException;
-import frontEnd.exception.ThrowException;
-import org.antlr.v4.runtime.misc.ParseCancellationException;
+import frontend.exception.SemanticErrorException;
+import frontend.exception.SyntaxErrorException;
+import main.TypeCheckVisitor;
+import main.WACCCompiler;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
+import org.apache.commons.cli.*;
+
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Main {
 
-    public static void main(String[] args) throws ParseCancellationException{
+	public static void main(String[] args) throws IOException {
+		// Parse the flags given in the command line arguments
+		CommandLine cmd = parseFlags(args);
 
-        /* Check if Argument is given, throw error if not the right number
-         */
-        if(args.length != 2) {
-            System.out.println("Error: One Argument Should be given.");
-            System.exit(-1);
-        }
+		// We set the logging options as appropriate
+		TypeCheckVisitor.dbh.setOptions(cmd);
 
-        File file = new File(args[1]);
+		// Get WACC source File
+		String waccFilePath = cmd.getOptionValue("f");
+		InputStream waccInput = (waccFilePath != null) ? new FileInputStream(waccFilePath) : System.in;
 
-        /* Check if file exists
-         */
-        if(!file.exists()) {
-            System.out.println("Error: File input does not exist.");
-            System.exit(-1);
-        }
+		try {
+			ANTLRInputStream antrlInput = new ANTLRInputStream(waccInput);
 
-        FileInputStream fis;
-        ParseTree tree;
+			WACCLexer lexer = new WACCLexer(antrlInput);
 
+			CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-        try {
+			// Create Parser from Tokens
+			WACCParser parser = new WACCParser(tokens);
 
-            fis = new FileInputStream(file);
+			// Set Tree to null for the moment
+			ParseTree tree = parser.program();
 
-            /*Get Parser after lexing */
-            WACCParser parser = CallLexerAndParser.start(fis, file);
+			if(parser.getNumberOfSyntaxErrors() > 0) {
+				System.exit(100);
+			}
 
-            /* Add my listener so error message prints out "Syntax Error ..."*/
-            parser.removeErrorListeners();
-            parser.addErrorListener(MyErrorListener.INSTANCE);
+			TypeCheckVisitor semantic = new TypeCheckVisitor(tree);
+			semantic.init();
 
-            /*Start parsing from program */
-            tree = parser.program();
+			// Check that the Error Listener has not recorded any exceptions
+			if ( !semantic.terminate() ) {
+				System.exit(200);
+			}
 
+			WACCCompiler compiler = new WACCCompiler(semantic.getProgTree());
+			compiler.init();
+			String compilerOutput = compiler.toString();
+			if (cmd.hasOption("s")) {
+				System.out.println(compilerOutput);
+			} else {
+				createAssemblyFile(compiler.toString(), waccFilePath);
+			}
 
-            /*Check if there are any Syntax errors */
-            int syntaxErr = parser.getNumberOfSyntaxErrors();
-            if(syntaxErr > 0) {
-               System.exit(100);
-            } else {
-                //Visit the tree
-                TypeCheckVisitor visitor = new TypeCheckVisitor();
-                visitor.visit(tree);
+		} catch (IOException e) {
+			throw e;
+		} catch (SyntaxErrorException e) {
+			System.err.println(e.toString());
+			System.exit(100);
+		} catch (SemanticErrorException e) {
+			System.err.println(e.toString());
+			System.exit(200);
+		}
+	}
 
-            }
-
-            /* Go through tree another time
-            Translate to assembly language and write to file.s*/
-            CodeGenVisitor codeGenVisitor = new CodeGenVisitor((WACCParser.ProgramContext) tree);
-
-
-            //Generate file.s
-            WriteFile writeFile = new WriteFile();
-            writeFile.writeToFile(file);
-
-            //Visit tree
-            codeGenVisitor.visit(tree);
-
-            //Write each instruction in file
-            for(int i = 0; i < codeGenVisitor.buffer.size(); i++) {
-                    writeFile.writer.write(codeGenVisitor.buffer.get(i));
-                    writeFile.writer.newLine();
-            }
-
-            fis.close();
-            writeFile.writer.close();
-
-            /*Check what error has been thrown in ThrowException and exit with proper code*/
-                if (ThrowException.semanticExceptionThrown) {
-                    System.exit(200);
-                }
-                if (ThrowException.syntaxExceptionThrown) {
-                    System.exit(100);
-                }
-
-        //Catching all the exceptions
-        } catch (IOException e) {
-            System.out.println("Error: InputStream does not work.");
-        } catch (Exception e) {
-            System.out.println("Exception Thrown!");
-            if(e instanceof NullPointerException) {
-                System.out.println("NullPointerException");
-            }
-            if (e instanceof SyntaxException) {
-                System.err.println(e.getMessage());
-                System.exit(100);
-            } else if (e instanceof SemanticException) {
-                System.err.println(e.getMessage());
-                System.exit(200);
-            }
-            if (ThrowException.semanticExceptionThrown) {
-                System.exit(200);
-            } else if(ThrowException.syntaxExceptionThrown) {
-                System.exit(100);
-            }
-            e.printStackTrace();
-        }
+	private static void createAssemblyFile(String assemblyString, String waccFilePath) {
+		// Extract the path from the waccFilePath string
+		Path p = Paths.get(waccFilePath);
+		// Get the filename and replace the extension
+		String assemblyFilename = p.getFileName().toString().replace(".wacc", ".s");
+		// Write to file
+		try {
+	          File file = new File(assemblyFilename);
+	          BufferedWriter output = new BufferedWriter(new FileWriter(file));
+	          output.write(assemblyString);
+	          output.close();
+	        } catch ( IOException e ) {
+	           e.printStackTrace();
+	        }
+	}
 
 
-        /* A successful compilation should return the exit status 0 */
-        System.exit(0);
-    }
+	private static CommandLine parseFlags(String[] args) {
+		// create Options object
+		Options options = new Options();
+		// add v option
+		options.addOption("v", false, "verbose");
+		options.addOption("d", false, "debug mode");
+		options.addOption("f", true, "source file");
+		options.addOption("s", false, "force printing assembly to std-out");
 
-    private static String[] loopArrayListString(ArrayList<String> list) {
-        String[] resultToAppend = new String[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            resultToAppend[i] = list.get(i);
-        }
-        return resultToAppend;
-    }
-
-
+		CommandLineParser flagsParser = new PosixParser();
+		CommandLine cmd = null;
+		try {
+			 cmd = flagsParser.parse(options, args);
+		} catch (ParseException e) {
+			System.err.println("There were problems parsing the flags");
+			System.err.println(e.toString());
+		}
+		return cmd;
+	}
 
 }
-

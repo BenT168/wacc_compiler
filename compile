@@ -1,11 +1,9 @@
 #!/usr/bin/ruby
-# Ruby front-end for your compiler.
+# Ruby front-end for your main.
 # You are free to change the language used for this script,
 # but do *not* change its name.
 
-#----------------------------------MAIN-----------------------------------------
-
-classPath = ["bin", "lib/antlr-4.4-complete.jar"].join(":")
+classPath = ["bin", "lib/antlr-4.4-complete.jar", "lib/xstream-1.4.7.jar", "lib/commons-cli-1.2.jar"].join(":")
 
 className = "Main"
 #checks that the first argument is a file, if so the java program is running in normal mode
@@ -17,5 +15,3 @@ else
     system("java -cp #{classPath} #{className} #{ARGV.join("")}")
 end
 exit($?.exitstatus)
-
-
