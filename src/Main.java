@@ -44,11 +44,13 @@ public class Main {
             System.exit(-1);
         }
         List<File> files = getFilesInFolder(file);
+        File dir = new File("test/" + file.getName());
+        dir.mkdirs();
 
         for (File f : files) {
             try {
                 System.out.println("Processing file: " + f.getAbsolutePath());
-                process(f);
+                process(dir, f);
             } catch (SecurityException e) {
                 e.toString();
                 e.printStackTrace();
@@ -57,11 +59,10 @@ public class Main {
         System.exit(0);
     }
 
-    private static void process(final File file) {
+    private static void process(final File dir, final File file) {
 
         FileInputStream fis;
         ParseTree tree;
-
 
         try {
             fis = new FileInputStream(file);
@@ -92,7 +93,7 @@ public class Main {
 
             //Generate file.s
             WriteFile writeFile = new WriteFile();
-            writeFile.writeToFile(file);
+            writeFile.writeToFile(dir, file);
 
             //Visit tree
             codeGenVisitor.visit(tree);
