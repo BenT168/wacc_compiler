@@ -233,15 +233,22 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
 
         //Loop through funcCodeGen and p_print to load into buffer for writing in main
         ArrayList<String> funcs = new ArrayList<>();
-        for (int i = 0; i < functionsCodeGen.size(); i++) {
-            //printArrayListString(functionsCodeGen.get(i));
-            funcs = writeListString(functionsCodeGen.get(i));
+
+        //Loop through p_print to add to codes
+        for(int i = 0; i < functionsCodeGen.size(); i++) {
+            for(int j = 0; j < functionsCodeGen.get(i).size(); j++) {
+                funcs.add(functionsCodeGen.get(i).get(j));
+            }
         }
 
+/*
+        for(ArrayList<String> f : functionsCodeGen) {
+            System.out.println(f);
+        }*/
+
         ArrayList<ArrayList<String>> p_prints = systemReadTokens.getP_Prints();
+
         ArrayList<String> codes = new ArrayList<>();
-
-
         //Loop through p_print to add to codes
         for(int i = 0; i < p_prints.size(); i++) {
             for(int j = 0; j < p_prints.get(i).size(); j++) {
