@@ -16,6 +16,23 @@ import java.nio.file.Paths;
 public class Main {
 
 	public static void main(String[] args) throws IOException {
+
+		/* Check if Argument is given, throw error if not the right number
+         */
+		if(args.length != 2) {
+			System.out.println("Error: One Argument Should be given.");
+			System.exit(-1);
+		}
+
+		File file = new File(args[1]);
+
+        /* Check if file exists
+         */
+		if(!file.exists()) {
+			System.out.println("Error: File input does not exist.");
+			System.exit(-1);
+		}
+
 		// Parse the flags given in the command line arguments
 		CommandLine cmd = parseFlags(args);
 
@@ -25,6 +42,8 @@ public class Main {
 		// Get WACC source File
 		String waccFilePath = cmd.getOptionValue("f");
 		InputStream waccInput = (waccFilePath != null) ? new FileInputStream(waccFilePath) : System.in;
+		WACCParser parser = null;
+		ParseTree tree = null;
 
 		try {
 			ANTLRInputStream antrlInput = new ANTLRInputStream(waccInput);
@@ -33,21 +52,31 @@ public class Main {
 
 			CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-			// Create Parser from Tokens
-			WACCParser parser = new WACCParser(tokens);
-
-			// Set Tree to null for the moment
-			ParseTree tree = parser.program();
-
-			TypeCheckVisitor semantic = new TypeCheckVisitor(tree);
-			semantic.init();
-
-			// Check that the Error Listener has not recorded any exceptions
-			if ( !semantic.terminate() ) {
+			try {
+				/* Create Parser from Tokens */
+				parser = new WACCParser(tokens);
+				/*Start parsing from program */
+				tree = parser.program();
+			} catch (Exception e) {
+				System.err.println(e.toString());
 				System.exit(200);
 			}
 
-			WACCCompiler compiler = new WACCCompiler(semantic.getProgTree());
+			/* Check if there are any Syntax errors */
+			if(parser.getNumberOfSyntaxErrors() > 0) {
+				System.exit(100);
+			}
+
+			/* Visit the tree */
+			TypeCheckVisitor visitor = new TypeCheckVisitor(tree);
+			visitor.init();
+
+			/* Check if the semantic checking will terminate */
+			if ( !visitor.terminate() ) {
+				System.exit(200);
+			}
+
+			WACCCompiler compiler = new WACCCompiler(visitor.getProgTree());
 			compiler.init();
 			String compilerOutput = compiler.toString();
 			if (cmd.hasOption("s")) {
@@ -65,6 +94,7 @@ public class Main {
 			System.err.println(e.toString());
 			System.exit(200);
 		}
+
 	}
 
 	private static void createAssemblyFile(String assemblyString, String waccFilePath) {
