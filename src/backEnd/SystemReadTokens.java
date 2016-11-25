@@ -486,8 +486,6 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
             for(int i = 0; i < mul.stat().size(); i++) {
                 getVariablesForFunction(mul.stat(i), f);
             }
-           /* getVariablesForFunction(stat.getChild(0), f);
-            getVariablesForFunction(stat.getChild(2), f);*/
         } else if (stat instanceof WACCParser.BeginContext) {
             getVariablesForFunction(((WACCParser.BeginContext) stat).stat(), f);
         }
@@ -517,20 +515,17 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
             if (v.getType().getChild(0) instanceof WACCParser.PairTypeContext) {
                 if (!seenFreePair && !seenFreePairBeforeFreeArray) {
                     defaultStrings.add(defaultFree);
-                    // defaultStrings.add(defaultString);
                     seenFreePairBeforeFreeArray = true;
                     seenFree = true;
                     seenFreePair = true;
                 } else if (!seenFreePair) {
                     defaultStrings.add(defaultFree);
-                    // defaultStrings.add(defaultString);
                     seenFree = true;
                     seenFreePair = true;
                 }
             } else if (!(v.getType().getChild(0) instanceof WACCParser.BaseTypeContext)) {
                 if (!seenFreeArray) {
                     defaultStrings.add(defaultFree);
-                    // defaultStrings.add(defaultString);
                     seenFree = true;
                     seenFreeArray = true;
                 }
@@ -664,9 +659,6 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
             visit(ctx.expr(0));
             visitPrintHelper(ctx.expr(0));
         } else if (Utils.isBinaryOper(ctx)) {
-            // recurse on one side only
-            // visitPrintHelper((ExprContext) ctx.getChild(0));
-            //visit(ctx.AND());
              visitPrintHelper(ctx.expr(0));
 
         } else if (ctx.PLUS() != null || ctx.MINUS() != null
@@ -726,9 +718,6 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
         }
     }
 
-    /*
-     * Method: visitPrintHelperType
-     */
 
     private void visitPrintHelperType(WACCParser.TypeContext type) {
         if (type.getChild(0) instanceof WACCParser.BaseTypeContext) {
@@ -790,9 +779,7 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
     }
 
 
-    /*
-     * Method: visitDivorMod Usage: ?
-     */
+
     public void visitDivorMod() {
         if (!seenDivorMod) {
             defaultStrings.add(defaultDivideByZero);
@@ -800,9 +787,7 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
         }
     }
 
-    /*
-     * Method: visitCalcOperator Usage: ?
-     */
+
     public void visitCalcOperator() {
         if (!seenCalc) {
             defaultStrings.add(defaultOverflowError);
@@ -811,9 +796,7 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
     }
 
 
-    /*
-     * Method: visitBinaryOperOther Usage: ?
-     */
+
     public void visitBinaryOperOther(ParseTree ctx) {
         if (!seenBool && checkParentIsPrint(ctx)) {
             defaultStrings.add(defaultTrue);
@@ -822,9 +805,7 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
         }
     }
 
-    /*
-     * Method: checkParentIsPrint Usage: ?
-     */
+
     public boolean checkParentIsPrint(ParseTree ctx) {
         if (ctx.getParent() instanceof WACCParser.PrintContext
                 || ctx.getParent() instanceof WACCParser.PrintlnContext) {

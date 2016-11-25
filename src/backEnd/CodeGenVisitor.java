@@ -26,8 +26,6 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
     private ArrayList<Function> listOfFunctions = new ArrayList<>();
     private ArrayList<String> stringsInProgram = new ArrayList<>();
     private ArrayList<Integer> beginOffsets;
-
-
     public ArrayList<String> buffer = new ArrayList<>();
 
     private Function currentFunction = null;
@@ -206,21 +204,9 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
         return result;
     }
 
-	/*
-	 * Method: addNumberingToOutput Usage: Helper method for printing the
-	 * results to the format of the testsuite.
-	 */
-    public String addNumberingToOutput(String result, ArrayList<String> list, int count) {
-        for (int i = 0; i < list.size(); i++) {
-            result += "\n" + count + list.get(i);
-            count++;
-        }
-        return result;
-    }
 
     /*
-     * Method: printResults Usage: This method prints out the ARM machine code
-     * at the end of visiting the whole program.
+     * Prints the results for the .s file
      */
     public void printResults() {
         ArrayList<String> messages = systemReadTokens.getMessages();
@@ -241,11 +227,7 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
             }
         }
 
-/*
-        for(ArrayList<String> f : functionsCodeGen) {
-            System.out.println(f);
-        }*/
-
+        //Get the messages from before main
         ArrayList<ArrayList<String>> p_prints = systemReadTokens.getP_Prints();
 
         ArrayList<String> codes = new ArrayList<>();
@@ -256,16 +238,9 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
             }
         }
 
-
-        /*for(int i = 0; i < codes.size(); i++) {
-            System.out.println(codes.get(i));
-        }*/
-
         //Fill up buffer with elements from both lists
-
         int start = buffer.size();
         int totalSize = start + funcs.size() + codes.size();
-
         int count = start;
         int funcPos = 0;
         int codesPos = 0;
@@ -282,18 +257,6 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
     }
 
 
-
-    /*
-        * Method: writeListString Usage: Given an arraylist of strings, this
-         * will store the strings in an ArrayList  in the correct order.
-         */
-    public ArrayList<String> writeListString(ArrayList<String> list) {
-        ArrayList<String> bf = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            bf.add(i, list.get(i));
-        }
-        return bf;
-    }
 
 
     //...................................PARAMETER......................................
@@ -405,6 +368,7 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
         regs.freeLastTwoNonReturnRegistersInUse();
         return null;    }
 
+
     /*PRINT expr*/
     @Override
     public LinkedList<String> visitPrint(@NotNull WACCParser.PrintContext ctx) {
@@ -422,8 +386,7 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
     }
 
     /*
-	 * Method: visitPrintHelper Usage: This method is recursive and given an
-	 * expression will print the right branch machine code instruction.
+	 * Function to print the correct Arm instruction in print functions
 	 */
     public void visitPrintHelper(WACCParser.ExprContext ctx, boolean isprintln, boolean recurse) {
         ArrayList<String> codeGen = functionsCodeGen.get(functionsCodeGen.size() - 1);
@@ -431,8 +394,8 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
             regs.freeAllRegisters();
             codeGen.add(ARMInstructions.MOV.printWithReg("r0", regs.getNonReturnRegister().getName()));
         }
-        if(ctx.boolLiter() != null || ctx.AND() != null || ctx.OR() != null) {
-            //|| ctx instanceof WACCParser.Binary_oper_other_exprContext) {
+        if(ctx.boolLiter() != null || ctx.AND() != null || ctx.OR() != null || ctx.GT() != null || ctx.GTE() != null ||
+                ctx.LT() != null || ctx.LTE() != null || ctx.EQ() != null || ctx.NEQ() != null) {
             codeGen.add(ARMInstructions.BL.printWithString("p_print_bool"));
             regs.freeAllRegisters();
         } else if(ctx.intLiter() != null || ctx.MOD() != null || ctx.DIV() != null || ctx.MUL() != null ||
@@ -478,9 +441,7 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
     }
 
     /*
-	 * Method: visitPrintArrayElemHelper Usage: This is a backEnd.helper method to take
-	 * care of printing the right branch instruction for the type of the array
-	 * -> digs into the ACTUAL type of the array, if the array is nested.
+	 Function to help to print array elements
 	 */
     public void visitPrintArrayElemHelper(WACCParser.TypeContext type) {
         if (type.getChild(0) instanceof WACCParser.BaseTypeContext
@@ -492,9 +453,7 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
     }
 
     /*
-     * Method: visitPrintHelperType Usage: This is a backEnd.helper method to take care
-     * of adding the right ARM machine code instruction, given the type of the
-     * expression.
+     helper function for visitPrinter
      */
     public void visitPrintHelperType(WACCParser.TypeContext type) {
         ArrayList<String> codeGen = functionsCodeGen.get(functionsCodeGen.size() - 1);
@@ -623,6 +582,9 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
     public ArrayList<String> returnOrExit(WACCParser.ExprContext ctx) {
         ArrayList<String> toAddto = functionsCodeGen.get(functionsCodeGen.size() - 1);
         visit(ctx);
+        if(resultReg == null) {
+            resultReg = regs.getNonReturnRegister();
+        }
         toAddto.add(ARMInstructions.MOV.printWithReg("r0", resultReg.getName()));
         regs.freeAllRegisters();
         return toAddto;
@@ -633,18 +595,12 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
     public LinkedList<String> visitIfElse(@NotNull WACCParser.IfElseContext ctx) {
         ArrayList<String> codeGen = functionsCodeGen.get(functionsCodeGen.size() - 1);
 
-        // making branches...
+        // making branches
         String branchName1 = labeller.getNewLabel();
         String branchName2 = labeller.getNewLabel();
 
-        // visiting expressions...
+        // visiting expressions
         visit(ctx.getChild(1));
-
-        // getting registers...
-		/*
-		 * reg1 and reg2 should be the registers assigned by visiting the
-		 * expressions, "randomReg1" and "RandomReg2" used for now.
-		 */
 
         codeGen.add(ARMInstructions.CMP.printWithImm(resultReg.getName(), "0"));
         codeGen.add(ARMInstructions.BEQ.printWithString(branchName1));
@@ -720,6 +676,10 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
         return null;
     }
 
+
+
+    /* AssignRHS -> Call
+     */
     public Void visitCall(WACCParser.AssignRHSContext ctx) {
 
         // ASSUMING PARENT IS VARIBALE STAT
@@ -761,7 +721,8 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
     }
 
 
-
+    /* In assignRHS -> Pair eleme
+     */
     public Void visitPair_elem_assignrhs(WACCParser.PairElemContext ctx) {
         ArrayList<String> codeGen = functionsCodeGen.get(functionsCodeGen.size() - 1);
         visit(ctx.getChild(0).getChild(1)); //
@@ -780,6 +741,9 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
         }
         return null;
     }
+
+    /* AssignRHS -> Newpair
+     */
 
     public Void visitNewpair_assignrhs(WACCParser.AssignRHSContext ctx) {
         ArrayList<String> codeGen = functionsCodeGen.get(functionsCodeGen.size() - 1);
@@ -810,39 +774,6 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
         return super.visitArgList(ctx);
     }
 
-    @Override
-    public LinkedList<String> visitPairElem(@NotNull WACCParser.PairElemContext ctx) {
-        return null;
-    }
-
-//..................................TYPE......................................
-
-    @Override
-    public LinkedList<String> visitType(@NotNull WACCParser.TypeContext ctx) {
-        return null;
-    }
-
-    @Override
-    public LinkedList<String> visitBaseType(@NotNull WACCParser.BaseTypeContext ctx) {
-        return null;
-    }
-
-    @Override
-    public LinkedList<String> visitArrayType(@NotNull WACCParser.ArrayTypeContext ctx) {
-        return null;
-    }
-
-    @Override
-    public LinkedList<String> visitPairType(@NotNull WACCParser.PairTypeContext ctx) {
-        return null;
-    }
-
-    @Override
-    public LinkedList<String> visitPairElemType(@NotNull WACCParser.PairElemTypeContext ctx) {
-        return null;
-    }
-
-
 
     //..................................EXPRESSION......................................
 
@@ -866,9 +797,6 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
         } else if(Utils.isBinaryOper(ctx)) {
             ArrayList<String> codeGen = functionsCodeGen.get(functionsCodeGen.size() - 1);
             visitBinaryOper(ctx);
-           /* if(ctx.expr(0).ident() == null && ctx.expr(1).ident() == null) {
-                codeGen.add(ARMInstructions.EOR.printWithOffset(resultReg.getName(), 1));
-            }*/
             return null;
         } else {
             if(ctx.intLiter() != null) {
@@ -883,9 +811,6 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
             if(ctx.boolLiter() != null) {
                 visitBoolLiter(ctx.boolLiter());
             }
-
-            //resultReg = regs.getNonReturnRegister();
-
         }
         return null;
     }
@@ -897,7 +822,9 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
 
 
 
-
+    /*
+    Expr -> minus
+     */
     private void visitMinus(WACCParser.ExprContext ctx) {
         ArrayList<String> codeGen = functionsCodeGen.get(functionsCodeGen.size() - 1);
         if (ctx.expr(0).intLiter() != null) {
@@ -913,124 +840,6 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
         }
     }
 
-    private void visitBinaryOper(WACCParser.ExprContext ctx) {
-        Register temp = regs.getNonReturnRegister();
-        //Register t = new Register("r4");
-        //regs.freeRegister(temp);
-        visitBinary(ctx, temp, false);
-        //regs.freeRegister(temp);
-    }
-
-    private void visitBinary(ParseTree parseTree, Register nonReturnRegister, boolean recurse) {
-
-        if (!recurse) {
-            regs.freeAllRegisters();
-            recurse = true;
-        }
-        WACCParser.ExprContext ctx = (WACCParser.ExprContext) parseTree;
-        if ((isLiter(ctx.expr(0)) || isIdent(ctx.expr(0))) && (isLiter(ctx.expr(1)) || isIdent(ctx.expr(1)))) {
-            // base case both sides bool liter
-            regs.freeLastRegister();
-            visit(ctx.expr(0));
-            if(ctx.expr(1).boolLiter() != null) {
-                resultReg = regs.getNonReturnRegister();
-            }
-            visit(ctx.expr(1));
-        } else if (isBinaryOper(ctx.expr(0)) && isLiter(ctx.expr(1))) {
-            visitBinary(ctx.expr(0), nonReturnRegister, recurse);
-            visit(ctx.expr(0));
-        } else if (isLiter(ctx.expr(0)) && isBinaryOper(ctx.expr(1))) {
-            regs.freeLastRegister();
-            visit(ctx.expr(1));
-            visitBinary(ctx.expr(1), regs.getNonReturnRegister(), recurse);
-        } else if (isBinaryOper(ctx.expr(0)) && isBinaryOper(ctx.expr(1))) {
-            visitBinary(ctx.expr(0), nonReturnRegister, recurse);
-            visitBinary(ctx.expr(1), regs.getNonReturnRegister(), recurse);
-        } else if (ctx.getChild(0) instanceof WACCParser.ExprContext && isLiter(ctx.expr(1))) {
-            visitBinary(ctx.getChild(0).getChild(1), nonReturnRegister, recurse);
-            visit(ctx.getChild(2));
-        } else if (isLiter(ctx.expr(0)) && ctx.expr(1) != null) {
-            regs.freeLastRegister();
-            visit(ctx.getChild(0));
-            visitBinary(ctx.getChild(1).getChild(0), regs.getNonReturnRegister(), recurse);
-        } else if (ctx.getChild(0) instanceof WACCParser.ExprContext && ctx.getChild(1) instanceof WACCParser.ExprContext) {
-            visitBinary(ctx.getChild(0).getChild(1), nonReturnRegister, recurse);
-            visitBinary(ctx.getChild(1).getChild(0), regs.getNonReturnRegister(), recurse);
-        }
-            printBinaryInstruction(ctx, nonReturnRegister);
-    }
-
-
-    private void printBinaryInstruction(ParseTree parseTree, Register nonReturnRegister) {
-        WACCParser.ExprContext ctx = (WACCParser.ExprContext) parseTree;
-        ArrayList<String> codeGen = functionsCodeGen.get(functionsCodeGen.size() - 1);
-        if (ctx.AND() != null) {
-            regs.freeRegister(nonReturnRegister);
-            nonReturnRegister = regs.getNonReturnRegister();
-            codeGen.add(ARMInstructions.AND.printWithReg(nonReturnRegister.getName(), nonReturnRegister.getName(),
-                    resultReg.getName()));
-        } else if (ctx.OR() != null) {
-            codeGen.add(ARMInstructions.ORR.printWithReg(nonReturnRegister.getName(), nonReturnRegister.getName(),
-                    resultReg.getName()));
-        } else if (ctx.PLUS() != null) {
-            if (r11Count > 0) {
-                codeGen.add(ARMInstructions.POP.printWithReg("r11"));
-                codeGen.add(ARMInstructions.ADDS.printWithReg("r10", "r11", "r10"));
-                r11Count--;
-            } else {
-                codeGen.add(ARMInstructions.ADDS.printWithReg(nonReturnRegister.getName(),
-                        nonReturnRegister.getName(), resultReg.getName()));
-            }
-            codeGen.add(ARMInstructions.BLVS.printWithString("p_throw_overflow_error"));
-        } else if (ctx.MINUS() != null) {
-            codeGen.add(ARMInstructions.SUBS.printWithReg(nonReturnRegister.getName(), nonReturnRegister.getName(),
-                    resultReg.getName()));
-            codeGen.add(ARMInstructions.BLVS.printWithString("p_throw_overflow_error"));
-        } else if (ctx.MUL() != null) {
-            codeGen.add(ARMInstructions.SMULL.printWith4Regs(nonReturnRegister.getName(), resultReg.getName()));
-            codeGen.add(
-                    ARMInstructions.CMP.printWithReg(resultReg.getName(), nonReturnRegister.getName(), "ASR #31"));
-            codeGen.add(ARMInstructions.BLNE.printWithString("p_throw_overflow_error"));
-        } else if (ctx.MOD() != null) {
-            codeGen.add(ARMInstructions.MOV.printWithReg("r0", nonReturnRegister.getName()));
-            codeGen.add(ARMInstructions.MOV.printWithReg("r1", resultReg.getName()));
-            codeGen.add(ARMInstructions.BL.printWithString("p_check_divide_by_zero"));
-            codeGen.add(ARMInstructions.BL.printWithString("__aeabi_idivmod"));
-            codeGen.add(ARMInstructions.MOV.printWithReg(nonReturnRegister.getName(), "r1"));
-        } else if (ctx.DIV() != null) {
-            codeGen.add(ARMInstructions.MOV.printWithReg("r0", nonReturnRegister.getName()));
-            codeGen.add(ARMInstructions.MOV.printWithReg("r1", resultReg.getName()));
-            codeGen.add(ARMInstructions.BL.printWithString("p_check_divide_by_zero"));
-            codeGen.add(ARMInstructions.BL.printWithString("__aeabi_idiv"));
-            codeGen.add(ARMInstructions.MOV.printWithReg(nonReturnRegister.getName(), "r0"));
-        } else if (ctx.GT() != null) {
-            codeGen.add(ARMInstructions.CMP.printWithReg(nonReturnRegister.getName(), resultReg.getName()));
-            codeGen.add(ARMInstructions.MOVGT.printWithImm(nonReturnRegister.getName(), "1"));
-            codeGen.add(ARMInstructions.MOVLE.printWithImm(nonReturnRegister.getName(), "0"));
-        } else if (ctx.GTE() != null) {
-            codeGen.add(ARMInstructions.CMP.printWithReg(nonReturnRegister.getName(), resultReg.getName()));
-            codeGen.add(ARMInstructions.MOVGE.printWithImm(nonReturnRegister.getName(), "1"));
-            codeGen.add(ARMInstructions.MOVLT.printWithImm(nonReturnRegister.getName(), "0"));
-        } else if (ctx.LTE() != null) {
-            codeGen.add(ARMInstructions.CMP.printWithReg(nonReturnRegister.getName(), resultReg.getName()));
-            codeGen.add(ARMInstructions.MOVLE.printWithImm(nonReturnRegister.getName(), "1"));
-            codeGen.add(ARMInstructions.MOVGT.printWithImm(nonReturnRegister.getName(), "0"));
-        } else if (ctx.LT() != null) {
-            codeGen.add(ARMInstructions.CMP.printWithReg(nonReturnRegister.getName(), resultReg.getName()));
-            codeGen.add(ARMInstructions.MOVLT.printWithImm(nonReturnRegister.getName(), "1"));
-            codeGen.add(ARMInstructions.MOVGE.printWithImm(nonReturnRegister.getName(), "0"));
-        } else if (ctx.EQ() != null) {
-            codeGen.add(ARMInstructions.CMP.printWithReg(nonReturnRegister.getName(), resultReg.getName()));
-            codeGen.add(ARMInstructions.MOVEQ.printWithImm(nonReturnRegister.getName(), "1"));
-            codeGen.add(ARMInstructions.MOVNE.printWithImm(nonReturnRegister.getName(), "0"));
-        } else if (ctx.NEQ() != null) {
-            codeGen.add(ARMInstructions.CMP.printWithReg(nonReturnRegister.getName(), resultReg.getName()));
-            codeGen.add(ARMInstructions.MOVNE.printWithImm(nonReturnRegister.getName(), "1"));
-            codeGen.add(ARMInstructions.MOVEQ.printWithImm(nonReturnRegister.getName(), "0"));
-        }
-        regs.freeRegister(resultReg);
-        resultReg = nonReturnRegister;
-    }
 
 
     @Override
@@ -1205,6 +1014,145 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
         resultReg = temp;
         return null;
     }
+
+//-----------------------------------------PRINT---------------------------------------------------
+
+    private void printBinaryInstruction(ParseTree parseTree, Register nonReturnRegister) {
+        WACCParser.ExprContext ctx = (WACCParser.ExprContext) parseTree;
+        ArrayList<String> codeGen = functionsCodeGen.get(functionsCodeGen.size() - 1);
+        if (ctx.AND() != null) {
+            regs.freeRegister(nonReturnRegister);
+            nonReturnRegister = regs.getNonReturnRegister();
+            codeGen.add(ARMInstructions.AND.printWithReg(nonReturnRegister.getName(), nonReturnRegister.getName(),
+                    resultReg.getName()));
+        } else if (ctx.OR() != null) {
+            codeGen.add(ARMInstructions.ORR.printWithReg(nonReturnRegister.getName(), nonReturnRegister.getName(),
+                    resultReg.getName()));
+        } else if (ctx.PLUS() != null) {
+            if (r11Count > 0) {
+                codeGen.add(ARMInstructions.POP.printWithReg("r11"));
+                codeGen.add(ARMInstructions.ADDS.printWithReg("r10", "r11", "r10"));
+                r11Count--;
+            } else {
+                codeGen.add(ARMInstructions.ADDS.printWithReg(nonReturnRegister.getName(),
+                        nonReturnRegister.getName(), resultReg.getName()));
+            }
+            codeGen.add(ARMInstructions.BLVS.printWithString("p_throw_overflow_error"));
+        } else if (ctx.MINUS() != null) {
+            codeGen.add(ARMInstructions.SUBS.printWithReg(nonReturnRegister.getName(), nonReturnRegister.getName(),
+                    resultReg.getName()));
+            codeGen.add(ARMInstructions.BLVS.printWithString("p_throw_overflow_error"));
+        } else if (ctx.MUL() != null) {
+            codeGen.add(ARMInstructions.SMULL.printWith4Regs(nonReturnRegister.getName(), resultReg.getName()));
+            codeGen.add(
+                    ARMInstructions.CMP.printWithReg(resultReg.getName(), nonReturnRegister.getName(), "ASR #31"));
+            codeGen.add(ARMInstructions.BLNE.printWithString("p_throw_overflow_error"));
+        } else if (ctx.MOD() != null) {
+            codeGen.add(ARMInstructions.MOV.printWithReg("r0", nonReturnRegister.getName()));
+            codeGen.add(ARMInstructions.MOV.printWithReg("r1", resultReg.getName()));
+            codeGen.add(ARMInstructions.BL.printWithString("p_check_divide_by_zero"));
+            codeGen.add(ARMInstructions.BL.printWithString("__aeabi_idivmod"));
+            codeGen.add(ARMInstructions.MOV.printWithReg(nonReturnRegister.getName(), "r1"));
+        } else if (ctx.DIV() != null) {
+            codeGen.add(ARMInstructions.MOV.printWithReg("r0", nonReturnRegister.getName()));
+            codeGen.add(ARMInstructions.MOV.printWithReg("r1", resultReg.getName()));
+            codeGen.add(ARMInstructions.BL.printWithString("p_check_divide_by_zero"));
+            codeGen.add(ARMInstructions.BL.printWithString("__aeabi_idiv"));
+            codeGen.add(ARMInstructions.MOV.printWithReg(nonReturnRegister.getName(), "r0"));
+        } else if (ctx.GT() != null) {
+            codeGen.add(ARMInstructions.CMP.printWithReg(nonReturnRegister.getName(), resultReg.getName()));
+            codeGen.add(ARMInstructions.MOVGT.printWithImm(nonReturnRegister.getName(), "1"));
+            codeGen.add(ARMInstructions.MOVLE.printWithImm(nonReturnRegister.getName(), "0"));
+        } else if (ctx.GTE() != null) {
+            codeGen.add(ARMInstructions.CMP.printWithReg(nonReturnRegister.getName(), resultReg.getName()));
+            codeGen.add(ARMInstructions.MOVGE.printWithImm(nonReturnRegister.getName(), "1"));
+            codeGen.add(ARMInstructions.MOVLT.printWithImm(nonReturnRegister.getName(), "0"));
+        } else if (ctx.LTE() != null) {
+            codeGen.add(ARMInstructions.CMP.printWithReg(nonReturnRegister.getName(), resultReg.getName()));
+            codeGen.add(ARMInstructions.MOVLE.printWithImm(nonReturnRegister.getName(), "1"));
+            codeGen.add(ARMInstructions.MOVGT.printWithImm(nonReturnRegister.getName(), "0"));
+        } else if (ctx.LT() != null) {
+            codeGen.add(ARMInstructions.CMP.printWithReg(nonReturnRegister.getName(), resultReg.getName()));
+            codeGen.add(ARMInstructions.MOVLT.printWithImm(nonReturnRegister.getName(), "1"));
+            codeGen.add(ARMInstructions.MOVGE.printWithImm(nonReturnRegister.getName(), "0"));
+        } else if (ctx.EQ() != null) {
+            codeGen.add(ARMInstructions.CMP.printWithReg(nonReturnRegister.getName(), resultReg.getName()));
+            codeGen.add(ARMInstructions.MOVEQ.printWithImm(nonReturnRegister.getName(), "1"));
+            codeGen.add(ARMInstructions.MOVNE.printWithImm(nonReturnRegister.getName(), "0"));
+        } else if (ctx.NEQ() != null) {
+            codeGen.add(ARMInstructions.CMP.printWithReg(nonReturnRegister.getName(), resultReg.getName()));
+            codeGen.add(ARMInstructions.MOVNE.printWithImm(nonReturnRegister.getName(), "1"));
+            codeGen.add(ARMInstructions.MOVEQ.printWithImm(nonReturnRegister.getName(), "0"));
+        }
+        regs.freeRegister(resultReg);
+        resultReg = nonReturnRegister;
+    }
+
+
+
+
+
+
+
+
+
+
+
+//-----------------------------------------HELPER----------------------------------------------------
+
+
+    //Expr -> Binary
+    private void visitBinary(ParseTree parseTree, Register nonReturnRegister, boolean recurse) {
+
+        if (!recurse) {
+            regs.freeAllRegisters();
+            recurse = true;
+        }
+        WACCParser.ExprContext ctx = (WACCParser.ExprContext) parseTree;
+        if ((isLiter(ctx.expr(0)) || isIdent(ctx.expr(0))) && (isLiter(ctx.expr(1)) || isIdent(ctx.expr(1)))) {
+            // base case both sides bool liter
+            regs.freeLastRegister();
+            visit(ctx.expr(0));
+            if(ctx.expr(1).boolLiter() != null) {
+                resultReg = regs.getNonReturnRegister();
+            }
+            visit(ctx.expr(1));
+        } else if (isBinaryOper(ctx.expr(0)) && isLiter(ctx.expr(1))) {
+            visitBinary(ctx.expr(0), nonReturnRegister, recurse);
+            visit(ctx.expr(0));
+        } else if (isLiter(ctx.expr(0)) && isBinaryOper(ctx.expr(1))) {
+            regs.freeLastRegister();
+            visit(ctx.expr(1));
+            visitBinary(ctx.expr(1), regs.getNonReturnRegister(), recurse);
+        } else if (isBinaryOper(ctx.expr(0)) && isBinaryOper(ctx.expr(1))) {
+            visitBinary(ctx.expr(0), nonReturnRegister, recurse);
+            visitBinary(ctx.expr(1), regs.getNonReturnRegister(), recurse);
+        } else if (ctx.getChild(0) instanceof WACCParser.ExprContext && isLiter(ctx.expr(1))) {
+            visitBinary(ctx.getChild(0).getChild(1), nonReturnRegister, recurse);
+            visit(ctx.getChild(2));
+        } else if (isLiter(ctx.expr(0)) && ctx.expr(1) != null) {
+            regs.freeLastRegister();
+            visit(ctx.getChild(0));
+            visitBinary(ctx.getChild(1).getChild(0), regs.getNonReturnRegister(), recurse);
+        } else if (ctx.getChild(0) instanceof WACCParser.ExprContext && ctx.getChild(1) instanceof WACCParser.ExprContext) {
+            visitBinary(ctx.getChild(0).getChild(1), nonReturnRegister, recurse);
+            visitBinary(ctx.getChild(1).getChild(0), regs.getNonReturnRegister(), recurse);
+        }
+        printBinaryInstruction(ctx, nonReturnRegister);
+    }
+
+    /*
+    Helper for visitBinary
+     */
+    private void visitBinaryOper(WACCParser.ExprContext ctx) {
+        Register temp = regs.getNonReturnRegister();
+        //Register t = new Register("r4");
+        //regs.freeRegister(temp);
+        visitBinary(ctx, temp, false);
+        //regs.freeRegister(temp);
+    }
+
+
 }
 
 
