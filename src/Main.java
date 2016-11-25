@@ -10,6 +10,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.Permission;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class Main {
 
     public static void main(String[] args) throws ParseCancellationException {
 
-        SecurityManager securityManager = new SecurityManager();
+        NoExitSecurityManager securityManager = new NoExitSecurityManager();
         System.setSecurityManager(securityManager);
         /* Check if Argument is given, throw error if not the right number
          */
@@ -49,7 +50,8 @@ public class Main {
                 System.out.println("Processing file: " + f.getAbsolutePath());
                 process(f);
             } catch (SecurityException e) {
-                
+                e.toString();
+                e.printStackTrace();
             }
         }
         System.exit(0);
@@ -145,8 +147,18 @@ public class Main {
 
     private static class NoExitSecurityManager extends SecurityManager {
         @Override
+        public void checkPermission(Permission permission) {
+            // Allow anything
+        }
+
+        @Override
+        public void checkPermission(Permission permission, Object o) {
+            // Allow anything
+        }
+
+        @Override
         public void checkExit(int status) {
-            throw new SecurityException();
+            throw new SecurityException("Exited with error code: "  + status);
         }
     }
 }
