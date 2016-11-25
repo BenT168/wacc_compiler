@@ -39,10 +39,6 @@ public class Main {
 			// Set Tree to null for the moment
 			ParseTree tree = parser.program();
 
-			if(parser.getNumberOfSyntaxErrors() > 0) {
-				System.exit(100);
-			}
-
 			TypeCheckVisitor semantic = new TypeCheckVisitor(tree);
 			semantic.init();
 
