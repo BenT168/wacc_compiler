@@ -667,7 +667,7 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
             // recurse on one side only
             // visitPrintHelper((ExprContext) ctx.getChild(0));
             //visit(ctx.AND());
-            // visitPrintHelper((ExprContext) ctx.getChild(0));
+             visitPrintHelper(ctx.expr(0));
 
         } else if (ctx.PLUS() != null || ctx.MINUS() != null
                 || ctx.MUL() != null || ctx.DIV() != null || ctx.MOD() != null) {
@@ -775,10 +775,10 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
         if(ctx.DIV() != null || ctx.MOD() != null) {
             visitDivorMod();
         }
-        if(Utils.isBinaryOper(ctx)) {
+        if(Utils.isBinaryOper(ctx) && ctx.expr().size() == 2) {
             if(ctx.MINUS() != null || ctx.PLUS()!= null  || ctx.MUL() != null ) {
                 visitCalcOperator();
-            } else if(ctx.DIV() == null) {//if div == null then must be a boolean function
+            } else if(ctx.DIV() == null && ctx.MOD() == null) {//if div == null then must be a boolean function
                 visitBinaryOperOther(ctx);
             }
         } else if(Utils.isUnaryOper(ctx)) {

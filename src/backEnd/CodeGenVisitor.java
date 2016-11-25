@@ -239,7 +239,6 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
         }
 
         ArrayList<ArrayList<String>> p_prints = systemReadTokens.getP_Prints();
-        System.out.println(p_prints.size());
         ArrayList<String> codes = new ArrayList<>();
 
 
@@ -845,7 +844,7 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
         if(ctx.ident() != null) {
             visitIdent((ctx.ident()));
         }
-        if(Utils.isUnaryOper(ctx)) {
+        if(Utils.isUnaryOper(ctx) && ctx.expr().size() == 1) {
             if(ctx.CHR() != null || ctx.ORD() != null) {
                 visit(ctx);
             } else if(ctx.LEN() != null) {
@@ -860,9 +859,9 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
         } else if(Utils.isBinaryOper(ctx)) {
             ArrayList<String> codeGen = functionsCodeGen.get(functionsCodeGen.size() - 1);
             visitBinaryOper(ctx);
-            if(ctx.expr(0).ident() == null && ctx.expr(1).ident() == null) {
+           /* if(ctx.expr(0).ident() == null && ctx.expr(1).ident() == null) {
                 codeGen.add(ARMInstructions.EOR.printWithOffset(resultReg.getName(), 1));
-            }
+            }*/
             return null;
         } else {
             if(ctx.intLiter() != null) {
@@ -930,23 +929,23 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
                 resultReg = regs.getNonReturnRegister();
             }
             visit(ctx.expr(1));
-        } else if (isBinaryOper(ctx.getChild(0)) && isLiter(ctx.expr(1))) {
-            visitBinary(ctx.getChild(0), nonReturnRegister, recurse);
-            visit(ctx.getChild(2));
+        } else if (isBinaryOper(ctx.expr(0)) && isLiter(ctx.expr(1))) {
+            visitBinary(ctx.expr(0), nonReturnRegister, recurse);
+            visit(ctx.expr(0));
         } else if (isLiter(ctx.expr(0)) && isBinaryOper(ctx.expr(1))) {
             regs.freeLastRegister();
-            visit(ctx.getChild(0));
+            visit(ctx.expr(1));
             visitBinary(ctx.expr(1), regs.getNonReturnRegister(), recurse);
-        } else if (isBinaryOper(ctx.getChild(0)) && isBinaryOper(ctx.getChild(2))) {
-            visitBinary(ctx.getChild(0), nonReturnRegister, recurse);
-            visitBinary(ctx.getChild(1), regs.getNonReturnRegister(), recurse);
+        } else if (isBinaryOper(ctx.expr(0)) && isBinaryOper(ctx.expr(1))) {
+            visitBinary(ctx.expr(0), nonReturnRegister, recurse);
+            visitBinary(ctx.expr(1), regs.getNonReturnRegister(), recurse);
         } else if (ctx.getChild(0) instanceof WACCParser.ExprContext && isLiter(ctx.expr(1))) {
             visitBinary(ctx.getChild(0).getChild(1), nonReturnRegister, recurse);
             visit(ctx.getChild(2));
         } else if (isLiter(ctx.expr(0)) && ctx.expr(1) != null) {
             regs.freeLastRegister();
             visit(ctx.getChild(0));
-            visitBinary(ctx.getChild(2).getChild(1), regs.getNonReturnRegister(), recurse);
+            visitBinary(ctx.getChild(1).getChild(0), regs.getNonReturnRegister(), recurse);
         } else if (ctx.getChild(0) instanceof WACCParser.ExprContext && ctx.getChild(1) instanceof WACCParser.ExprContext) {
             visitBinary(ctx.getChild(0).getChild(1), nonReturnRegister, recurse);
             visitBinary(ctx.getChild(1).getChild(0), regs.getNonReturnRegister(), recurse);

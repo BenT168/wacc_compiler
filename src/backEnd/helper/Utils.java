@@ -95,6 +95,9 @@ public class Utils {
     }
 
     public static boolean isLiter(WACCParser.ExprContext ctx) {
+        if(ctx.getText().charAt(0) == '-') {
+            return true;
+        }
         return(ctx.intLiter() != null || ctx.stringLiter() != null || ctx.pairLiter() != null
         || ctx.arrayElem() != null || ctx.boolLiter()!= null);
     }

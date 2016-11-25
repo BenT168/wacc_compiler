@@ -46,7 +46,7 @@ public enum ARMInstructions {
     public String printWithReg(String reg1, String reg2, String reg3) {
         switch(this){
             case SUBS:
-                return "\t\t" + this + " " + reg1 + ", " + reg2 +  ", #" + reg3;
+                return "\t\t" + this + " " + reg1 + ", " + reg2 +  ", " + reg3;
             case AND:
             case ORR:
             case ADD:
