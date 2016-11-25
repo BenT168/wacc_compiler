@@ -409,6 +409,7 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
     /*PRINTLN expr*/
     @Override
     public LinkedList<String> visitPrintln(@NotNull WACCParser.PrintlnContext ctx) {
+        System.out.println(ctx.getText());
         visitChildren(ctx);
         visitPrintHelper(ctx.expr(), true, false);
         return null;
@@ -841,6 +842,9 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
 
     @Override
     public LinkedList<String> visitExpr(@NotNull WACCParser.ExprContext ctx) {
+        if(ctx.ident() != null) {
+            visitIdent((ctx.ident()));
+        }
         if(Utils.isUnaryOper(ctx)) {
             if(ctx.CHR() != null || ctx.ORD() != null) {
                 visit(ctx);
@@ -854,19 +858,16 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
         } else if(ctx.arrayElem() != null) {
             visitArrayElem_expr(ctx);
         } else if(Utils.isBinaryOper(ctx)) {
-            if(ctx.expr(0).ident() != null) {
-                visitIdent(ctx.expr(0).ident());
-            }
-            if(ctx.expr(1).ident() != null) {
-                visitIdent(ctx.expr(1).ident());
-            }
+            visitExpr(ctx.expr(0));
+            visitExpr(ctx.expr(1));
             //visit(ctx.expr(0));
             //visit(ctx.expr(1));
             ArrayList<String> codeGen = functionsCodeGen.get(functionsCodeGen.size() - 1);
-                visitBinaryOper(ctx);
+            visitBinaryOper(ctx);
             if(ctx.expr(0).ident() == null && ctx.expr(1).ident() == null) {
                 codeGen.add(ARMInstructions.EOR.printWithOffset(resultReg.getName(), 1));
             }
+            return null;
         } else {
             if(ctx.intLiter() != null) {
                 visitIntLiter(ctx.intLiter());
@@ -879,9 +880,9 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
             }
             if(ctx.boolLiter() != null) {
                 visitBoolLiter(ctx.boolLiter());
-            } /*if(ctx.ident() != null) {
-                visitIdent((ctx.ident()));
-            }*/
+            }
+
+            //resultReg = regs.getNonReturnRegister();
 
         }
         return null;
@@ -927,8 +928,11 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
         WACCParser.ExprContext ctx = (WACCParser.ExprContext) parseTree;
         if ((isLiter(ctx.expr(0)) || isIdent(ctx.expr(0))) && (isLiter(ctx.expr(1)) || isIdent(ctx.expr(1)))) {
             // base case both sides bool liter
-            //regs.freeLastRegister();
+            regs.freeLastRegister();
             visit(ctx.expr(0));
+            if(ctx.expr(1).boolLiter() != null) {
+                resultReg = regs.getNonReturnRegister();
+            }
             visit(ctx.expr(1));
         } else if (isBinaryOper(ctx.getChild(0)) && isLiter(ctx.expr(1))) {
             visitBinary(ctx.getChild(0), nonReturnRegister, recurse);
@@ -959,13 +963,8 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
         WACCParser.ExprContext ctx = (WACCParser.ExprContext) parseTree;
         ArrayList<String> codeGen = functionsCodeGen.get(functionsCodeGen.size() - 1);
         if (ctx.AND() != null) {
-            //Register temp = resultReg;
-           /* //System.out.println(nonReturnRegister.getName());
             regs.freeRegister(nonReturnRegister);
             nonReturnRegister = regs.getNonReturnRegister();
-            if(nonReturnRegister.getName().compareTo(resultReg.getName()) == 0) {
-                resultReg = regs.getNonReturnRegister();
-            }*/
             codeGen.add(ARMInstructions.AND.printWithReg(nonReturnRegister.getName(), nonReturnRegister.getName(),
                     resultReg.getName()));
         } else if (ctx.OR() != null) {
@@ -1041,8 +1040,7 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
         resultReg = regs.getNonReturnRegister();
         if (currentFunction.getVariable(ctx.getText()).getOffset() == 1) {
             codeGen.add(ARMInstructions.LDRSB.printWithAddr(resultReg.getName(), offset));
-            System.out.println(resultReg.getName());
-            //regs.freeRegister();
+            //regs.freeAllRegisters()e
         } else {
             codeGen.add(ARMInstructions.LDR.printWithAddr(resultReg.getName(), offset));
         }
