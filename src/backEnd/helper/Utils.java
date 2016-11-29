@@ -99,7 +99,7 @@ public class Utils {
             return true;
         }
         return(ctx.intLiter() != null || ctx.stringLiter() != null || ctx.pairLiter() != null
-        || ctx.arrayElem() != null || ctx.boolLiter()!= null);
+        || ctx.arrayElem() != null || ctx.boolLiter()!= null || ctx.charLiter() != null);
     }
 
     public static boolean isIdent(WACCParser.ExprContext ctx) {
@@ -109,6 +109,9 @@ public class Utils {
     public static Variable getVariable(WACCParser.DeclareContext ctx) {
         int o = Utils.getNumOfBytesForType(ctx.type());
         Variable v = new Variable(ctx.getChild(1).getText(), o, ctx.type());
+        if(isLiter(ctx.assignRHS().expr(0))) {
+            v.setValue(ctx.assignRHS().expr(0).getText());
+        }
         return v;
     }
 

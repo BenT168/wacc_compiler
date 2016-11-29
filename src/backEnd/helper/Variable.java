@@ -8,6 +8,7 @@ public class Variable {
     private int offset;
     private WACCParser.TypeContext type;
     private int scopeCount;
+    private String value;
 
     public Variable(String name, int offset, WACCParser.TypeContext type) {
         this.name = name;
@@ -22,6 +23,14 @@ public class Variable {
 
     public String getName() {
         return name;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public void setScopeCount(int beginCount) {

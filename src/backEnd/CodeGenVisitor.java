@@ -45,7 +45,6 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
     private int r11Count = 0;
     final String _false = "0";
     final String _true = "1";
-    //private boolean optimisationsTurnedOn;
 
     public String getLabel(String s) {
         return "msg_" + messagesLoaded++;
@@ -323,8 +322,7 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
             Variable v = currentFunction.getVariable(ctx.assignLHS().getChild(0).getChild(0).getText());
             int numOfBytes = Utils.getNumOfBytesForType(v.getType());
             regs.freeLastTwoNonReturnRegistersInUse();
-            regs.freeLastRegister(); // Slightly dodgy, but freeing three
-            // registers to get r4 and r5.
+            regs.freeLastRegister();
             if (numOfBytes == 1 || v.getType().getChild(0).getText().equals("string")) {
                 if (ctx.assignRHS().getChild(0) instanceof WACCParser.ArrayLiterContext) {
                     codeGen.add(ARMInstructions.STRB.printWithAddrReg(regs.getLastDisabled().getName(),
@@ -796,6 +794,7 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
             visitArrayElem_expr(ctx);
         } else if(Utils.isBinaryOper(ctx)) {
             ArrayList<String> codeGen = functionsCodeGen.get(functionsCodeGen.size() - 1);
+
             visitBinaryOper(ctx);
             return null;
         } else {
@@ -810,6 +809,9 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
             }
             if(ctx.boolLiter() != null) {
                 visitBoolLiter(ctx.boolLiter());
+            }
+            if(ctx.charLiter() != null) {
+                visitCharLiter(ctx.charLiter());
             }
         }
         return null;
@@ -1102,7 +1104,7 @@ public class CodeGenVisitor extends WACCParserBaseVisitor<LinkedList<String>> {
 
 
     //Expr -> Binary
-    private void visitBinary(ParseTree parseTree, Register nonReturnRegister, boolean recurse) {
+    private void visitBinary(ParseTree parseTree, Register nonReturnRegister, boolean recurse) {;
 
         if (!recurse) {
             regs.freeAllRegisters();

@@ -8,6 +8,8 @@ import backEnd.helper.Variable;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
 
@@ -46,6 +48,7 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
     private boolean seenPrint = false;
     private boolean seenCalc = false;
     private boolean isident = false;
+    private boolean isFirstInString =  true;
 
     private boolean seenDivorMod = false;
     private boolean seenArrayElem = false;
@@ -58,6 +61,8 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
     private boolean seenFreePair = false;
     private boolean seenFreePairBeforeFreeArray = false;
     private boolean seenPairElem = false;
+
+    private LinkedList<HashMap<String, String>> variableValuesList = new LinkedList<>();
 
     public ArrayList<String> getStringsInProgram() {
         return stringsInProgram;
@@ -502,6 +507,16 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
     }
 
     @Override
+    public Void visitDeclare(WACCParser.DeclareContext ctx) {
+        HashMap<String, String> currentMap = new HashMap<>();
+       /* String variableName = ctx.ident().getText();
+        currentMap.put(ctx.)
+        variableValuesList.addLast();*/
+        return visitChildren(ctx);
+    }
+
+
+    @Override
     public Void visitFree(WACCParser.FreeContext ctx) {
         if (ctx.getChild(1) instanceof WACCParser.IdentContext) {
             Function currentFunction = functions.get(functions.size() - 1);
@@ -616,10 +631,11 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
 
    @Override
     public Void visitPrintln(WACCParser.PrintlnContext ctx) {
-       visitChildren(ctx);
+        visitChildren(ctx);
         visitPrintHelper(ctx.expr());
-        if (!seenPrint)
+        if (!seenPrint) {
             defaultStrings.add(defaultPrint);
+        }
         seenPrint = true;
         return null;
     }
@@ -636,8 +652,9 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
     public void visitPrintHelper(WACCParser.ExprContext ctx) {
         if (ctx.stringLiter() != null) {
             stringsInProgram.add(ctx.getChild(0).getText());
-            if (!seenString)
+            if (!seenString) {
                 defaultStrings.add(defaultString);
+            }
             seenString = true;
         } else if (ctx.boolLiter() != null) {
             if (!seenBool) {
@@ -733,13 +750,14 @@ public class SystemReadTokens<Void> extends WACCParserBaseVisitor<Void> {
                     seenBool = true;
                 }
             } else if (baseType.equals(Utils.STRING)) {
-                if (!seenString)
+                if (!seenString) {
                     defaultStrings.add(defaultString);
+                }
                 seenString = true;
             } else if (baseType.equals(Utils.CHAR)) {
 
             } else {
-                defaultStrings.add("visitPrintHelperType in precodegenwalk has some dodgy type");
+                defaultStrings.add("visitPrintHelperType in SystemReadTokens has a bad type");
             }
         } else if (type.getChild(0) instanceof WACCParser.PairTypeContext) {
             if (!seenPrintAddress) {
