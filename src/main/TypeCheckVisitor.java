@@ -476,7 +476,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 
 	@Override
 	public Tree visitIntLiter(IntLiterContext ctx) {
-		java.lang.String intValue = ctx.getText();
+		String intValue = ctx.getText();
 		IntLeaf anIntLeaf = new IntLeaf(intValue);
 		anIntLeaf.check(currentSymbolTable, ctx);
 		return anIntLeaf;
@@ -499,21 +499,21 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 				//...............EXTENSION_EXPRESSION...........................
 
 	@Override
-	public  Tree visitBinLiter(BinLiterContext ctx) {
+	public Tree visitBinLiter(BinLiterContext ctx) {
 		ex_BinLeaf exBinLeaf = new ex_BinLeaf(ctx.getText());
 		exBinLeaf.check(currentSymbolTable, ctx);
 		return exBinLeaf;
 	}
 
 	@Override
-	public  Tree visitOctLiter(OctLiterContext ctx) {
+	public Tree visitOctLiter(OctLiterContext ctx) {
 		ex_OctLeaf exOctLeaf = new ex_OctLeaf(ctx.getText());
 		exOctLeaf.check(currentSymbolTable, ctx);
 		return exOctLeaf;
 	}
 
 	@Override
-	public  Tree visitHexLiter(HexLiterContext ctx) {
+	public Tree visitHexLiter(HexLiterContext ctx) {
 		ex_HexLeaf exHexLeaf = new ex_HexLeaf(ctx.getText());
 		exHexLeaf.check(currentSymbolTable, ctx);
 		return exHexLeaf;
