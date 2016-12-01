@@ -2,16 +2,12 @@ package backend.tokens.general;
 
 import backend.Token;
 
-public class JumpToken extends Token {
+public class ex_JumpToken extends Token {
     private String label;
     private String condition;
 
-    public JumpToken(String condition, String label) {
-        this.label = label;
-        this.condition = condition;
-    }
 
-    public JumpToken(String label) {
+    public ex_JumpToken(String label) {
         this.label = label;
         this.condition = "";
     }

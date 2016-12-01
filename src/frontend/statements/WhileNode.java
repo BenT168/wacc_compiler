@@ -27,7 +27,7 @@ public class WhileNode extends StatNode {
 		if (loopCond.getType() == BaseType.BOOL) {
 			return true;
 		} else {
-			throw new SemanticErrorException("While statement should have an expressions of type BOOL", ctx);
+			throw new SemanticErrorException("While condition should be an expression of type BOOL", ctx);
 		}
 	}
 
@@ -37,7 +37,6 @@ public class WhileNode extends StatNode {
 		TokSeq whileStat = new TokSeq(
 				new BranchToken(l0),
 				new LabelToken(l1));
-		checkBreak(register);
 		whileStat.appendAll(loopBody.assemblyCodeGenerating(register));
 		whileStat.append(
 				new LabelToken(l0));

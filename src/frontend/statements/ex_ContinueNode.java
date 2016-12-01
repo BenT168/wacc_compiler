@@ -3,11 +3,11 @@ package frontend.statements;
 import backend.Register;
 import backend.TokSeq;
 import backend.Token;
-import backend.tokens.general.JumpToken;
+import backend.tokens.general.ex_JumpToken;
 
-public class ContinueNode extends StatNode {
+public class ex_ContinueNode extends StatNode {
 
-    public ContinueNode() {
+    public ex_ContinueNode() {
     }
 
     @Override
@@ -15,7 +15,7 @@ public class ContinueNode extends StatNode {
         TokSeq contStat = new TokSeq();
         hasContinue = true;
         lastContinue = this;
-        Token jump = new JumpToken("continue");
+        Token jump = new ex_JumpToken("continue");
         contStat.prepend(jump);
         return contStat;
     }

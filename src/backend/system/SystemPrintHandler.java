@@ -128,4 +128,81 @@ public static Token PRINT_STRING = new Token() {
 			return false;
 		}
 	};
+
+	//------------------------EXTENSION-----------------------------------
+
+	public static Token PRINT_BIN = new Token() {
+
+		public TokSeq toPrepend() {
+			return new TokSeq(SystemFormatterHandler.BIN_FORMATTER);
+		}
+
+		@Override
+		public String toString() {
+			return	"p_print_bin:"
+					+ "\n\t\tPUSH {lr}"
+					+ "\n\t\tMOV r1, r0"
+					+ "\n\t\tLDR r0, =msg_5"
+					+ "\n\t\tADD r0, r0, #4"
+					+ "\n\t\tBL printf"
+					+ "\n\t\tMOV r0, #0"
+					+ "\n\t\tBL fflush"
+					+ "\n\t\tPOP {pc}";
+		}
+
+		@Override
+		public boolean requiresTab() {
+			return false;
+		}
+	};
+
+	public static Token PRINT_OCT = new Token() {
+
+		public TokSeq toPrepend() {
+			return new TokSeq(SystemFormatterHandler.OCT_FORMATTER);
+		}
+
+		@Override
+		public String toString() {
+			return	"p_print_oct:"
+					+ "\n\t\tPUSH {lr}"
+					+ "\n\t\tMOV r1, r0"
+					+ "\n\t\tLDR r0, =msg_6"
+					+ "\n\t\tADD r0, r0, #4"
+					+ "\n\t\tBL printf"
+					+ "\n\t\tMOV r0, #0"
+					+ "\n\t\tBL fflush"
+					+ "\n\t\tPOP {pc}";
+		}
+
+		@Override
+		public boolean requiresTab() {
+			return false;
+		}
+	};
+
+	public static Token PRINT_HEX = new Token() {
+
+		public TokSeq toPrepend() {
+			return new TokSeq(SystemFormatterHandler.HEX_FORMATTER);
+		}
+
+		@Override
+		public String toString() {
+			return	"p_print_hex:"
+					+ "\n\t\tPUSH {lr}"
+					+ "\n\t\tMOV r1, r0"
+					+ "\n\t\tLDR r0, =msg_7"
+					+ "\n\t\tADD r0, r0, #4"
+					+ "\n\t\tBL printf"
+					+ "\n\t\tMOV r0, #0"
+					+ "\n\t\tBL fflush"
+					+ "\n\t\tPOP {pc}";
+		}
+
+		@Override
+		public boolean requiresTab() {
+			return false;
+		}
+	};
 }

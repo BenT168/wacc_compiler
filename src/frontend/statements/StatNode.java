@@ -15,9 +15,9 @@ import frontend.type.BaseType;
 public abstract class StatNode extends Tree {
 
 	protected static boolean hasContinue = false;
-	protected static ContinueNode lastContinue;
+	protected static ex_ContinueNode lastContinue;
 	protected static boolean hasBreak = false;
-	protected static BreakNode lastBreak;
+	protected static ex_BreakNode lastBreak;
 
 	public void checkContinue(Register reg) {
 		if (hasContinue) {

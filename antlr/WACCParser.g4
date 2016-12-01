@@ -32,7 +32,7 @@ stat    : SKIP							    # skip
         | BEGIN stat END 					# begin
         | stat SEMI_COLON stat 				# multipleStat
         | BREAK                             # break
-        | CONTINUE                          # continue
+        | CONTINUE                          # continues
         ;
 
 // Assignments
@@ -99,7 +99,8 @@ expr    : (NOT | MINUS | LEN | ORD | CHR) expr
         | OPEN_PARENTHESES expr CLOSE_PARENTHESES
         // expression literals
         | (intLiter | boolLiter | charLiter | stringLiter | pairLiter | ident | arrayElem )
-;
+        | (binLiter | hexLiter | octLiter )
+        ;
 
 
 arrayElem
@@ -119,6 +120,15 @@ charLiter
 
 stringLiter
         : STRING_LITER ;
+
+binLiter
+        : BIN_LITER ;
+
+hexLiter
+        : HEX_LITER ;
+
+octLiter
+        : OCT_LITER ;
 
 arrayLiter
         : OPEN_SQUARE (expr (COMMA (expr))*)? CLOSE_SQUARE ;

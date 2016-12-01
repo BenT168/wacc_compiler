@@ -275,8 +275,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 		return ifStat;
 	}
 
-
-	/*WHILE statements*/
+	/*WHILE expr DO statements DONE*/
 	@Override
 	public Tree visitWhile(WhileContext ctx) {
 		ExprNode loopCond = (ExprNode) visit(ctx.expr());
@@ -329,21 +328,26 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 
 	/*CONTINUE*/
 	@Override
-	public Tree visitContinue(@NotNull WACCParser.ContinueContext ctx) {
-		return new ContinueNode();
+	public Tree visitContinues(@NotNull WACCParser.ContinuesContext ctx) {
+		return new ex_ContinueNode();
 	}
 
 	/*BREAK*/
 	@Override
 	public Tree visitBreak(@NotNull WACCParser.BreakContext ctx) {
-		return new BreakNode();
+		return new ex_BreakNode();
 	}
 
-	/*DO stat WHILE expr  */
-	@Override public Tree visitDoWhile(@NotNull WACCParser.DoWhileContext ctx) {
-		return visitChildren(ctx);
-	}
+	/*DO stat WHILE expr DONE */
+	@Override
+	public Tree visitDoWhile(@NotNull WACCParser.DoWhileContext ctx) {
+		ExprNode loopCond = (ExprNode) visit(ctx.expr());
+		StatNode loopBody = (StatNode) visit(ctx.stat());
+		DoWhileNode doWhileStat = new DoWhileNode(loopCond, loopBody);
+		doWhileStat.check(currentSymbolTable, ctx);
 
+		return doWhileStat;
+	}
 
 //..................................ASSIGNMENT......................................
 
@@ -509,6 +513,29 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 		StringLeaf strLeaf = new StringLeaf(ctx.getText());
 		strLeaf.check(currentSymbolTable, ctx);
 		return strLeaf;
+	}
+
+				//...............EXTENSION_EXPRESSION...........................
+
+	@Override
+	public Tree visitBinLiter(BinLiterContext ctx) {
+		ex_BinLeaf exBinLeaf = new ex_BinLeaf(ctx.getText());
+		exBinLeaf.check(currentSymbolTable, ctx);
+		return exBinLeaf;
+	}
+
+	@Override
+	public Tree visitOctLiter(OctLiterContext ctx) {
+		ex_OctLeaf exOctLeaf = new ex_OctLeaf(ctx.getText());
+		exOctLeaf.check(currentSymbolTable, ctx);
+		return exOctLeaf;
+	}
+
+	@Override
+	public Tree visitHexLiter(HexLiterContext ctx) {
+		ex_HexLeaf exHexLeaf = new ex_HexLeaf(ctx.getText());
+		exHexLeaf.check(currentSymbolTable, ctx);
+		return exHexLeaf;
 	}
 
 	//..................................IDENTITY......................................
