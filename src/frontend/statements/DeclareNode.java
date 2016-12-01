@@ -14,12 +14,12 @@ import backend.Register;
 import backend.StackAlloc;
 
 
-public class VarDecNode extends StatNode {
+public class DeclareNode extends StatNode {
 
 	private Assignable rhsTree;
 	private Variable var;
 
-	public VarDecNode(Variable var, Assignable rhsTree) {
+	public DeclareNode(Variable var, Assignable rhsTree) {
 		this.var = var;
 		this.rhsTree = rhsTree;
 	}

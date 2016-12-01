@@ -1,0 +1,14 @@
+# simple continue statement
+
+# Output:
+# #empty#
+
+# Program:
+
+begin
+  if true then
+    continue
+  else
+    break
+  fi
+end

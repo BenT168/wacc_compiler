@@ -1,0 +1,10 @@
+# simple break statement
+
+# Output:
+# #empty#
+
+# Program:
+
+begin
+  break
+end

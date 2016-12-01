@@ -151,9 +151,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 	/*SKIP*/
 	@Override
 	public Tree visitSkip(SkipContext ctx) {
-		SkipNode ssn = new SkipNode();
-
-		return ssn;
+		return new SkipNode();
 	}
 
 	/* type IDENTITY EQUALS assignRHS */
@@ -162,7 +160,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 		BaseType varType = BaseType.evalType(ctx.type());
 		java.lang.String ident = ctx.ident().getText();
 		Variable var = new Variable(varType, ident);
-		VarDecNode vdn = new VarDecNode(var, rhsTree);
+		DeclareNode vdn = new DeclareNode(var, rhsTree);
 		vdn.check(currentSymbolTable, ctx);
 
 		return vdn;
@@ -325,13 +323,13 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 	/*CONTINUE*/
 	@Override
 	public Tree visitContinue(@NotNull WACCParser.ContinueContext ctx) {
-		return visitChildren(ctx);
+		return new ContinueNode();
 	}
 
 	/*BREAK*/
 	@Override
 	public Tree visitBreak(@NotNull WACCParser.BreakContext ctx) {
-		return visitChildren(ctx);
+		return new BreakNode();
 	}
 
 	/*DO stat WHILE expr  */
@@ -358,7 +356,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 		ArgList args;
 
 		//Here we check that the call has arguments
-		//if no arguments are present, a new empty arg_list will be made.
+		//if no arguments are present, a info empty arg_list will be made.
 		if (ctx.argList() == null) {
 			args = new ArgList();
 		} else {

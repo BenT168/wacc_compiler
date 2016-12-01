@@ -1,0 +1,16 @@
+# simple break with print statement
+
+# Output:
+# here
+
+# Program:
+
+begin
+  if false
+  then
+    println "not here"
+  else
+    break
+    println "here"
+  fi
+end

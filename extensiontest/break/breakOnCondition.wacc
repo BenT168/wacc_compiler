@@ -1,0 +1,15 @@
+# break on Condition statement
+
+# Output:
+# #empty#
+
+# Program:
+
+begin
+  if true
+  then
+    break
+  else
+    break
+  fi
+end

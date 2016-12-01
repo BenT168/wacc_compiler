@@ -27,7 +27,7 @@ stat    : SKIP							    # skip
         | PRINTLN expr 						# println
         | IF expr THEN stat ELSE stat ENDIF	# ifElse
         | WHILE expr DO stat DONE			# while
-        | DO stat WHILE expr                # doWhile
+        | DO stat WHILE expr DONE           # doWhile
         | FOR stat SEMI_COLON expr SEMI_COLON expr  # forLoop
         | BEGIN stat END 					# begin
         | stat SEMI_COLON stat 				# multipleStat
