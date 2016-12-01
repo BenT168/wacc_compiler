@@ -30,6 +30,7 @@ public abstract class BinaryOperators {
 
 	public abstract TokSeq print(Register r);
 
+
 	/*
 	 * There are only 4 types of logic to check that `rhs BinOp lhs` is correct:
 	 * 1 - lhs and rhs must be INT  (Arithmetic BinOps)
@@ -250,6 +251,36 @@ public abstract class BinaryOperators {
 
 	};
 
+	//5:
+	public static final BinaryOperators PLUSEQUAL = new DoubleBinaryOperator() {
+		@Override
+		public TokSeq apply(Register lhs, Register rhs) {
+			Token add = new AddToken("S", lhs, lhs, rhs);
+			Token overflow = new OverflowToken("VS");
+			return new TokSeq(add, overflow);
+		}
+
+		@Override
+		public TokSeq print(Register r) {
+			return new TokSeq(new PrintIntToken(r));
+		}
+	};
+
+	public static final BinaryOperators MINUSEQUAL = new DoubleBinaryOperator() {
+		@Override
+		public TokSeq apply(Register lhs, Register rhs) {
+			Token sub = new SubToken("S", lhs, lhs, rhs);
+			Token overflow = new OverflowToken("VS");
+			return new TokSeq(sub, overflow);
+		}
+
+		@Override
+		public TokSeq print(Register r) {
+			return new TokSeq(new PrintIntToken(r));
+		}
+	};
+
+
 	/*
 	 * Utility method to convert a StringLeaf to a Binary Operator
 	 */
@@ -285,6 +316,11 @@ public abstract class BinaryOperators {
 			return AND;
 		case "||":
 			return OR;
+		//5:
+		case "+=":
+			return PLUSEQUAL;
+		case "-=":
+			return MINUSEQUAL;
 
 		default:
 			throw new IllegalArgumentException("The provided StringLeaf does not match any operators: " + operator);

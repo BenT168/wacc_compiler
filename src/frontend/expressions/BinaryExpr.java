@@ -3,6 +3,7 @@ package frontend.expressions;
 import backend.Register;
 import backend.TokSeq;
 import frontend.exception.SemanticErrorException;
+import frontend.statements.ForLoopNode;
 import frontend.type.BinaryOperators;
 import frontend.type.BaseType;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -13,6 +14,12 @@ public class BinaryExpr extends ExprNode {
 	private ExprNode lhs;
 	private BinaryOperators operator;
 	private ExprNode rhs;
+
+	/* booleans to set branching statements in forloop */
+	public static boolean inLoopGT = false;
+	public static boolean inLoopLT = false;
+	public static boolean inLoopGTE = false;
+	public static boolean inLoopLTE =  false;
 
 	public BinaryExpr(ExprNode lhs, BinaryOperators operator, ExprNode rhs) {
 		this.lhs = lhs;
@@ -55,11 +62,32 @@ public class BinaryExpr extends ExprNode {
 				exprs.appendAll(operator.apply(r, r.getNext()));
 				return exprs;
 			}
-		} else {
-			TokSeq exprs = lhs.assemblyCodeGenerating(r);
-			exprs.appendAll(rhs.assemblyCodeGenerating(r.getNext()));
-			exprs.appendAll(operator.apply(r, r.getNext()));
+		} else if(ForLoopNode.isInLoopAssembler()) {
+			TokSeq exprs = rhs.assemblyCodeGenerating(r);
+			setForBranchCondInLoop();
+			//exprs.appendAll(operator.apply(r, r.getNext()));
 			return exprs;
+		} else {
+				TokSeq exprs = lhs.assemblyCodeGenerating(r);
+				exprs.appendAll(rhs.assemblyCodeGenerating(r.getNext()));
+				exprs.appendAll(operator.apply(r, r.getNext()));
+				return exprs;
+			}
+	}
+
+	private void setForBranchCondInLoop() {
+		if(operator == BinaryOperators.GRT) {
+			inLoopGT = true;
+			return;
+		} else if(operator == BinaryOperators.GRT_EQ) {
+			inLoopGTE = true;
+			return;
+		} else if(operator == BinaryOperators.LESS) {
+			inLoopLT = true;
+			return;
+		} else if(operator == BinaryOperators.LESS_EQ) {
+			inLoopLTE = true;
+			return;
 		}
 	}
 

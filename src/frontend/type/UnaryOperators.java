@@ -2,6 +2,8 @@ package frontend.type;
 
 import backend.TokSeq;
 import backend.Token;
+import backend.tokens.operator.AddImmToken;
+import backend.tokens.operator.SubToken;
 import frontend.expressions.ExprNode;
 import backend.Register;
 import backend.tokens.operator.EorToken;
@@ -27,6 +29,10 @@ public abstract class UnaryOperators {
 			return ORD;
 		case "chr":
 			return CHR;
+		case "++":
+			return PLUSPLUS;
+		case "--":
+			return MINUSMINUS;
 
 		default:
 			throw new IllegalArgumentException("The StringLeaf provided " + opString + " did not match any unary operators.");
@@ -155,6 +161,44 @@ public abstract class UnaryOperators {
 		@Override
 		public TokSeq apply(Register register) {
 			return new TokSeq();
+		}
+	};
+
+	public static final UnaryOperators PLUSPLUS = new UnaryOperators() {
+		@Override
+		public boolean check(ExprNode e) {
+			return e.getType() == BaseType.INT;
+		}
+
+		@Override
+		public BaseType getType() {
+			return BaseType.INT;
+		}
+
+		@Override
+		public TokSeq apply(Register register) {
+			Token add = new AddImmToken(register, register, "1");
+			Token overflow = new OverflowToken("VS");
+			return new TokSeq(add, overflow);
+		}
+	};
+
+	public static final UnaryOperators MINUSMINUS = new UnaryOperators() {
+		@Override
+		public boolean check(ExprNode e) {
+			return e.getType() == BaseType.INT;
+		}
+
+		@Override
+		public BaseType getType() {
+			return BaseType.INT;
+		}
+
+		@Override
+		public TokSeq apply(Register register) {
+			Token sub = new SubToken(register, register, 1);
+			Token overflow = new OverflowToken("VS");
+			return new TokSeq(sub, overflow);
 		}
 	};
 }

@@ -1,0 +1,15 @@
+# Adding the variable by 2 using += operator
+
+# Output:
+# i = 0
+# i = 2
+
+
+# Program:
+
+begin
+  i = 0 ;
+  println " i = " + i ;
+  i += 2 ;
+  println " i = " + i ;
+end

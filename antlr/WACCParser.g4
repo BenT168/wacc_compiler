@@ -28,7 +28,7 @@ stat    : SKIP							    # skip
         | IF expr THEN stat ELSE stat ENDIF	# ifElse
         | WHILE expr DO stat DONE			# while
         | DO stat WHILE expr DONE           # doWhile
-        | FOR stat SEMI_COLON expr SEMI_COLON expr  # forLoop
+        | FOR stat SEMI_COLON expr SEMI_COLON expr DO stat DONE # forLoop
         | BEGIN stat END 					# begin
         | stat SEMI_COLON stat 				# multipleStat
         | BREAK                             # break
@@ -82,6 +82,9 @@ baseType: INT
 // Expressions.
         // Unary expressions bind the tightest.
 expr    : (NOT | MINUS | LEN | ORD | CHR) expr
+        //Loops
+        | ident PLUSPLUS
+        | ident MINUSMINUS
         // binary expressions with order of precedence
         | expr (MUL | DIV | MOD) expr
         | expr (PLUS | MINUS) expr
@@ -90,14 +93,14 @@ expr    : (NOT | MINUS | LEN | ORD | CHR) expr
         // binary boolean expressions
         | expr AND expr
         | expr OR expr
-        //Loops
-        | ident AND AND
-        | ident MINUS MINUS
+        | expr PLUSEQUAL expr
+        | expr MINUSEQUAL expr
         // atomic expressions
         | OPEN_PARENTHESES expr CLOSE_PARENTHESES
         // expression literals
         | (intLiter | boolLiter | charLiter | stringLiter | pairLiter | ident | arrayElem )
 ;
+
 
 arrayElem
         : ident (OPEN_SQUARE expr CLOSE_SQUARE)+ ;
