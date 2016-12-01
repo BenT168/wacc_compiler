@@ -1,7 +1,7 @@
 # simple break with print statement
 
 # Output:
-# here
+# #empty#
 
 # Program:
 
@@ -10,7 +10,7 @@ begin
   then
     println "not here"
   else
-    break
+    break;
     println "here"
   fi
 end

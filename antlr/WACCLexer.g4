@@ -46,8 +46,18 @@ OPEN_SQUARE: '[' ;
 CLOSE_SQUARE: ']' ;
 
 //numbers
-fragment DIGIT : '0'..'9' ; 
-INTEGER: DIGIT+ ;
+fragment DIGIT : '0'..'9' ;
+fragment SIGN : ( PLUS | MINUS );
+INTEGER: SIGN? DIGIT+ ;
+
+fragment BINARY : [0-1] ;
+BIN_LITER: '0b' SIGN? BINARY+ ;
+
+fragment OCTAL : [0-7] ;
+OCT_LITER: '0o' SIGN? OCTAL+ ;
+
+fragment HEXADECIMAL : [0-9A-F] ;
+HEX_LITER: '0h' SIGN? HEXADECIMAL+ ;
 
 //program keywords
 BEGIN : 'begin' ;

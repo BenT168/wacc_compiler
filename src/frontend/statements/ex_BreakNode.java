@@ -3,11 +3,11 @@ package frontend.statements;
 import backend.Register;
 import backend.TokSeq;
 import backend.Token;
-import backend.tokens.general.JumpToken;
+import backend.tokens.general.ex_JumpToken;
 
-public class BreakNode extends StatNode {
+public class ex_BreakNode extends StatNode {
 
-    public BreakNode() {
+    public ex_BreakNode() {
     }
 
     @Override
@@ -15,7 +15,7 @@ public class BreakNode extends StatNode {
         TokSeq breakStat = new TokSeq();
         hasBreak = true;
         lastBreak = this;
-        Token jump = new JumpToken("break");
+        Token jump = new ex_JumpToken("break");
         breakStat.prepend(jump);
         return breakStat;
     }

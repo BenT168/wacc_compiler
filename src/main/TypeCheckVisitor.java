@@ -323,13 +323,13 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 	/*CONTINUE*/
 	@Override
 	public Tree visitContinue(@NotNull WACCParser.ContinueContext ctx) {
-		return new ContinueNode();
+		return new ex_ContinueNode();
 	}
 
 	/*BREAK*/
 	@Override
 	public Tree visitBreak(@NotNull WACCParser.BreakContext ctx) {
-		return new BreakNode();
+		return new ex_BreakNode();
 	}
 
 	/*DO stat WHILE expr  */
@@ -490,6 +490,29 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 		StringLeaf strLeaf = new StringLeaf(ctx.getText());
 		strLeaf.check(currentSymbolTable, ctx);
 		return strLeaf;
+	}
+
+				//...............EXTENSION_EXPRESSION...........................
+
+	@Override
+	public  Tree visitBinLiter(BinLiterContext ctx) {
+		ex_BinLeaf exBinLeaf = new ex_BinLeaf(ctx.getText());
+		exBinLeaf.check(currentSymbolTable, ctx);
+		return exBinLeaf;
+	}
+
+	@Override
+	public  Tree visitOctLiter(OctLiterContext ctx) {
+		ex_OctLeaf exOctLeaf = new ex_OctLeaf(ctx.getText());
+		exOctLeaf.check(currentSymbolTable, ctx);
+		return exOctLeaf;
+	}
+
+	@Override
+	public  Tree visitHexLiter(HexLiterContext ctx) {
+		ex_HexLeaf exHexLeaf = new ex_HexLeaf(ctx.getText());
+		exHexLeaf.check(currentSymbolTable, ctx);
+		return exHexLeaf;
 	}
 
 	//..................................IDENTITY......................................

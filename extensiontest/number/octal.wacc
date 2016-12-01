@@ -1,0 +1,10 @@
+# simple octal println statement
+
+# Output:
+# 0o01
+
+# Program:
+
+begin
+  println 0o01
+end

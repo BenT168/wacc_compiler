@@ -97,7 +97,8 @@ expr    : (NOT | MINUS | LEN | ORD | CHR) expr
         | OPEN_PARENTHESES expr CLOSE_PARENTHESES
         // expression literals
         | (intLiter | boolLiter | charLiter | stringLiter | pairLiter | ident | arrayElem )
-;
+        | (binLiter | hexLiter | octLiter )
+        ;
 
 arrayElem
         : ident (OPEN_SQUARE expr CLOSE_SQUARE)+ ;
@@ -116,6 +117,15 @@ charLiter
 
 stringLiter
         : STRING_LITER ;
+
+binLiter
+        : BIN_LITER ;
+
+hexLiter
+        : HEX_LITER ;
+
+octLiter
+        : OCT_LITER ;
 
 arrayLiter
         : OPEN_SQUARE (expr (COMMA (expr))*)? CLOSE_SQUARE ;
