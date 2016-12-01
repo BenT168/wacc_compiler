@@ -275,8 +275,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 		return ifStat;
 	}
 
-
-	/*WHILE statements*/
+	/*WHILE expr DO statements DONE*/
 	@Override
 	public Tree visitWhile(WhileContext ctx) {
 		ExprNode loopCond = (ExprNode) visit(ctx.expr());
@@ -332,11 +331,16 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 		return new BreakNode();
 	}
 
-	/*DO stat WHILE expr  */
-	@Override public Tree visitDoWhile(@NotNull WACCParser.DoWhileContext ctx) {
-		return visitChildren(ctx);
-	}
+	/*DO stat WHILE expr DONE */
+	@Override
+	public Tree visitDoWhile(@NotNull WACCParser.DoWhileContext ctx) {
+		ExprNode loopCond = (ExprNode) visit(ctx.expr());
+		StatNode loopBody = (StatNode) visit(ctx.stat());
+		DoWhileNode doWhileStat = new DoWhileNode(loopCond, loopBody);
+		doWhileStat.check(currentSymbolTable, ctx);
 
+		return doWhileStat;
+	}
 
 //..................................ASSIGNMENT......................................
 

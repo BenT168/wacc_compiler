@@ -14,6 +14,7 @@ import symboltable.SymbolTable;
 
 public class WhileNode extends StatNode {
 
+	private int iterNumber = 0;
 	private ExprNode loopCond;
 	private StatNode loopBody;
 
@@ -27,11 +28,12 @@ public class WhileNode extends StatNode {
 		if (loopCond.getType() == BaseType.BOOL) {
 			return true;
 		} else {
-			throw new SemanticErrorException("While statement should have an expressions of type BOOL", ctx);
+			throw new SemanticErrorException("While condition should be an expression of type BOOL", ctx);
 		}
 	}
 
 	public TokSeq assemblyCodeGenerating(Register register) {
+		iterNumber++;
 		String l0 = "l" + Labeller.counter.getLabel();
 		String l1 = "l" + Labeller.counter.getLabel();
 		TokSeq whileStat = new TokSeq(
@@ -42,9 +44,11 @@ public class WhileNode extends StatNode {
 		whileStat.append(
 				new LabelToken(l0));
 		whileStat.appendAll(loopCond.assemblyCodeGenerating(register));
-		whileStat.appendAll(new TokSeq(
-				new CompareToken(register, "#1"),
-				new BranchToken("EQ", l1)));
+		if (iterNumber > 1) {
+			whileStat.appendAll(new TokSeq(
+					new CompareToken(register, "#1"),
+					new BranchToken("EQ", l1)));
+		}
 		return whileStat;
 	}
 
