@@ -14,7 +14,6 @@ import symboltable.SymbolTable;
 
 public class DoWhileNode extends StatNode {
 
-    private int iterNumber = 0;
     private ExprNode loopCond;
     private StatNode loopBody;
 
@@ -33,22 +32,18 @@ public class DoWhileNode extends StatNode {
     }
 
     public TokSeq assemblyCodeGenerating(Register register) {
-        iterNumber++;
         String l0 = "l" + Labeller.counter.getLabel();
         String l1 = "l" + Labeller.counter.getLabel();
         TokSeq doWhileStat = new TokSeq(
-                new BranchToken(l0),
                 new LabelToken(l1));
         checkBreak(register);
         doWhileStat.appendAll(loopBody.assemblyCodeGenerating(register));
         doWhileStat.append(
                 new LabelToken(l0));
         doWhileStat.appendAll(loopCond.assemblyCodeGenerating(register));
-        if (iterNumber > 1) {
-            doWhileStat.appendAll(new TokSeq(
-                    new CompareToken(register, "#1"),
-                    new BranchToken("EQ", l1)));
-        }
+        doWhileStat.appendAll(new TokSeq(
+                new CompareToken(register, "#1"),
+                new BranchToken("EQ", l1)));
         return doWhileStat;
     }
 

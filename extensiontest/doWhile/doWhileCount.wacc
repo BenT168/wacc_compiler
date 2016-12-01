@@ -1,7 +1,7 @@
 # simple counting do-while loop
 
 # Output:
-# Can you count to 10? Do-While can count to 11!
+# Can you count to 10?
 # 1
 # 2
 # 3
@@ -12,7 +12,6 @@
 # 8
 # 9
 # 10
-# 11
 
 # Program:
 
