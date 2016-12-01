@@ -23,4 +23,5 @@ begin
     println i ;
     i = i + 1
   while i <= 10
+  done
 end

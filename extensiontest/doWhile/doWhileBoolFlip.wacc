@@ -11,6 +11,7 @@ begin
   do
     println "flip b!" ;
     b = !b
-  while b ;
+  while b
+  done ;
   println "end of loop"
 end

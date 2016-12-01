@@ -9,4 +9,5 @@ begin
   do
     skip
   while false
+  done
 end
