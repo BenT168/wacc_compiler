@@ -1,0 +1,10 @@
+# simple binary println statement
+
+# Output:
+# 0b0110
+
+# Program:
+
+begin
+  println 0b0110
+end

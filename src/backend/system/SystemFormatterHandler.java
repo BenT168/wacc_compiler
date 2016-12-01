@@ -6,7 +6,7 @@ import backend.Token;
 public class SystemFormatterHandler {
 
 
-	public static Token NEW_LINE_FORMATTER = new Token() {
+    public static Token NEW_LINE_FORMATTER = new Token() {
 		@Override
 		public String toString() {
 			return "msg_1:"
@@ -91,4 +91,49 @@ public class SystemFormatterHandler {
 			return false;
 		}
 	};
+
+	//------------------------EXTENSION-----------------------------------
+
+	public static Token BIN_FORMATTER = new Token() {
+		@Override
+		public String toString() {
+			return "msg_5:"
+					+ "\n\t\t.word 5"
+					+ "\n\t\t.ascii	\"%b\\0b\"";
+		}
+
+		@Override
+		public boolean requiresTab() {
+			return false;
+		}
+	};
+
+	public static Token OCT_FORMATTER = new Token() {
+		@Override
+		public String toString() {
+			return "msg_6:"
+					+ "\n\t\t.word 6"
+					+ "\n\t\t.ascii	\"%o\\0o\"";
+		}
+
+		@Override
+		public boolean requiresTab() {
+			return false;
+		}
+	};
+
+	public static Token HEX_FORMATTER = new Token() {
+		@Override
+		public String toString() {
+			return "msg_7:"
+					+ "\n\t\t.word 7"
+					+ "\n\t\t.ascii	\"%h\\0h\"";
+		}
+
+		@Override
+		public boolean requiresTab() {
+			return false;
+		}
+	};
+
 }

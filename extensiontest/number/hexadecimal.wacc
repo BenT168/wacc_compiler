@@ -1,0 +1,10 @@
+# simple hexadecimal println statement
+
+# Output:
+# 0h11
+
+# Program:
+
+begin
+  println 0h11
+end

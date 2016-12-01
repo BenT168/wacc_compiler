@@ -56,6 +56,12 @@ public interface WACCParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSkip(@NotNull WACCParser.SkipContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link WACCParser#binLiter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBinLiter(@NotNull WACCParser.BinLiterContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link WACCParser#program}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -166,6 +172,12 @@ public interface WACCParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFree(@NotNull WACCParser.FreeContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link WACCParser#hexLiter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitHexLiter(@NotNull WACCParser.HexLiterContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code ifElse}
 	 * labeled alternative in {@link WACCParser#stat}.
 	 * @param ctx the parse tree
@@ -263,6 +275,12 @@ public interface WACCParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitParamList(@NotNull WACCParser.ParamListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link WACCParser#octLiter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitOctLiter(@NotNull WACCParser.OctLiterContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code multipleStat}
 	 * labeled alternative in {@link WACCParser#stat}.

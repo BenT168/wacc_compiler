@@ -1,0 +1,10 @@
+# simple int println statement
+
+# Output:
+# 12
+
+# Program:
+
+begin
+  println 12
+end
