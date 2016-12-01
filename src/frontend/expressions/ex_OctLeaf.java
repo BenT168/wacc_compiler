@@ -3,7 +3,6 @@ package frontend.expressions;
 import backend.Register;
 import backend.TokSeq;
 import backend.tokens.load.LoadToken;
-import frontend.exception.SyntaxErrorException;
 import frontend.type.BaseType;
 import org.antlr.v4.runtime.ParserRuleContext;
 import symboltable.SymbolTable;
@@ -26,10 +25,6 @@ public class ex_OctLeaf extends ExprNode {
 
     @Override
     public boolean check( SymbolTable st, ParserRuleContext ctx ) {
-        long integer = Long.valueOf(value);
-        if (integer < - (Math.pow(2, 31)) || integer > (Math.pow(2, 31) + 1)) {
-            throw new SyntaxErrorException("The absolute value, " + value + " is too large", ctx);
-        }
         return true;
     }
 

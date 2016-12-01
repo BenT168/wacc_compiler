@@ -7,6 +7,8 @@ MUL: '*' ;
 DIV: '/' ;
 MOD: '%' ;
 EQUAL: '=' ;
+PLUSEQUAL: '+=' ;
+MINUSEQUAL: '-=' ;
 
 //relational-operator
 GREATER_EQUAL: '>=' ;
@@ -27,6 +29,8 @@ NOT: '!' ;
 LEN: 'len' ;
 ORD: 'ord' ;
 CHR: 'chr' ;
+PLUSPLUS: '++';
+MINUSMINUS: '--';
 
 //boolean-literals
 TRUE: 'true' ;
@@ -101,7 +105,7 @@ FOR: 'for' ;
 
 //break and continue
 BREAK: 'break' ;
-CONTINUE: 'continue' ;
+CONTINUE: 'continues' ;
 
 
 //pairs

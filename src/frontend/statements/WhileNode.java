@@ -37,7 +37,6 @@ public class WhileNode extends StatNode {
 		TokSeq whileStat = new TokSeq(
 				new BranchToken(l0),
 				new LabelToken(l1));
-		checkBreak(register);
 		whileStat.appendAll(loopBody.assemblyCodeGenerating(register));
 		whileStat.append(
 				new LabelToken(l0));

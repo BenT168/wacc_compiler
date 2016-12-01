@@ -37,7 +37,6 @@ public class IfElseNode extends StatNode {
 		TokSeq ifStat = ifCond.assemblyCodeGenerating(register);
 		String l0 = "l" + Labeller.counter.getLabel();
 		String l1 = "l" + Labeller.counter.getLabel();
-		checkBreak(register);
 		ifStat.appendAll(new TokSeq(
 				new CompareToken(register, "#0"),
 				new BranchToken("EQ", l0)));

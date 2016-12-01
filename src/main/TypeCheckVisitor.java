@@ -301,7 +301,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 	public Tree visitMultipleStat(MultipleStatContext ctx) {
 		StatNode lhs = (StatNode) visit(ctx.stat(0));
 		StatNode rhs = (StatNode) visit(ctx.stat(1));
-		;
+
 		MultiStatNode seqStat = new MultiStatNode(lhs, rhs);
 		seqStat.check(currentSymbolTable, ctx);
 
@@ -313,15 +313,22 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 			//....................EXTENSION_STAT...........................
 
 
-	/*FOR stat SEMI_COLON expr SEMI_COLON expr*/
+	/*FOR stat SEMI_COLON expr SEMI_COLON expr DO stat DONE*/
 	@Override
 	public Tree visitForLoop(@NotNull WACCParser.ForLoopContext ctx) {
-		return visitChildren(ctx);
+		StatNode loopCondOne = (StatNode) visit(ctx.stat(0));
+		ExprNode loopCondTwo = (ExprNode) visit(ctx.expr(0));
+		ExprNode loopCondThree = (ExprNode) visit(ctx.expr(1));
+		StatNode loopBody = (StatNode) visit(ctx.stat(1));
+		ForLoopNode forLoopStat = new ForLoopNode(loopCondOne, loopCondTwo, loopCondThree, loopBody);
+		forLoopStat.check(currentSymbolTable, ctx);
+
+		return forLoopStat;
 	}
 
 	/*CONTINUE*/
 	@Override
-	public Tree visitContinue(@NotNull WACCParser.ContinueContext ctx) {
+	public Tree visitContinues(@NotNull WACCParser.ContinuesContext ctx) {
 		return new ex_ContinueNode();
 	}
 
@@ -435,7 +442,8 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 		}
 
 		switch (ctx.getChildCount()) {
-			case 3: // Binary Expression of type `lhs OP rhs`
+			case 3:
+				// Binary Expression of type `lhs OP rhs`
 				ExprNode lhs = (ExprNode) visit(ctx.expr(0));
 				ExprNode rhs = (ExprNode) visit(ctx.expr(1));
 				BinaryOperators binaryOp = BinaryOperators.evalBinOp(ctx.getChild(1).getText());
@@ -444,14 +452,25 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 
 				return binExpr;
 
-			case 2: // Unary Expression of type `OP expressions`
-				ExprNode expr = (ExprNode) visit(ctx.expr(0));
-				UnaryOperators unaryOp = UnaryOperators.evalUnOp(ctx.getChild(0).getText());
-				UnaryExpr unaryExpr = new UnaryExpr(unaryOp, expr);
-				unaryExpr.check(currentSymbolTable, ctx);
+			case 2:
+				// Unary Expression of type 'ident OP'
+				if(ctx.ident() != null && (ctx.PLUSPLUS() != null || ctx.MINUSMINUS() != null)) {
+					ExprNode expr = (ExprNode) visit(ctx.ident());
+					UnaryOperators unaryOp = UnaryOperators.evalUnOp(ctx.getChild(1).getText());
+					UnaryExpr unaryExpr = new UnaryExpr(unaryOp, expr);
+					unaryExpr.check(currentSymbolTable, ctx);
 
-				return unaryExpr;
+					return unaryExpr;
+				} else {
+					// Unary Expression of type `OP expressions`
+					ExprNode expr = (ExprNode) visit(ctx.expr(0));
+					UnaryOperators unaryOp = UnaryOperators.evalUnOp(ctx.getChild(0).getText());
+					UnaryExpr unaryExpr = new UnaryExpr(unaryOp, expr);
+					unaryExpr.check(currentSymbolTable, ctx);
 
+					return unaryExpr;
+
+				}
 			default: // in this case this is a single rule (i.e. int_liter, char_liter)
 				return visit(ctx.getChild(0));
 		}
@@ -476,7 +495,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 
 	@Override
 	public Tree visitIntLiter(IntLiterContext ctx) {
-		java.lang.String intValue = ctx.getText();
+		String intValue = ctx.getText();
 		IntLeaf anIntLeaf = new IntLeaf(intValue);
 		anIntLeaf.check(currentSymbolTable, ctx);
 		return anIntLeaf;
@@ -499,21 +518,21 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 				//...............EXTENSION_EXPRESSION...........................
 
 	@Override
-	public  Tree visitBinLiter(BinLiterContext ctx) {
+	public Tree visitBinLiter(BinLiterContext ctx) {
 		ex_BinLeaf exBinLeaf = new ex_BinLeaf(ctx.getText());
 		exBinLeaf.check(currentSymbolTable, ctx);
 		return exBinLeaf;
 	}
 
 	@Override
-	public  Tree visitOctLiter(OctLiterContext ctx) {
+	public Tree visitOctLiter(OctLiterContext ctx) {
 		ex_OctLeaf exOctLeaf = new ex_OctLeaf(ctx.getText());
 		exOctLeaf.check(currentSymbolTable, ctx);
 		return exOctLeaf;
 	}
 
 	@Override
-	public  Tree visitHexLiter(HexLiterContext ctx) {
+	public Tree visitHexLiter(HexLiterContext ctx) {
 		ex_HexLeaf exHexLeaf = new ex_HexLeaf(ctx.getText());
 		exHexLeaf.check(currentSymbolTable, ctx);
 		return exHexLeaf;

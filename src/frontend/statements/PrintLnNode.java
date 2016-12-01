@@ -16,7 +16,10 @@ public class PrintLnNode extends StatNode {
 
 	@Override
 	public TokSeq assemblyCodeGenerating(Register register) {
-		TokSeq exprSeq = expr.assemblyCodeGenerating(register);
+		TokSeq exprSeq = new TokSeq();
+		if(!ForLoopNode.isInLoopAssembler()) {
+			exprSeq = expr.assemblyCodeGenerating(register);
+		}
 		TokSeq printSeq = expr.getType().printAssembly(register);
 		Token println = new PrintLnToken();
 		exprSeq.appendAll(printSeq);

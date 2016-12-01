@@ -1,0 +1,13 @@
+# Enter the loop twice and then exit the loop
+
+# Output:
+# Hi
+# Hi
+
+# Program:
+
+begin
+  for int i = 0 ; i < 2 ; i ++ do
+    println "Hi"
+  done
+end
