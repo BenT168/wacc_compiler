@@ -101,7 +101,7 @@ FOR: 'for' ;
 
 //break and continue
 BREAK: 'break' ;
-CONTINUE: 'continue' ;
+CONTINUE: 'continues' ;
 
 
 //pairs

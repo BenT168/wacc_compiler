@@ -37,7 +37,7 @@ public class WACCParser extends Parser {
 		"HEX_LITER", "'begin'", "'end'", "'is'", "'skip'", "'read'", "'free'", 
 		"'return'", "'exit'", "'println'", "'print'", "'null'", "COMMENT", "';'", 
 		"':'", "','", "'#'", "'if'", "'then'", "'else'", "'fi'", "'while'", "'done'", 
-		"'do'", "'for'", "'break'", "'continue'", "'newpair'", "'fst'", "'snd'", 
+		"'do'", "'for'", "'break'", "'continues'", "'newpair'", "'fst'", "'snd'", 
 		"'call'", "STRING_LITER", "WS", "'\\0'", "'\\n'", "'\\t'", "'\\r'", "'\\f'", 
 		"'\\\"'", "'\\'", "' '", "'''", "IDENTITY", "CHAR_LITER"
 	};
@@ -427,12 +427,12 @@ public class WACCParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class ContinueContext extends StatContext {
+	public static class ContinuesContext extends StatContext {
 		public TerminalNode CONTINUE() { return getToken(WACCParser.CONTINUE, 0); }
-		public ContinueContext(StatContext ctx) { copyFrom(ctx); }
+		public ContinuesContext(StatContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitContinue(this);
+			if ( visitor instanceof WACCParserVisitor ) return ((WACCParserVisitor<? extends T>)visitor).visitContinues(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -725,7 +725,7 @@ public class WACCParser extends Parser {
 				break;
 			case CONTINUE:
 				{
-				_localctx = new ContinueContext(_localctx);
+				_localctx = new ContinuesContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(140); match(CONTINUE);

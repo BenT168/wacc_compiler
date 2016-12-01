@@ -32,7 +32,7 @@ stat    : SKIP							    # skip
         | BEGIN stat END 					# begin
         | stat SEMI_COLON stat 				# multipleStat
         | BREAK                             # break
-        | CONTINUE                          # continue
+        | CONTINUE                          # continues
         ;
 
 // Assignments

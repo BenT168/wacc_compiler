@@ -321,7 +321,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 
 	/*CONTINUE*/
 	@Override
-	public Tree visitContinue(@NotNull WACCParser.ContinueContext ctx) {
+	public Tree visitContinues(@NotNull WACCParser.ContinuesContext ctx) {
 		return new ex_ContinueNode();
 	}
 

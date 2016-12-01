@@ -126,13 +126,6 @@ public interface WACCParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitParam(@NotNull WACCParser.ParamContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code continue}
-	 * labeled alternative in {@link WACCParser#stat}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitContinue(@NotNull WACCParser.ContinueContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code newPair_assignRHS}
 	 * labeled alternative in {@link WACCParser#assignRHS}.
 	 * @param ctx the parse tree
@@ -146,6 +139,13 @@ public interface WACCParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitArrayLiter_assignRHS(@NotNull WACCParser.ArrayLiter_assignRHSContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code continues}
+	 * labeled alternative in {@link WACCParser#stat}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitContinues(@NotNull WACCParser.ContinuesContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link WACCParser#charLiter}.
 	 * @param ctx the parse tree
