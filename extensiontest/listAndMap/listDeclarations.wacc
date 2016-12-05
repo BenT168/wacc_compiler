@@ -1,0 +1,7 @@
+# Program
+
+begin
+ list<int> items = new linkedList<int>() ;
+ list<bool> bools = new arrayList<bool>() ;
+ linkedList<char> charItems = new linkedList<int>()
+end

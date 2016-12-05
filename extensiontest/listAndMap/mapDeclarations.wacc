@@ -1,0 +1,7 @@
+# Program
+
+begin
+   map<int,chat> map1 = new hashmap<int, char>() ;
+   hashMap<string,string> map2 = new hashMap<string,string>()
+end
+

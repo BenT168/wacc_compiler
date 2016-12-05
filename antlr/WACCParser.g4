@@ -31,18 +31,21 @@ stat    : SKIP							    # skip
         | FOR stat SEMI_COLON expr SEMI_COLON expr DO stat DONE # forLoop
         | BEGIN stat END 					# begin
         | stat SEMI_COLON stat 				# multipleStat
+        | ident ADD expr                    # addElem
         | BREAK                             # break
         | CONTINUE                          # continues
         ;
 
 // Assignments
 assignLHS
-        : ident | arrayElem | pairElem ;
+        : ident | arrayElem | pairElem | listElem;
 
 assignRHS
         : expr                                                        # expr_assignRHS
         | arrayLiter                                                  # arrayLiter_assignRHS
         | NEWPAIR OPEN_PARENTHESES expr COMMA expr CLOSE_PARENTHESES  # newPair_assignRHS
+        | NEW (LINKEDLIST | ARRAYLIST) LESS type GREATER OPEN_PARENTHESES CLOSE_PARENTHESES # newList_assignRHS
+        | NEW HASHMAP LESS type COMMA type GREATER OPEN_PARENTHESES CLOSE_PARENTHESES # newMap_assignRHS
         | pairElem                                                    # pairElem_assignRHS
         | CALL ident OPEN_PARENTHESES (argList)? CLOSE_PARENTHESES    # funcCall_assignRHS
         ;
@@ -67,10 +70,18 @@ pairElemType
 arrayType
         :( baseType | pairType ) (OPEN_SQUARE CLOSE_SQUARE)+ ;
 
+// Lists
+listType: (LIST | LINKEDLIST | ARRAYLIST) (LESS type GREATER) ;
+
+// Maps
+mapType: (MAP | HASHMAP) (LESS type COMMA type GREATER) ;
+
 // WACC Types
 type    : baseType
         | arrayType
         | pairType
+        | listType
+        | mapType
         ;
 
 baseType: INT
@@ -98,13 +109,17 @@ expr    : (NOT | MINUS | LEN | ORD | CHR) expr
         // atomic expressions
         | OPEN_PARENTHESES expr CLOSE_PARENTHESES
         // expression literals
-        | (intLiter | boolLiter | charLiter | stringLiter | pairLiter | ident | arrayElem )
+        | (intLiter | boolLiter | charLiter | stringLiter | pairLiter | ident | arrayElem | listElem )
         | (binLiter | hexLiter | octLiter )
         ;
 
 
 arrayElem
         : ident (OPEN_SQUARE expr CLOSE_SQUARE)+ ;
+
+listElem
+        : ident GET OPEN_PARENTHESES expr CLOSE_PARENTHESES ;
+
 
 intLiter: (PLUS | MINUS) INTEGER
         | INTEGER

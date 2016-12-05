@@ -18,6 +18,7 @@ import frontend.function.Param;
 import frontend.statements.*;
 import frontend.type.BaseType;
 import frontend.type.BinaryOperators;
+import frontend.type.ListType;
 import frontend.type.UnaryOperators;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -158,7 +159,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 	public Tree visitDeclare(DeclareContext ctx) {
 		Assignable rhsTree = (Assignable) visit(ctx.assignRHS());
 		BaseType varType = BaseType.evalType(ctx.type());
-		java.lang.String ident = ctx.ident().getText();
+		String ident = ctx.ident().getText();
 		Variable var = new Variable(varType, ident);
 		DeclareNode vdn = new DeclareNode(var, rhsTree);
 		vdn.check(currentSymbolTable, ctx);
@@ -326,6 +327,22 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 		return forLoopStat;
 	}
 
+	/*@Override
+	public Tree visitAddElem(@NotNull WACCParser.AddElemContext ctx) {
+		boolean isIn = currentSymbolTable.isContained(ctx.ident().getText());
+		if(isIn) {
+			Tree tree = currentSymbolTable.get(ctx.ident().getText());
+			if(tree instanceof DeclareNode) {
+				ExprNode expr = (ExprNode) visit(ctx.expr());
+				if(tree.getType().isCompatible(expr.getType())) {
+					tree.
+				}
+
+			}
+		}
+
+	}*/
+
 	/*CONTINUE*/
 	@Override
 	public Tree visitContinues(@NotNull WACCParser.ContinuesContext ctx) {
@@ -360,9 +377,28 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 		return pair;
 	}
 
+	/*@Override
+	public Tree visitNewList_assignRHS(NewList_assignRHSContext ctx) {
+		BaseType type = BaseType.evalType(ctx.type);
+		NewList list = new NewList(type);
+		list.check(currentSymbolTable, ctx);
+		return list;
+	}
+
+	@Override
+	public Tree visitNewMap_assignRHS(NewMap_assignRHSContext ctx) {
+		BaseType type1 = BaseType.evalType(ctx.type(0));
+		BaseType type2 = BaseType.evalType(ctx.type(1));
+		NewMap map = new NewMap(type1, type2);
+		map.check(currentSymbolTable, ctx);
+		return map;
+	}*/
+
+
+
 	@Override
 	public Tree visitFuncCall_assignRHS(FuncCall_assignRHSContext ctx) {
-		java.lang.String ident = ctx.ident().getText();
+		String ident = ctx.ident().getText();
 		FuncDec funcDef = (FuncDec) currentSymbolTable.get(ident);
 		ArgList args;
 

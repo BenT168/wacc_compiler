@@ -11,6 +11,7 @@ import backend.tokens.store.StorePreIndexToken;
 import backend.tokens.store.StoreToken;
 import frontend.exception.SemanticErrorException;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -459,11 +460,63 @@ public abstract class BaseType {
 					BaseType fstType = fstString.equals("pair") ? BaseType.NULL : evalType(fstString);
 					BaseType sndType = sndString.equals("pair") ? BaseType.NULL : evalType(sndString);
 
-
 					return new PairType(fstType, sndType);
 				}
 
+				//matches any list
+				if(typeString.startsWith("list") || typeString.startsWith("linkedList") ||
+						typeString.startsWith("arrayList")) {
+					return new ListType(getListType(typeString));
+
+				}
+
+				//matches any map
+				if(typeString.startsWith("map") || typeString.startsWith("hashMap")) {
+
+				}
+
 				throw new SemanticErrorException("The type provided was not recognised: " + typeString);
+		}
+	}
+
+	private static BaseType getListType(String typeString) {
+		int count = 0;
+
+		for(int i = 0; i < typeString.length(); i++) {
+			if(typeString.charAt(i) == '<') {
+				count++;
+			}
+		}
+
+		if(count == 1) {
+			String requiredString = typeString.substring(typeString.indexOf("<") + 1, typeString.indexOf(">"));
+			BaseType baseType = evalType(requiredString);
+			return new ListType(baseType);
+		} else { //Nested List
+			char[] type = new char[typeString.length()];
+			int pos = 0;
+			boolean charSeen = false;
+			int recurseCount = 0;
+			for(int i = 0; i < typeString.length() ; i++) {
+				if(typeString.charAt(i) == '<') {
+					recurseCount++;
+					charSeen = true;
+					if(recurseCount == 1) {
+						continue;
+					}
+				}
+				if(charSeen) {
+					type[pos] = typeString.charAt(i);
+					pos++;
+				}
+				if(typeString.charAt(i) == '>') {
+					break;
+				}
+			}
+
+			String recurseString = String.valueOf(type).trim();
+			ListType list = new ListType(getListType(recurseString));
+			return new ListType(list);
 		}
 	}
 

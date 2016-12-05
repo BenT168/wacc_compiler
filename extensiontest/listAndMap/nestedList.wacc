@@ -1,0 +1,6 @@
+# Program
+
+begin
+  arraylist<arrayList<int>> arrayInts = new arrayList<arrayList<int>>() ;
+  list<linkedList<char>> listChar = new linkedList<linkedList<char>>()
+end

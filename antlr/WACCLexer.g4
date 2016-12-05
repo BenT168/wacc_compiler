@@ -43,6 +43,18 @@ CHAR: 'char' ;
 STRING: 'string' ;
 PAIR: 'pair' ;
 
+//LIST TYPES
+LIST: 'list' ;
+LINKEDLST: 'linkedList' ;
+ARRAYLIST: 'arrayList' ;
+NEW: 'new' ;
+GET: 'get' ;
+ADD: 'add' ;
+
+//MAP TYPES
+MAP: 'map' ;
+HASHMAP: 'hashMap' ;
+
 //brackets
 OPEN_PARENTHESES : '(' ;
 CLOSE_PARENTHESES : ')' ;

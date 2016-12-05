@@ -1,0 +1,6 @@
+# Program
+
+begin
+    map<hashmap<int,int>,char> nested1 = new hashmap<hashmap<int,int>,char>() ;
+    hashmap<hashmap<int,int>,hashmap<char,char>> nested1 = new hashmap<hashmap<int,int>,hashmap<char,char>>()
+end
