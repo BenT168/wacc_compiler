@@ -22,15 +22,14 @@ public class Optimiser {
     private void analyse() {
         String delims = "\n";
         StringTokenizer tokens = new StringTokenizer(code, delims);
+        delims = " ";
         while (tokens.hasMoreElements()) {
-            delims = " ";
-            StringTokenizer pieces = new StringTokenizer(code, delims);
+            StringTokenizer pieces = new StringTokenizer(tokens.nextToken(), delims);
             String instr = pieces.nextToken();
             String ops = "";
-            int numberOfOps = pieces.countTokens();
-            while (numberOfOps > 0) {
+            while (pieces.hasMoreElements()) {
                 ops = ops.concat(pieces.nextToken());
-            }
+                }
             instructions.put(instr, ops);
         }
     }
