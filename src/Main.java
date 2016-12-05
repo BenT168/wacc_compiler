@@ -1,9 +1,10 @@
 import antlr.WACCLexer;
 import antlr.WACCParser;
+import backend.Optimiser;
 import frontend.exception.SemanticErrorException;
 import frontend.exception.SyntaxErrorException;
-import main.TypeCheckVisitor;
 import main.CodeGenerator;
+import main.TypeCheckVisitor;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -80,7 +81,7 @@ public class Main {
 		try {
 	          File file = new File(assemblyFilename);
 	          BufferedWriter output = new BufferedWriter(new FileWriter(file));
-	          output.write(assemblyString);
+	          output.write(Optimiser.optimiser.optimise(assemblyString));
 	          output.close();
 	        } catch ( IOException e ) {
 	           e.printStackTrace();

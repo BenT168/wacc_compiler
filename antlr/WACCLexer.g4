@@ -45,7 +45,7 @@ PAIR: 'pair' ;
 
 //LIST TYPES
 LIST: 'list' ;
-LINKEDLST: 'linkedList' ;
+LINKEDLIST: 'linkedList' ;
 ARRAYLIST: 'arrayList' ;
 NEW: 'new' ;
 GET: 'get' ;
