@@ -1,6 +1,6 @@
 # Program
 
 begin
-    map<hashmap<int,int>,char> nested1 = new hashmap<hashmap<int,int>,char>() ;
-    hashmap<hashmap<int,int>,hashmap<char,char>> nested1 = new hashmap<hashmap<int,int>,hashmap<char,char>>()
+    map<hashMap<int,int>,char> nested1 = new hashMap<hashMap<int,int>,char>() ;
+    hashMap<hashMap<int,int>,hashMap<char,char>> nested2 = new hashMap<hashMap<int,int>,hashMap<char,char>>()
 end

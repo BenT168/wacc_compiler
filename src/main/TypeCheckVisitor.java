@@ -337,7 +337,6 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 				if(tree.getType().isCompatible(expr.getType())) {
 					tree.
 				}
-
 			}
 		}
 
@@ -377,9 +376,9 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 		return pair;
 	}
 
-	/*@Override
+	@Override
 	public Tree visitNewList_assignRHS(NewList_assignRHSContext ctx) {
-		BaseType type = BaseType.evalType(ctx.type);
+		BaseType type = BaseType.evalType(ctx.type());
 		NewList list = new NewList(type);
 		list.check(currentSymbolTable, ctx);
 		return list;
@@ -392,7 +391,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 		NewMap map = new NewMap(type1, type2);
 		map.check(currentSymbolTable, ctx);
 		return map;
-	}*/
+	}
 
 
 

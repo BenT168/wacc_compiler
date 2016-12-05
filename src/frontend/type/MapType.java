@@ -9,65 +9,53 @@ import backend.tokens.load.LoadAddressToken;
 import backend.tokens.print.PrintReferenceToken;
 import backend.tokens.store.StorePreIndexToken;
 import backend.tokens.store.StoreToken;
+import frontend.exception.SemanticErrorException;
 
 public class MapType extends BaseType {
 
     private BaseType key;
     private BaseType value;
 
-    protected final int VAR_SIZE = key.getVarSize() + value.getVarSize();
+    protected final int VAR_SIZE;
 
     public MapType(BaseType key, BaseType value) {
         this.key = key;
         this.value = value;
+        VAR_SIZE = key.getVarSize() + value.getVarSize();
     }
 
 
     @Override
     public boolean isCompatible(BaseType other) {
-        return false;
+        // NULL cannot be assigned to maps - they have to be initialised
+        if (other == BaseType.NULL) {
+            throw new SemanticErrorException("Cannot assign a declaration of a Map to " +
+                    "a null object");
+        }
+
+        if (!(other instanceof MapType)) {
+            return false;
+        }
+
+        MapType otherMap = (MapType) other;
+        return 	checkType(this.getKey(), otherMap.getKey())
+                && checkType(this.getValue(), otherMap.getValue());
     }
 
-    public boolean isCompatible(BaseType otherKey, BaseType otherValue) {
-
-        //Check if otherKey and otherValue are instances of Maps
-        if (!(otherKey instanceof MapType)) {
-            if(!key.isCompatible(otherKey)) {
-                return false;
-            }
+    // utility method for checking map types
+    private static boolean checkType(BaseType lhs, BaseType rhs) {
+        boolean compatible = lhs.isCompatible(rhs);
+        if (!compatible) {
+            throw new SemanticErrorException("The types " + lhs.toString() +
+                    " and " + rhs.toString() + "are incompatible.");
         }
-        if (!(otherValue instanceof MapType)) {
-            if(!value.isCompatible(otherValue)) {
-                return false;
-            }
-            return true;
-        }
-
-        //Otherwise check that otherKey and otherValue compatible with key and value
-        if (!(key == BaseType.NULL) ) {
-            MapType otherMap = (MapType) otherKey;
-            if (otherMap.getKey() == BaseType.NULL) {
-                return true;
-            } else if (!key.isCompatible(otherMap.getKey())) {
-                return false;
-            }
-        }
-        if (!(value == BaseType.NULL) ) {
-            MapType otherMap = (MapType) otherValue;
-            if (otherMap.getValue() == BaseType.NULL) {
-                return true;
-            } else if (!value.isCompatible(otherMap.getValue())) {
-                return false;
-            }
-            return true;
-        }
-
-        return true;
+        return compatible;
     }
+
 
     @Override
     public String toString() {
-        return "map-"+key.toString()+", "+value.toString();
+        return "map-("+key.toString()+", "+value.toString()+")";
     }
 
     public BaseType getKey() {

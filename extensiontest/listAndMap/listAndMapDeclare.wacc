@@ -1,0 +1,6 @@
+# Program
+
+begin
+   list<hashMap<int,int>> listofMaps = new linkedList<hashMap<int,int>>() ;
+   map<linkedList<char>,arrayList<string>> mapOfLists = new hashMap<linkedList<char>,arrayList<string>>()
+end

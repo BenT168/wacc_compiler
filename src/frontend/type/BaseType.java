@@ -466,13 +466,13 @@ public abstract class BaseType {
 				//matches any list
 				if(typeString.startsWith("list") || typeString.startsWith("linkedList") ||
 						typeString.startsWith("arrayList")) {
-					return new ListType(getListType(typeString));
+					return getListType(typeString);
 
 				}
 
 				//matches any map
 				if(typeString.startsWith("map") || typeString.startsWith("hashMap")) {
-
+					return getMapType(typeString);
 				}
 
 				throw new SemanticErrorException("The type provided was not recognised: " + typeString);
@@ -480,23 +480,16 @@ public abstract class BaseType {
 	}
 
 	private static BaseType getListType(String typeString) {
-		int count = 0;
-
-		for(int i = 0; i < typeString.length(); i++) {
-			if(typeString.charAt(i) == '<') {
-				count++;
-			}
-		}
-
-		if(count == 1) {
-			String requiredString = typeString.substring(typeString.indexOf("<") + 1, typeString.indexOf(">"));
-			BaseType baseType = evalType(requiredString);
-			return new ListType(baseType);
-		} else { //Nested List
+		if(!isNested(typeString)) {
+			return getList(typeString);
+		} else {
+			//Nested List
 			char[] type = new char[typeString.length()];
 			int pos = 0;
 			boolean charSeen = false;
 			int recurseCount = 0;
+
+			//Loop through typeString and get inner list
 			for(int i = 0; i < typeString.length() ; i++) {
 				if(typeString.charAt(i) == '<') {
 					recurseCount++;
@@ -515,9 +508,143 @@ public abstract class BaseType {
 			}
 
 			String recurseString = String.valueOf(type).trim();
-			ListType list = new ListType(getListType(recurseString));
-			return new ListType(list);
+			if(recurseString.startsWith("linkedList") || recurseString.startsWith("arrayList")) {
+				ListType list = new ListType(getListType(recurseString));
+				return new ListType(list);
+			} else { // not actually a nested list (may be a list of maps)
+				return getList(recurseString);
+			}
 		}
 	}
+
+	private static BaseType getList(String typeString) {
+		if(typeString.startsWith("hashMap")) { // Map in a list
+			BaseType baseType = evalType(typeString);
+			return new ListType(baseType);
+    	}
+		String requiredString = typeString.substring(typeString.indexOf("<") + 1, typeString.indexOf(">"));
+		BaseType baseType = evalType(requiredString);
+		return new ListType(baseType);
+	}
+
+	private static boolean isNested(String typeString) {
+		int count = 0;
+		for(int i = 0; i < typeString.length(); i++) {
+			if(typeString.charAt(i) == '<') {
+				count++;
+			}
+		}
+
+		//Check if list in map
+		if(count > 1 && (typeString.startsWith("map") || typeString.startsWith("hashMap"))) {
+			typeString = getInnerString(typeString);
+			if(fstList(typeString) && sndList(typeString)) {
+				//both lists
+				return false;
+			}
+		}
+		return count > 1;
+	}
+
+	private static boolean fstList(String s) {
+		return getFirst(s).startsWith("linkedList") || getFirst(s).startsWith("arrayList");
+
+	}
+
+	private static boolean sndList(String s) {
+		return getSnd(s).startsWith("linkedList") || getSnd(s).startsWith("arrayList");
+
+	}
+
+
+	private static boolean isNestedInnerMap(String typeString) {
+		return typeString.startsWith("hashMap");
+	}
+
+	private static BaseType getMapType(String typeString) {
+		if(!isNested(typeString)) {
+			return getMap(typeString);
+		} else { //Nested Maps
+			typeString = getInnerString(typeString);
+			if(!isNestedInnerMap(getFirst(typeString)) && isNestedInnerMap(getSnd(typeString))) {
+				BaseType firstType = evalType(getFirst(typeString));
+				return new MapType(firstType, getMapType(getSnd(typeString)));
+			} else if(!isNestedInnerMap(getSnd(typeString)) && isNestedInnerMap(getFirst(typeString))) {
+				BaseType sndType = evalType(getSnd(typeString));
+				return new MapType(getMapType(getFirst(typeString)), sndType);
+			} else { // both nested
+				return new MapType(getMapType(getFirst(typeString)), getMapType(getSnd(typeString)));
+			}
+		}
+	}
+
+	private static BaseType getMap(String typeString) {
+		String s = getInnerString(typeString);
+		if(fstList(s) && sndList(s)) {
+			BaseType firstType = evalType(getFirst(s));
+			BaseType sndType = evalType(getSnd(s));
+			return new MapType(firstType,sndType);
+		}
+		String firstString = typeString.substring(typeString.indexOf("<") + 1, typeString.indexOf(","));
+		String sndString = typeString.substring(typeString.indexOf(",") + 1, typeString.indexOf(">"));
+		BaseType firstType = evalType(firstString);
+		BaseType sndType = evalType(sndString);
+		return new MapType(firstType,sndType);
+	}
+
+
+	private static String getInnerString(String typeString) {
+		String sub = "";
+		if(typeString.startsWith("map")) {
+			sub = typeString.substring(4, typeString.length() - 1);
+		} else if(typeString.startsWith("hashMap")) {
+			sub = typeString.substring(8, typeString.length() - 1);
+		}
+		return sub;
+	}
+
+	private static String getFirst(String typeString) {
+		if(typeString.startsWith("hashMap")) { // nested
+			int posOfComma = getCommaPosition(typeString);
+			return typeString.substring(0, posOfComma);
+		} else { // not nested
+			return typeString.split(",")[0];
+		}
+	}
+
+	private static int getCommaPosition(String typeString) {
+		int  countOpenArrow = 0;
+		int countClosedArrow = 0;
+		int posOfComma = 1;
+		for(int i = 0; i < typeString.length(); i++) {
+			if(typeString.charAt(i) == '<') {
+				countOpenArrow++;
+			}
+			if(typeString.charAt(i) == '>') { // done with open brackets
+				countClosedArrow++;
+				if(countClosedArrow == countOpenArrow) {
+					break;
+				}
+			}
+			posOfComma++;
+		}
+		return posOfComma;
+	}
+
+	private static String getSnd(String typeString) {
+		if(typeString.startsWith("hashMap")) { //nested
+			int posOfComma = getCommaPosition(typeString);
+			return typeString.substring(posOfComma + 1);
+		} else { // not nested
+			String temp = typeString.split(",")[1];
+			return getText(temp);
+		}
+	}
+
+	private static String getText(String s) {
+		int commaPos = s.indexOf(",") + 1;
+		return s.substring(commaPos);
+	}
+
 
 }
