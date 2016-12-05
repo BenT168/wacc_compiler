@@ -42,7 +42,7 @@ public class Optimiser {
                 Map.Entry<String, String> next = it.next();
                 boolean done = removeDuplicates(current, next);
                 if (!done) done = removeSTRandLDR(current, next);
-                current = it.next();
+                if (it.hasNext()) current = it.next();
             }
     }
 
