@@ -1,0 +1,5 @@
+package backend.data;
+
+public enum OperandType {
+    IMM_OPERAND, MEM_ADDR_OPERAND, STACK_OPERAND, DATA_TRANSFER_OPERAND, DEFAULT_OPERAND;
+}
