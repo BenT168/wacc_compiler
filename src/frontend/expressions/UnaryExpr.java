@@ -3,7 +3,7 @@ package frontend.expressions;
 import backend.Register;
 import backend.TokSeq;
 import frontend.exception.SemanticErrorException;
-import frontend.statements.ForLoopNode;
+import frontend.statements.ex_ForLoopNode;
 import frontend.type.BaseType;
 import frontend.type.UnaryOperators;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -40,7 +40,7 @@ public class UnaryExpr extends ExprNode{
 
 	@Override
 	public TokSeq assemblyCodeGenerating(Register register) {
-		if(ForLoopNode.isInLoopAssembler()) {
+		if(ex_ForLoopNode.isInLoopAssembler()) {
 			TokSeq exprSeq = new TokSeq();
 			return exprSeq.appendAll(operator.apply(register));
 		}

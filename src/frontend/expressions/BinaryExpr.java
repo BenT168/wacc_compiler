@@ -3,7 +3,7 @@ package frontend.expressions;
 import backend.Register;
 import backend.TokSeq;
 import frontend.exception.SemanticErrorException;
-import frontend.statements.ForLoopNode;
+import frontend.statements.ex_ForLoopNode;
 import frontend.type.BinaryOperators;
 import frontend.type.BaseType;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -62,7 +62,7 @@ public class BinaryExpr extends ExprNode {
 				exprs.appendAll(operator.apply(r, r.getNext()));
 				return exprs;
 			}
-		} else if(ForLoopNode.isInLoopAssembler()) {
+		} else if(ex_ForLoopNode.isInLoopAssembler()) {
 			TokSeq exprs = rhs.assemblyCodeGenerating(r);
 			setForBranchCondInLoop();
 			//exprs.appendAll(operator.apply(r, r.getNext()));
