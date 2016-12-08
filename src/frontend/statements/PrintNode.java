@@ -4,6 +4,11 @@ import backend.TokSeq;
 import frontend.expressions.ExprNode;
 import backend.Register;
 
+/**
+ * Class representing print statements
+ * Rule: PRINT expressions
+ */
+
 public class PrintNode extends StatNode {
 
 	private ExprNode expr;

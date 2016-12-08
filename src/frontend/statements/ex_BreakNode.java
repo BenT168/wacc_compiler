@@ -5,6 +5,11 @@ import backend.TokSeq;
 import backend.Token;
 import backend.tokens.general.ex_JumpToken;
 
+/**
+ * Class representing break statements
+ * Rule: BREAK
+ */
+
 public class ex_BreakNode extends StatNode {
 
     public ex_BreakNode() {

@@ -15,6 +15,11 @@ import backend.tokens.free.FreePairToken;
 import backend.tokens.load.LoadAddressToken;
 import backend.tokens.move.MovRegToken;
 
+/**
+ * Class representing free statements
+ * Rule: FREE expressions
+ */
+
 public class FreeNode extends StatNode {
 
 	private ExprNode en;

@@ -12,6 +12,12 @@ import frontend.type.BaseType;
 import org.antlr.v4.runtime.ParserRuleContext;
 import symboltable.SymbolTable;
 
+/**
+ * Class representing while statements
+ * Rule: WHILE expression DO statement DONE
+ */
+
+
 public class WhileNode extends StatNode {
 
 	private ExprNode loopCond;
@@ -37,6 +43,7 @@ public class WhileNode extends StatNode {
 		TokSeq whileStat = new TokSeq(
 				new BranchToken(l0),
 				new LabelToken(l1));
+		checkBreak(register);
 		whileStat.appendAll(loopBody.assemblyCodeGenerating(register));
 		whileStat.append(
 				new LabelToken(l0));

@@ -12,6 +12,11 @@ import backend.StackAlloc;
 import backend.tokens.move.MovRegToken;
 import backend.tokens.general.PopToken;
 
+/**
+ * Class representing return statements
+ * Rule: RETURN expression
+ */
+
 
 public class ReturnNode extends StatNode {
 	private ExprNode expr;

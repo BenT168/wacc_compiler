@@ -6,6 +6,12 @@ import backend.Register;
 import backend.TokSeq;
 import backend.tokens.print.PrintLnToken;
 
+/**
+ * Class representing println statements
+ * Rule: PRINTLN expressions
+ */
+
+
 public class PrintLnNode extends StatNode {
 
 	private ExprNode expr;
@@ -17,7 +23,7 @@ public class PrintLnNode extends StatNode {
 	@Override
 	public TokSeq assemblyCodeGenerating(Register register) {
 		TokSeq exprSeq = new TokSeq();
-		if(!ForLoopNode.isInLoopAssembler()) {
+		if(!ex_ForLoopNode.isInLoopAssembler()) {
 			exprSeq = expr.assemblyCodeGenerating(register);
 		}
 		TokSeq printSeq = expr.getType().printAssembly(register);

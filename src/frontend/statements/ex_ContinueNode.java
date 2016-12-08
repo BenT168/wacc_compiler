@@ -5,6 +5,11 @@ import backend.TokSeq;
 import backend.Token;
 import backend.tokens.general.ex_JumpToken;
 
+/**
+ * Class representing continue statements
+ * Rule: CONTINUE
+ */
+
 public class ex_ContinueNode extends StatNode {
 
     public ex_ContinueNode() {

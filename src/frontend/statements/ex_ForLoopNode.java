@@ -10,13 +10,15 @@ import frontend.exception.SemanticErrorException;
 import frontend.expressions.BinaryExpr;
 import frontend.expressions.ExprNode;
 import frontend.type.BaseType;
-import frontend.type.BinaryOperators;
 import org.antlr.v4.runtime.ParserRuleContext;
 import symboltable.SymbolTable;
 
-public class ForLoopNode extends StatNode {
+/**
+ * Class representing for loop statements
+ * Rule: for(loopCondOne ; loopCondTwo; loopCondThree) { loopBody }
+ */
 
-    //for(loopCondOne ; loopCondTwo; loopCondThree) { loopBody }
+public class ex_ForLoopNode extends StatNode {
 
     private StatNode loopCondOne;
     private ExprNode loopCondTwo;
@@ -24,7 +26,7 @@ public class ForLoopNode extends StatNode {
     private StatNode loopBody;
     private static boolean inLoop = false;
 
-    public ForLoopNode(StatNode loopCondOne, ExprNode loopCondTwo, ExprNode loopCondThree, StatNode loopBody) {
+    public ex_ForLoopNode(StatNode loopCondOne, ExprNode loopCondTwo, ExprNode loopCondThree, StatNode loopBody) {
         this.loopCondOne = loopCondOne;
         this.loopCondTwo = loopCondTwo;
         this.loopCondThree = loopCondThree;

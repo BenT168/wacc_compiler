@@ -12,6 +12,11 @@ import frontend.expressions.Variable;
 import frontend.function.FuncDec;
 import backend.Register;
 
+/**
+ * Class representing assignment statements
+ * Rule: assignLHS EQUALS assignRHS
+ */
+
 public class AssignNode extends StatNode {
 
 	private Tree lhs;

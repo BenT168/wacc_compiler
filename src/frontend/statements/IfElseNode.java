@@ -12,6 +12,11 @@ import frontend.type.BaseType;
 import org.antlr.v4.runtime.ParserRuleContext;
 import symboltable.SymbolTable;
 
+/**
+ * Class representing if-else statements
+ * Rule: IF expr THEN stat ELSE stat ENDIF
+ */
+
 public class IfElseNode extends StatNode {
 
 	private ExprNode ifCond;
@@ -37,6 +42,7 @@ public class IfElseNode extends StatNode {
 		TokSeq ifStat = ifCond.assemblyCodeGenerating(register);
 		String l0 = "l" + Labeller.counter.getLabel();
 		String l1 = "l" + Labeller.counter.getLabel();
+		checkBreak(register);
 		ifStat.appendAll(new TokSeq(
 				new CompareToken(register, "#0"),
 				new BranchToken("EQ", l0)));

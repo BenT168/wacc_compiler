@@ -5,7 +5,6 @@ import backend.TokSeq;
 import frontend.exception.SemanticErrorException;
 import frontend.type.BaseType;
 import org.antlr.v4.runtime.ParserRuleContext;
-
 import symboltable.SymbolTable;
 import frontend.assignments.Assignable;
 import frontend.expressions.Variable;
@@ -13,6 +12,10 @@ import frontend.function.FuncDec;
 import backend.Register;
 import backend.StackAlloc;
 
+/**
+ * Class representing declaring statements
+ * Rule: type IDENTITY EQUALS assignRHS
+ */
 
 public class DeclareNode extends StatNode {
 

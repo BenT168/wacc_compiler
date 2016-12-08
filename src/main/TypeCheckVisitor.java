@@ -18,7 +18,6 @@ import frontend.function.Param;
 import frontend.statements.*;
 import frontend.type.BaseType;
 import frontend.type.BinaryOperators;
-import frontend.type.ListType;
 import frontend.type.UnaryOperators;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -321,7 +320,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 		ExprNode loopCondTwo = (ExprNode) visit(ctx.expr(0));
 		ExprNode loopCondThree = (ExprNode) visit(ctx.expr(1));
 		StatNode loopBody = (StatNode) visit(ctx.stat(1));
-		ForLoopNode forLoopStat = new ForLoopNode(loopCondOne, loopCondTwo, loopCondThree, loopBody);
+		ex_ForLoopNode forLoopStat = new ex_ForLoopNode(loopCondOne, loopCondTwo, loopCondThree, loopBody);
 		forLoopStat.check(currentSymbolTable, ctx);
 
 		return forLoopStat;
@@ -359,7 +358,7 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 	public Tree visitDoWhile(@NotNull WACCParser.DoWhileContext ctx) {
 		ExprNode loopCond = (ExprNode) visit(ctx.expr());
 		StatNode loopBody = (StatNode) visit(ctx.stat());
-		DoWhileNode doWhileStat = new DoWhileNode(loopCond, loopBody);
+		ex_DoWhileNode doWhileStat = new ex_DoWhileNode(loopCond, loopBody);
 		doWhileStat.check(currentSymbolTable, ctx);
 
 		return doWhileStat;

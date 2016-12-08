@@ -3,6 +3,10 @@ package frontend.statements;
 import backend.Register;
 import backend.TokSeq;
 
+/**
+ * Class representing a general statements
+ * Rule: BEGIN statements END
+ */
 
 public class BeginNode extends StatNode {
 

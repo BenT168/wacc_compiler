@@ -3,6 +3,11 @@ package frontend.statements;
 import backend.Register;
 import backend.TokSeq;
 
+/**
+ * Class representing multiple statements
+ * Rule: statement ; statement
+ */
+
 public class MultiStatNode extends StatNode {
 
 	private StatNode lhs;

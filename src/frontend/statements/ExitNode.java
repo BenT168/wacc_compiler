@@ -12,6 +12,11 @@ import backend.Register;
 import backend.tokens.branch.BranchLinkToken;
 import backend.tokens.move.MovRegToken;
 
+/**
+ * Class representing exit statements
+ * Rule: EXIT expression
+ */
+
 public class ExitNode extends StatNode {
 
 	private ExprNode exitVal;

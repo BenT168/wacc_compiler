@@ -9,6 +9,12 @@ import backend.tokens.print.PrintReferenceToken;
 import backend.tokens.store.StorePreIndexToken;
 import backend.tokens.store.StoreToken;
 
+/**
+ * Class representing ArrayType
+ *
+ */
+
+
 public class ArrayType extends BaseType {
 
 	private BaseType baseType;

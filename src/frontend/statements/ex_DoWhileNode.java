@@ -12,12 +12,17 @@ import frontend.type.BaseType;
 import org.antlr.v4.runtime.ParserRuleContext;
 import symboltable.SymbolTable;
 
-public class DoWhileNode extends StatNode {
+/**
+ * Class representing do while statements
+ * Rule: DO stat WHILE expr DONE
+ */
+
+public class ex_DoWhileNode extends StatNode {
 
     private ExprNode loopCond;
     private StatNode loopBody;
 
-    public DoWhileNode(ExprNode expr, StatNode stat) {
+    public ex_DoWhileNode(ExprNode expr, StatNode stat) {
         this.loopCond = expr;
         this.loopBody = stat;
     }
