@@ -1,0 +1,7 @@
+# Program
+
+begin
+  map<int,int> nums = new hashMap<int,int>();
+  nums add 3 4
+end
+

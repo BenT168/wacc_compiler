@@ -75,9 +75,6 @@ public class Instruction {
 
     @Override
     public String toString() {
-        if (!sanityCheck()) {
-            System.err.println("Instruction failed sanity check while in toString() method.");
-        }
         StringBuilder builder = new StringBuilder();
         String directiveText;
         String labelText;

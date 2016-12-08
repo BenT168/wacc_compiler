@@ -48,12 +48,13 @@ LIST: 'list' ;
 LINKEDLIST: 'linkedList' ;
 ARRAYLIST: 'arrayList' ;
 NEW: 'new' ;
-GET: 'get' ;
+GETLIST: 'getList' ;
 ADD: 'add' ;
 
 //MAP TYPES
 MAP: 'map' ;
 HASHMAP: 'hashMap' ;
+GETMAP: 'getMap' ;
 
 //brackets
 OPEN_PARENTHESES : '(' ;
@@ -100,6 +101,7 @@ SEMI_COLON: ';' ;
 COLON: ':' ;
 COMMA: ',' ;
 HASH_KEY: '#' ;
+TERNARY: '?' ;
 
 //if then else
 IF: 'if' ;

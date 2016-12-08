@@ -4,22 +4,25 @@ public class Register {
 	
 	private Integer registerNumber;
 	private Register next;
-	
+
+	/* assigns/updates register number */
 	public void setReg(int reg) {
 		this.registerNumber = reg;
 	}
-	
+
+	/* returns next register if any */
 	public Register getNext() {
 		if (next == null)
 			next = new Register();
 		return next;
 	}
 
+	/* returns true iff register is pre-allocated */
 	public boolean isPreAlloc() {
 		return false;
 	}
 
-	
+	/* returns string of the form "rN" where N is the register number */
 	@Override
 	public String toString() {
 		if (registerNumber == null) {
@@ -28,7 +31,10 @@ public class Register {
 		
 		return "r" + registerNumber;
 	}
-	
+
+
+	/* set of pre-allocated registers
+	 * i.e. R0, R1, R2, R3, sp, lr, pc */
 
 	public static final Register R0 = new Register() {
 		@Override
@@ -46,6 +52,7 @@ public class Register {
 			return R1;
 		}
 	};
+
 	public static final Register R1 = new Register() {
 		@Override
 		public String toString() {
@@ -62,6 +69,7 @@ public class Register {
 			return R2;
 		}
 	};
+
 	public static final Register R2 = new Register() {
 		@Override
 		public String toString() {

@@ -1,8 +1,8 @@
 # Program
 
 begin
-  list<int> numbers = new linkedList<int() ;
+  list<int> numbers = new linkedList<int>() ;
   numbers add 2 ;
-  int num = numbers get(0) ;
-  print num
+  int num = numbers getList(0) ;
+   print num
 end

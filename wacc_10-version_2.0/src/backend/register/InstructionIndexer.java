@@ -17,4 +17,8 @@ public class InstructionIndexer {
         instructionCount++;
         return i;
     }
+
+    public void reset() {
+        this.instructionCount = 0;
+    }
 }

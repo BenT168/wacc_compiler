@@ -24,6 +24,13 @@ public interface WACCParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitArrayLiter(@NotNull WACCParser.ArrayLiterContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code conditionalOps}
+	 * labeled alternative in {@link WACCParser#stat}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitConditionalOps(@NotNull WACCParser.ConditionalOpsContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link WACCParser#arrayElem}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -48,6 +55,12 @@ public interface WACCParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitIdent(@NotNull WACCParser.IdentContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link WACCParser#condAssign}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCondAssign(@NotNull WACCParser.CondAssignContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link WACCParser#binLiter}.
 	 * @param ctx the parse tree
@@ -181,6 +194,13 @@ public interface WACCParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSkip(@NotNull WACCParser.SkipContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code addElemMap}
+	 * labeled alternative in {@link WACCParser#stat}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAddElemMap(@NotNull WACCParser.AddElemMapContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link WACCParser#listType}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -206,12 +226,11 @@ public interface WACCParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPrintln(@NotNull WACCParser.PrintlnContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code addElem}
-	 * labeled alternative in {@link WACCParser#stat}.
+	 * Visit a parse tree produced by {@link WACCParser#mapElem}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAddElem(@NotNull WACCParser.AddElemContext ctx);
+	T visitMapElem(@NotNull WACCParser.MapElemContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link WACCParser#pairLiter}.
 	 * @param ctx the parse tree
@@ -309,6 +328,13 @@ public interface WACCParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitMapType(@NotNull WACCParser.MapTypeContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code addElemList}
+	 * labeled alternative in {@link WACCParser#stat}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAddElemList(@NotNull WACCParser.AddElemListContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link WACCParser#boolLiter}.
 	 * @param ctx the parse tree

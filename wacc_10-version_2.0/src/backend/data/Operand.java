@@ -4,6 +4,9 @@ public final class Operand {
 
     private String operandText;
     private OperandType operandType;
+    private int shiftValue;
+    private String preBuildText;
+    private int offset;
 
     Operand() {
     }
@@ -23,5 +26,21 @@ public final class Operand {
     @Override
     public String toString() {
         return operandText;
+    }
+
+    public void setShiftValue(int shiftValue) {
+        this.shiftValue = shiftValue;
+    }
+
+    public void setPreBuildText(String preBuildText) {
+        this.preBuildText = preBuildText;
+    }
+
+    public String getPreBuildText() {
+        return preBuildText;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
 }

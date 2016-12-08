@@ -12,6 +12,7 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -44,10 +45,10 @@ public class WACC {
         }
     }
 
-    private void process() {
+    private void process(File outputFile) {
         parseTree = parser.program();
         codeGenerator = new CodeGenerator();
-        codeGenerator.process((WACCParser.ProgramContext) parseTree);
+        codeGenerator.process((WACCParser.ProgramContext) parseTree, outputFile);
     }
 
     public static void main(String[] args) {
@@ -58,7 +59,11 @@ public class WACC {
         try {
             String filePath = args[1];
             WACC wacc = new WACC(filePath);
-            wacc.process();
+
+            String[] filePathParts = filePath.split("\\\\|\\.|/");
+            String outputFilePath = filePathParts[filePathParts.length-2] + ".s";
+            File outputFile = new File(outputFilePath);
+            wacc.process(outputFile);
         } catch (Exception e) {
             e.printStackTrace();
         }

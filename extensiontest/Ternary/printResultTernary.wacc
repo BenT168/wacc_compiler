@@ -1,0 +1,10 @@
+# Program
+
+# Output
+# a
+
+begin
+  bool test = false ;
+  char letter = test == false ? 'a' : 'b' ;
+  println letter
+end

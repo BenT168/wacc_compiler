@@ -7,9 +7,9 @@ package message;
  */
 public interface MessageSender {
 
-    public void addMessageObserver(MessageObserver observer);
+    void addMessageObserver(MessageObserver observer);
 
-    public void removeMessageObserver(MessageObserver observer);
+    void removeMessageObserver(MessageObserver observer);
 
-    public void sendMessage(Message message);
+    void sendMessage(Message message);
 }

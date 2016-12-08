@@ -4,6 +4,7 @@ import backend.Register;
 import backend.TokSeq;
 import backend.tokens.move.MovRegToken;
 import frontend.expressions.ExprNode;
+import frontend.statements.ex_listObject;
 import frontend.type.BaseType;
 import frontend.type.ListType;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -11,14 +12,19 @@ import symboltable.SymbolTable;
 
 import java.util.LinkedList;
 
-public class NewList extends Assignable {
+public class ex_NewList extends Assignable {
 
-    private LinkedList<ExprNode> elems;
     private BaseType type;
-    private final int LIST_SIZE = 4;
+    private ex_listObject listObject;
+    private final int MEMORY_SIZE = 1000;
 
-    public NewList(BaseType type) {
+    public ex_NewList(BaseType type, ex_listObject listObject) {
+        this.listObject = listObject;
         this.type = type;
+    }
+
+    public ex_listObject getListObject() {
+        return listObject;
     }
 
     @Override
@@ -33,7 +39,7 @@ public class NewList extends Assignable {
 
     @Override
     public TokSeq assemblyCodeGenerating(Register dest) {
-        TokSeq firstAlloc = mallocSequence(2, LIST_SIZE);
+        TokSeq firstAlloc = mallocSequence(1, MEMORY_SIZE);
         MovRegToken movReg1 = new MovRegToken(dest, Register.R0);
         firstAlloc
                 .append(movReg1);
