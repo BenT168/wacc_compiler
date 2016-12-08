@@ -88,13 +88,18 @@ public class RegisterAllocator implements Allocator {
         Map<Integer, Set<Variable>> currentInSets = new LinkedHashMap<>();
         Map<Integer, Set<Variable>> currentOutSets = new LinkedHashMap<>();
 
+        // Sort keys in ascending order
+        List<Integer> sortedNodes = new ArrayList<>(cfgGraph.keySet());
+        sortedNodes.sort((node1, node2) -> node2 - node1);
+
         do {
-            for (Integer node : cfgGraph.keySet()) {
+            for (int i = sortedNodes.size()-1; i >= 0; i--) {
+                Integer node = sortedNodes.get(i);
                 currentInSets.put(node, liveInSets.get(node));
                 currentOutSets.put(node, liveOutSets.get(node));
 
-                Set<Variable> newInSet = getLiveInSet(node, cfg);
                 Set<Variable> newOutSet = getLiveOutSet(node, cfg);
+                Set<Variable> newInSet = getLiveInSet(node, cfg);
                 liveInSets.put(node, newInSet);
                 liveOutSets.put(node, newOutSet);
             }

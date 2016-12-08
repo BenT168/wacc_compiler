@@ -5,8 +5,10 @@ import backend.data.*;
 import backend.label.Label;
 import org.antlr.v4.runtime.misc.NotNull;
 
+import java.io.File;
+
 public interface CodeGeneratorInterface {
-    void process(@NotNull WACCParser.ProgramContext ctx);
+    void process(@NotNull WACCParser.ProgramContext ctx, File outputFile);
 
     Operand buildOperand(String input);
 

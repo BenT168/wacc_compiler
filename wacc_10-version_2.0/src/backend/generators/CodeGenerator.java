@@ -9,7 +9,6 @@ import backend.data.*;
 import backend.label.Label;
 import backend.label.NumberedLabelFactory;
 import backend.label.PredefinedLabelFactory;
-import backend.register.ControlFlowGraph;
 import backend.register.InstructionMap;
 import backend.register.Register;
 import backend.register.RegisterAllocator;
@@ -32,6 +31,7 @@ import static util.Utils.matchesVarSyntax;
 public class CodeGenerator extends Backend implements CodeGeneratorInterface {
 
     // Static fields: only visible in 'CodeGenerator' class.
+    private static String outputFileName;
     private static PrintWriter assemblyFile;
     private final static List<Instruction> instructions = new ArrayList<>();
 
@@ -68,14 +68,15 @@ public class CodeGenerator extends Backend implements CodeGeneratorInterface {
     }
 
     @Override
-    public void process(@NotNull WACCParser.ProgramContext ctx) {
+    public void process(@NotNull WACCParser.ProgramContext ctx, File outputFile) {
         long startTime = System.nanoTime();
 
         // Open assembly file for writing.
         // 'PrintWriter' is acts as a decorator for 'PrintStream'; it is useful
         // for writing output as characters rather than bytes.
         try {
-            assemblyFile = new PrintWriter(new PrintStream(new File("tmp.s")));
+            assemblyFile = new PrintWriter(new PrintStream(outputFile));
+            outputFileName = outputFile.getName();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -88,7 +89,6 @@ public class CodeGenerator extends Backend implements CodeGeneratorInterface {
             instructionMap.putIfAbsent(currentLabel, currentInstructionBlock);
         }
 
-        // TEMPORARY TESTING CODE
         RegisterAllocator regAllocator = new RegisterAllocator();
 
         Map<Variable, Register> nodeRegMap = regAllocator.allocate(instructionMap);
@@ -116,16 +116,16 @@ public class CodeGenerator extends Backend implements CodeGeneratorInterface {
             List<Operand> operands = i.getOperands();
             List<Operand> updatedOperands = new ArrayList<>();
 
-            for (Operand oper : operands) {
-                String operandText = oper.toString();
-                String rawVarText = oper.getPreBuildText();
+            for (Operand operand : operands) {
+                String operandText = operand.toString();
+                String rawVarText = operand.getPreBuildText();
 
                 if (matchesVarSyntax(rawVarText)) {
                     String registerText = stringRegisterMap.get(rawVarText).toString();
                     operandText = operandText.replaceAll(rawVarText, registerText);
-                    oper.setOperandText(operandText);
+                    operand.setOperandText(operandText);
                 }
-                updatedOperands.add(oper);
+                updatedOperands.add(operand);
             }
             i.setOperands(updatedOperands);
         }
@@ -160,7 +160,7 @@ public class CodeGenerator extends Backend implements CodeGeneratorInterface {
     void prefix_emit(Set<Map.Entry<Label, List<Instruction>>> entries) {
         PrintWriter prefixAssemblyFile;
         try {
-            prefixAssemblyFile = new PrintWriter(new PrintStream(new File("tmp1.s")));
+            prefixAssemblyFile = new PrintWriter(new PrintStream(new File("tmp.s")));
             prefixAssemblyFile.println(Directive.DATA + "\n");
 
             for (Map.Entry<Label, List<Instruction>> entry : entries) {
@@ -178,8 +178,8 @@ public class CodeGenerator extends Backend implements CodeGeneratorInterface {
             prefixAssemblyFile.flush();
             prefixAssemblyFile.close();
 
-            FileOutputStream fos = new FileOutputStream("tmp1.s", true);
-            Path path = Paths.get("tmp.s");
+            FileOutputStream fos = new FileOutputStream("tmp.s", true);
+            Path path = Paths.get(outputFileName);
             Files.copy(path, fos);
             fos.close();
         } catch (IOException e) {

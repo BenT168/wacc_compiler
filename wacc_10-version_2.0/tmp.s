@@ -1,40 +1,268 @@
+.data
+
+
+.text
+
+.global main
 main:
 		PUSH {lr}
-		LDR t0, =1
-		LDR t1, =msg_00
-		BL p_print_ln
-		B L00
-L01:
-		LDR t2, t0
-		BL p_print_ln
-		LDR t4, t0
-		LDR t5, =1
-		ADD t3, t4, t5
-		LDR t0, t3
-L00:
-		LDR t7, t0
-		LDR t8, =10
-		CMP t7, t8
-		MOVLE t6, #1
-		MOVGT t6, #0
-		CMP t6, #1
-		BEQ L01
+		LDR t0, =0
+		LDR t1, =1
+		LDR t2, =2
+		LDR t3, =3
+		LDR t4, =4
+		LDR t5, =5
+		LDR t6, =6
+		LDR t7, =7
+		LDR t8, =8
+		LDR t9, =9
+		LDR t10, =10
+		LDR t11, =11
+		LDR t12, =12
+		LDR t13, =13
+		LDR t14, =14
+		LDR t15, =15
+		LDR t16, =16
+		LDR t17, =17
+		LDR t18, =18
+		LDR t19, =19
+		LDR t20, =20
+		LDR t21, =21
+		LDR t22, =22
+		LDR t23, =23
+		LDR t24, =24
+		LDR t25, =25
+		LDR t26, =26
+		LDR t27, =27
+		LDR t28, =28
+		LDR t29, =29
+		LDR t30, =30
+		LDR t31, =31
+		LDR t32, =32
+		LDR t33, =33
+		LDR t34, =34
+		LDR t35, =35
+		LDR t36, =36
+		LDR t37, =37
+		LDR t38, =38
+		LDR t39, =39
+		LDR t40, =40
+		LDR t41, =41
+		LDR t42, =42
+		LDR t43, =43
+		LDR t44, =44
+		LDR t45, =45
+		LDR t46, =46
+		LDR t47, =47
+		LDR t48, =48
+		LDR t49, =49
+		LDR t50, =50
+		LDR t51, =51
+		LDR t52, =52
+		LDR t53, =53
+		LDR t54, =54
+		LDR t55, =55
+		LDR t56, =56
+		LDR t57, =57
+		LDR t58, =58
+		LDR t59, =59
+		LDR t60, =60
+		LDR t61, =61
+		LDR t62, =62
+		LDR t63, =63
+		LDR t64, =64
+		LDR t65, =65
+		LDR t66, =66
+		LDR t67, =67
+		LDR t68, =68
+		LDR t69, =69
+		LDR t70, =70
+		LDR t71, =71
+		LDR t72, =72
+		LDR t73, =73
+		LDR t74, =74
+		LDR t75, =75
+		LDR t76, =76
+		LDR t77, =77
+		LDR t78, =78
+		LDR t79, =79
+		LDR t80, =80
+		LDR t81, =81
+		LDR t82, =82
+		LDR t83, =83
+		LDR t84, =84
+		LDR t85, =85
+		LDR t86, =86
+		LDR t87, =87
+		LDR t88, =88
+		LDR t89, =89
+		LDR t90, =90
+		LDR t91, =91
+		LDR t92, =92
+		LDR t93, =93
+		LDR t94, =94
+		LDR t95, =95
+		LDR t96, =96
+		LDR t97, =97
+		LDR t98, =98
+		LDR t99, =99
+		LDR t100, =100
+		LDR t101, =101
+		LDR t102, =102
+		LDR t103, =103
+		LDR t104, =104
+		LDR t105, =105
+		LDR t106, =106
+		LDR t107, =107
+		LDR t108, =108
+		LDR t109, =109
+		LDR t110, =110
+		LDR t111, =111
+		LDR t112, =112
+		LDR t113, =113
+		LDR t114, =114
+		LDR t115, =115
+		LDR t116, =116
+		LDR t117, =117
+		LDR t118, =118
+		LDR t119, =119
+		LDR t120, =120
+		LDR t121, =121
+		LDR t122, =122
+		LDR t123, =123
+		LDR t124, =124
+		LDR t125, =125
+		LDR t126, =126
+		LDR t127, =127
+		LDR t128, =128
+		LDR t129, =129
+		LDR t130, =130
+		LDR t131, =131
+		LDR t132, =132
+		LDR t133, =133
+		LDR t134, =134
+		LDR t135, =135
+		LDR t136, =136
+		LDR t137, =137
+		LDR t138, =138
+		LDR t139, =139
+		LDR t140, =140
+		LDR t141, =141
+		LDR t142, =142
+		LDR t143, =143
+		LDR t144, =144
+		LDR t145, =145
+		LDR t146, =146
+		LDR t147, =147
+		LDR t148, =148
+		LDR t149, =149
+		LDR t150, =150
+		LDR t151, =151
+		LDR t152, =152
+		LDR t153, =153
+		LDR t154, =154
+		LDR t155, =155
+		LDR t156, =156
+		LDR t157, =157
+		LDR t158, =158
+		LDR t159, =159
+		LDR t160, =160
+		LDR t161, =161
+		LDR t162, =162
+		LDR t163, =163
+		LDR t164, =164
+		LDR t165, =165
+		LDR t166, =166
+		LDR t167, =167
+		LDR t168, =168
+		LDR t169, =169
+		LDR t170, =170
+		LDR t171, =171
+		LDR t172, =172
+		LDR t173, =173
+		LDR t174, =174
+		LDR t175, =175
+		LDR t176, =176
+		LDR t177, =177
+		LDR t178, =178
+		LDR t179, =179
+		LDR t180, =180
+		LDR t181, =181
+		LDR t182, =182
+		LDR t183, =183
+		LDR t184, =184
+		LDR t185, =185
+		LDR t186, =186
+		LDR t187, =187
+		LDR t188, =188
+		LDR t189, =189
+		LDR t190, =190
+		LDR t191, =191
+		LDR t192, =192
+		LDR t193, =193
+		LDR t194, =194
+		LDR t195, =195
+		LDR t196, =196
+		LDR t197, =197
+		LDR t198, =198
+		LDR t199, =199
+		LDR t200, =200
+		LDR t201, =201
+		LDR t202, =202
+		LDR t203, =203
+		LDR t204, =204
+		LDR t205, =205
+		LDR t206, =206
+		LDR t207, =207
+		LDR t208, =208
+		LDR t209, =209
+		LDR t210, =210
+		LDR t211, =211
+		LDR t212, =212
+		LDR t213, =213
+		LDR t214, =214
+		LDR t215, =215
+		LDR t216, =216
+		LDR t217, =217
+		LDR t218, =218
+		LDR t219, =219
+		LDR t220, =220
+		LDR t221, =221
+		LDR t222, =222
+		LDR t223, =223
+		LDR t224, =224
+		LDR t225, =225
+		LDR t226, =226
+		LDR t227, =227
+		LDR t228, =228
+		LDR t229, =229
+		LDR t230, =230
+		LDR t231, =231
+		LDR t232, =232
+		LDR t233, =233
+		LDR t234, =234
+		LDR t235, =235
+		LDR t236, =236
+		LDR t237, =237
+		LDR t238, =238
+		LDR t239, =239
+		LDR t240, =240
+		LDR t241, =241
+		LDR t242, =242
+		LDR t243, =243
+		LDR t244, =244
+		LDR t245, =245
+		LDR t246, =246
+		LDR t247, =247
+		LDR t248, =248
+		LDR t249, =249
+		LDR t250, =250
+		LDR t251, =251
+		LDR t252, =252
+		LDR t253, =253
+		LDR t254, =254
+		LDR t255, =255
+		LDR t256, =256
 		LDR r0, 0
 		POP {pc}
 .ltorg
-p_print_ln:
-		PUSH {lr}
-		LDR t9, =msg_01
-		ADD t9, t9, #4
-		BL puts
-		MOV t9, #0
-		BL fflush
-		POP {pc}
-p_print_ln:
-		PUSH {lr}
-		LDR t10, =msg_02
-		ADD t10, t10, #4
-		BL puts
-		MOV t10, #0
-		BL fflush
-		POP {pc}
