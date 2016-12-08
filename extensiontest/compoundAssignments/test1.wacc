@@ -1,0 +1,8 @@
+# Program
+
+begin
+  int i = 3 ;
+  println i ;
+  i += 2 ;
+  println i
+end

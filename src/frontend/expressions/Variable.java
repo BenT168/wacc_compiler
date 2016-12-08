@@ -2,7 +2,11 @@ package frontend.expressions;
 
 import backend.StackPos;
 import backend.TokSeq;
+import frontend.assignments.ex_NewList;
 import frontend.exception.SemanticErrorException;
+import frontend.statements.ex_listObject;
+import frontend.statements.ex_mapObject;
+import frontend.type.ListType;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import symboltable.SymbolTable;
@@ -18,9 +22,34 @@ public class Variable extends ExprNode implements AssignLHS {
 	protected BaseType type;
 	protected StackPos position;
 
+
+	//Only used if declareNode is a list
+	private ex_listObject listObject;
+
+	//Only used if declareNode is a map
+	private ex_mapObject mapObject;
+
 	public Variable(BaseType type, String ident) {
 		this.ident = ident;
 		this.type = type;
+	}
+
+	//If variable is a listObject
+	public void updateListObject(ex_listObject listObject) {
+		this.listObject = listObject;
+	}
+
+	public ex_listObject getListObject() {
+		return listObject;
+	}
+
+	//If variable is a mapObject
+	public void updateMapObject(ex_mapObject mapObject) {
+		this.mapObject = mapObject;
+	}
+
+	public ex_mapObject getMapObject() {
+		return mapObject;
 	}
 
 	@Override
@@ -69,7 +98,5 @@ public class Variable extends ExprNode implements AssignLHS {
 		return new TokSeq(
 				new AddImmToken(dest, position.getBaseReg(), position.getStackIndex()));
 	}
-
-
 
 }

@@ -31,7 +31,9 @@ stat    : SKIP							    # skip
         | FOR stat SEMI_COLON expr SEMI_COLON expr DO stat DONE # forLoop
         | BEGIN stat END 					# begin
         | stat SEMI_COLON stat 				# multipleStat
-        | ident ADD expr                    # addElem
+        | ident ADD expr                    # addElemList
+        | ident ADD expr expr               # addElemMap
+        | condAssign                        # conditionalOps
         | BREAK                             # break
         | CONTINUE                          # continues
         ;
@@ -104,22 +106,28 @@ expr    : (NOT | MINUS | LEN | ORD | CHR) expr
         // binary boolean expressions
         | expr AND expr
         | expr OR expr
-        | expr PLUSEQUAL expr
-        | expr MINUSEQUAL expr
         // atomic expressions
         | OPEN_PARENTHESES expr CLOSE_PARENTHESES
+        //Ternary expression
+        | expr TERNARY expr COLON expr
         // expression literals
         | (intLiter | boolLiter | charLiter | stringLiter | pairLiter | ident | arrayElem | listElem )
         | (binLiter | hexLiter | octLiter )
         ;
 
 
+condAssign : ident PLUSEQUAL expr
+           | ident MINUSEQUAL expr
+           ;
+
 arrayElem
         : ident (OPEN_SQUARE expr CLOSE_SQUARE)+ ;
 
 listElem
-        : ident GET OPEN_PARENTHESES expr CLOSE_PARENTHESES ;
+        : ident GETLIST OPEN_PARENTHESES expr CLOSE_PARENTHESES ;
 
+mapElem
+        : ident GETMAP OPEN_PARENTHESES expr CLOSE_PARENTHESES ;
 
 intLiter: (PLUS | MINUS) INTEGER
         | INTEGER

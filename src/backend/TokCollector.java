@@ -6,14 +6,16 @@ public class TokCollector {
 	private TokSeq bottom;
 	
 	private RegAlloc allocator;
-	
+
+	/* constructor */
 	public TokCollector(TokSeq progToken) {
 		this.top = new TokSeq().setUnique();
 		this.body = progToken;
 		this.bottom = new TokSeq().setUnique();
 		this.allocator = new RegAlloc();
 	}
-	
+
+	/* returns token sequence of all tokens appended */
 	public TokSeq collect() {
 		
 		for (Token t:body) {
@@ -27,7 +29,9 @@ public class TokCollector {
 		
 		return finalSequence;
 	}
-	
+
+	/* includes top string into token sequence passed as argument
+	 * every assembly program needs this top string */
 	private static void wrapTopSequence(TokSeq top) {
 		top.prepend(new Token() {
 			@Override

@@ -13,7 +13,7 @@ public class ListType extends BaseType {
 
     private BaseType baseType;
 
-    protected final int VAR_SIZE = 4;
+    protected final int MEMORY_SIZE = 1000;
 
     public ListType(BaseType baseType) {
         this.baseType = baseType;
@@ -53,12 +53,12 @@ public class ListType extends BaseType {
 
     @Override
     public Token passAsArg(Register r) {
-        return  new StorePreIndexToken(Register.sp, r, -VAR_SIZE  );
+        return  new StorePreIndexToken(Register.sp, r, -MEMORY_SIZE  );
     }
 
     @Override
     public int getVarSize() {
-        return VAR_SIZE;
+        return MEMORY_SIZE;
     }
 
     @Override
