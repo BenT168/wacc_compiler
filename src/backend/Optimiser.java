@@ -15,7 +15,8 @@ public class Optimiser {
         this.code = code;
         analyse();
         removeRedundant();
-        return code;
+        updateCode();
+        return this.code;
     }
 
     /* analyses assembly code to separate and store instructions into hashmap */
@@ -67,6 +68,17 @@ public class Optimiser {
             }
         }
         return false;
+    }
+
+    private void updateCode() {
+        Iterator<Map.Entry<String, String>> it = instructions.entrySet().iterator();
+        code = "";
+        while (it.hasNext()) {
+            Map.Entry<String, String> current = it.next();
+            code = code.concat(current.getKey());
+            code = code.concat(current.getValue());
+            code = code.concat("\n");
+        }
     }
 
     public static final Optimiser optimiser = new Optimiser() {
