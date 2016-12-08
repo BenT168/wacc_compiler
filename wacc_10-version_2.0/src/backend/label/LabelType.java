@@ -17,6 +17,7 @@ public enum LabelType {
     CHECK_DIVIDE_BY_ZERO("p_check_divide_by_zero"),
     _SPECIAL_MOD("__aeabi_idivmod"),
     PRINT_INT("p_print_int"),
+    PRINT_BOOL("p_print_bool"),
     READ_CHAR("p_read_char"),
     READ_INT("p_read_int"),
     THROW_RUNTIME_ERROR("p_throw_runtime_error"),
@@ -24,6 +25,9 @@ public enum LabelType {
     PUTS("puts"),
     F_FLUSH("fflush"),
     EXIT("exit"),
+    FREE("free"),
+    PRINT_F("printf"),
+    PUT_CHAR("putchar"),
     // Function label
     FUNCTION_LABEL("");
 

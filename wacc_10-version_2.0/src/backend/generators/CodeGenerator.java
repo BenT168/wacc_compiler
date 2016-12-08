@@ -7,6 +7,7 @@ import backend.LocalStack;
 import backend.LocalVariables;
 import backend.data.*;
 import backend.label.Label;
+import backend.label.LabelType;
 import backend.label.NumberedLabelFactory;
 import backend.label.PredefinedLabelFactory;
 import backend.register.InstructionMap;
@@ -31,7 +32,9 @@ import static util.Utils.matchesVarSyntax;
 public class CodeGenerator extends Backend implements CodeGeneratorInterface {
 
     // Static fields: only visible in 'CodeGenerator' class.
-    private static String outputFileName;
+    private static String outputFileName = "tmp1.s";
+    private static String tempFileName = "tmp.s";
+    private static String finalFileOutputName;
     private static PrintWriter assemblyFile;
     private final static List<Instruction> instructions = new ArrayList<>();
 
@@ -75,8 +78,8 @@ public class CodeGenerator extends Backend implements CodeGeneratorInterface {
         // 'PrintWriter' is acts as a decorator for 'PrintStream'; it is useful
         // for writing output as characters rather than bytes.
         try {
-            assemblyFile = new PrintWriter(new PrintStream(outputFile));
-            outputFileName = outputFile.getName();
+            assemblyFile = new PrintWriter(new PrintStream(new File(tempFileName)));
+            finalFileOutputName = outputFile.getName();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -129,16 +132,42 @@ public class CodeGenerator extends Backend implements CodeGeneratorInterface {
             }
             i.setOperands(updatedOperands);
         }
-        // Testing
-        Set<Label> labels = instructionMap.keySet();
-        for (Label l : labels) {
-            List<Instruction> instructions = instructionMap.get(l);
-            System.out.println(l.toString());
-            for (Instruction i : instructions) {
-                System.out.println("\t" + i.toString());
+
+        try {
+            Set<Label> labels                         = instructionMap.keySet();
+            PrintWriter finalAssemblyFile             = new PrintWriter(new PrintStream(new File(finalFileOutputName)));
+            Map<Label, List<Instruction>> dataSegment = codegenInfo.getDataSegment();
+
+            finalAssemblyFile.println(Directive.DATA + "\n");
+
+            for (Map.Entry<Label, List<Instruction>> entry : dataSegment.entrySet()) {
+                Label dataLabel = entry.getKey();
+                List<Instruction> instructionList = entry.getValue();
+                finalAssemblyFile.print(dataLabel.toString() + ":");
+
+                for (Instruction i : instructionList) {
+                    finalAssemblyFile.println("\t" + i.toString());
+                }
             }
+            finalAssemblyFile.println("\n" + Directive.TEXT);
+            finalAssemblyFile.println("\n" + Directive.GLOBAL + " main");
+
+            for (Label label : labels) {
+                List<Instruction> instructionList2 = instructionMap.get(label);
+                finalAssemblyFile.println(label.toString() + ":");
+                for (Instruction i : instructionList2) {
+                    finalAssemblyFile.println("\t" + i.toString());
+                }
+                if (label.getLabelType().equals(LabelType.MAIN_FUNCTION_LABEL)) {
+                    finalAssemblyFile.println("\t\t" + Directive.LTORG);
+                }
+            }
+
+            finalAssemblyFile.flush();
+            finalAssemblyFile.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
-        // End
 
         // Close assembly file.
         assemblyFile.close();
@@ -160,7 +189,7 @@ public class CodeGenerator extends Backend implements CodeGeneratorInterface {
     void prefix_emit(Set<Map.Entry<Label, List<Instruction>>> entries) {
         PrintWriter prefixAssemblyFile;
         try {
-            prefixAssemblyFile = new PrintWriter(new PrintStream(new File("tmp.s")));
+            prefixAssemblyFile = new PrintWriter(new PrintStream(new File(outputFileName)));
             prefixAssemblyFile.println(Directive.DATA + "\n");
 
             for (Map.Entry<Label, List<Instruction>> entry : entries) {
@@ -178,8 +207,8 @@ public class CodeGenerator extends Backend implements CodeGeneratorInterface {
             prefixAssemblyFile.flush();
             prefixAssemblyFile.close();
 
-            FileOutputStream fos = new FileOutputStream("tmp.s", true);
-            Path path = Paths.get(outputFileName);
+            FileOutputStream fos = new FileOutputStream(outputFileName, true);
+            Path path = Paths.get(tempFileName);
             Files.copy(path, fos);
             fos.close();
         } catch (IOException e) {

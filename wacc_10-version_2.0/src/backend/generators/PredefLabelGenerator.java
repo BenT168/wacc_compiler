@@ -57,10 +57,10 @@ class PredefLabelGenerator extends CodeGenerator {
 
         // Instruction 3
         Label msg_label1    = nLabelFactory.createLabel(LabelType.MESSAGE_LABEL);
-        String asciiMessage = "NullReferenceError: attempt to dereference a null reference\n\0";
-        int wordSize        = asciiMessage.length();
+        String asciiMessage = PredefData.NUL_REF_ERROR.toString();
+        int wordSize        = asciiMessage.length()-3;
 
-        List<Instruction> msg_instructions = generateMsgLabelCode(wordSize, asciiMessage);
+        List<Instruction> msg_instructions = buildMsgLabelCode(wordSize, asciiMessage);
         codegenInfo.addToDataSegment(msg_label1, msg_instructions);
 
         operand2       = buildOperand(msg_label1.toString(), OperandType.DATA_TRANSFER_OPERAND);
@@ -88,7 +88,7 @@ class PredefLabelGenerator extends CodeGenerator {
         emit(buildInstruction(OpCode.POP, operand1));
     }
 
-    private List<Instruction> generateMsgLabelCode(final int wordSize, final String asciiMessage) {
+    private List<Instruction> buildMsgLabelCode(final int wordSize, final String asciiMessage) {
         List<Instruction> instructions = new ArrayList<>();
 
         Operand operand1 = buildOperand(String.valueOf(wordSize));
@@ -102,11 +102,128 @@ class PredefLabelGenerator extends CodeGenerator {
     }
 
     void generateFreePair() {
-        
+        emitLabel(pLabelFactory.createLabel(LabelType.FREE_PAIR));
+
+        // Instruction 1
+        generatePushLRCode();
+
+        // Instruction 2
+        Register register = Register.R0_REG;
+        Operand operand1  = buildOperand(register.toString());
+        Operand operand2  = buildOperand(String.valueOf(0), OperandType.IMM_OPERAND);
+        Instruction i2    = buildInstruction(OpCode.CMP, operand1, operand2);
+        emit(i2);
+
+        // Instruction 3
+        Label msg_label1                   = nLabelFactory.createLabel(LabelType.MESSAGE_LABEL);
+        String asciiMessage                = PredefData.NUL_REF_ERROR.toString();
+        int wordSize                       = asciiMessage.length()-3;
+        List<Instruction> msg_instructions = buildMsgLabelCode(wordSize, asciiMessage);
+        codegenInfo.addToDataSegment(msg_label1, msg_instructions);
+
+        operand2 = buildOperand(msg_label1.toString(), OperandType.DATA_TRANSFER_OPERAND);
+        i2 = buildInstruction(OpCode.LDREQ, operand1, operand2);
+        emit(i2);
+
+        // Instruction 4
+        Label branchLabel = pLabelFactory.createLabel(LabelType.THROW_RUNTIME_ERROR);
+        i2 = buildInstruction(OpCode.BEQ, branchLabel);
+        emit(i2);
+
+        // Instruction 5
+        operand2 = buildOperand(register.toString(), OperandType.STACK_OPERAND);
+        i2 = buildInstruction(OpCode.PUSH, operand2);
+        emit(i2);
+
+        // Instruction 6
+        operand2 = buildOperand(register.toString(), OperandType.MEM_ADDR_OPERAND);
+        i2 = buildInstruction(OpCode.LDR, operand1, operand2);
+        emit(i2);
+
+        // Instruction 7
+        branchLabel = pLabelFactory.createLabel(LabelType.FREE);
+        Instruction i7 = buildInstruction(OpCode.BL, branchLabel);
+        emit(i7);
+
+        // Instruction 8
+        operand2 = buildOperand(Register.SP_REG.toString(), OperandType.MEM_ADDR_OPERAND);
+        i2 = buildInstruction(OpCode.LDR, operand1, operand2);
+        emit(i2);
+
+        // Instruction 9
+        operand2 = buildOperand(Register.R0_REG.toString(), 4, true);
+        i2 = buildInstruction(OpCode.LDR, operand1, operand2);
+        emit(i2);
+
+        // Instruction 10
+        emit(i7);
+
+        // Instruction 11
+        operand2 = buildOperand(Register.R0_REG.toString(), OperandType.STACK_OPERAND);
+        i2 = buildInstruction(OpCode.POP, operand2);
+        emit(i2);
+
+        // Instruction 12
+        emit(i7);
+
+        // Instruction 13
+        generatePopPCCode();
     }
 
     void generatePrintString() {
-        
+        emitLabel(pLabelFactory.createLabel(LabelType.PRINT_STRING));
+
+        // Instruction 1
+        generatePushLRCode();
+
+        // Instruction 2
+        Register register = Register.R0_REG;
+        Operand operand1  = buildOperand(Register.R1_REG.toString());
+        Operand operand2  = buildOperand(register.toString(), OperandType.MEM_ADDR_OPERAND);
+        Instruction i2    = buildInstruction(OpCode.LDR, operand1, operand2);
+        emit(i2);
+
+        // Instruction 3
+        operand1 = buildOperand(Register.R2_REG.toString());
+        operand2 = buildOperand(register.toString());
+        Operand operand3 = buildOperand(String.valueOf(4), OperandType.IMM_OPERAND);
+        i2 = buildInstruction(OpCode.ADD, operand1, operand2, operand3);
+        emit(i2);
+
+        // Instruction 4
+        Label msg_label1 = nLabelFactory.createLabel(LabelType.MESSAGE_LABEL);
+        String asciiMessage = PredefData.STRING_MSG.toString();
+        int wordSize = asciiMessage.length()-3;
+
+        List<Instruction> msg_instructions = buildMsgLabelCode(wordSize, asciiMessage);
+        codegenInfo.addToDataSegment(msg_label1, msg_instructions);
+
+        operand1 = operand2;
+        operand2 = buildOperand(msg_label1.toString(), OperandType.DATA_TRANSFER_OPERAND);
+        i2 = buildInstruction(OpCode.LDR, operand1, operand2);
+        emit(i2);
+
+        // Instruction 5
+        i2 = buildInstruction(OpCode.ADD, operand1, operand1, operand3);
+        emit(i2);
+
+        // Instruction 6
+        Label branchLabel = pLabelFactory.createLabel(LabelType.PRINT_F);
+        i2 = buildInstruction(OpCode.BL, branchLabel);
+        emit(i2);
+
+        // Instruction 7
+        operand2 = buildOperand(String.valueOf(0), OperandType.IMM_OPERAND);
+        i2 = buildInstruction(OpCode.MOV, operand1, operand2);
+        emit(i2);
+
+        // Instruction 8
+        branchLabel = pLabelFactory.createLabel(LabelType.F_FLUSH);
+        i2 = buildInstruction(OpCode.BL, branchLabel);
+        emit(i2);
+
+        // Instruction 9
+        generatePopPCCode();
     }
 
     void generatePrintLine() {
@@ -118,17 +235,17 @@ class PredefLabelGenerator extends CodeGenerator {
         generatePushLRCode();
 
         // Instruction 2
-        Variable v1      = newVarFactory.createNewVar();
-        Label msg_label1 = nLabelFactory.createLabel(LabelType.MESSAGE_LABEL);
+        Register register = Register.R0_REG;
+        Label msg_label1  = nLabelFactory.createLabel(LabelType.MESSAGE_LABEL);
 
         // Data for nul-byte terminator
         String asciiMessage = PredefData.NUL_BYTE.toString();
-        int wordSize        = asciiMessage.length();
+        int wordSize        = asciiMessage.length()-3;
 
-        List<Instruction> msg_instructions = generateMsgLabelCode(wordSize, asciiMessage);
+        List<Instruction> msg_instructions = buildMsgLabelCode(wordSize, asciiMessage);
         codegenInfo.addToDataSegment(msg_label1, msg_instructions);
 
-        Operand operand1  = buildOperand(v1.toString());
+        Operand operand1  = buildOperand(register.toString());
         Operand operand2  = buildOperand(msg_label1.toString(), OperandType.DATA_TRANSFER_OPERAND);
         Instruction i2    = buildInstruction(OpCode.LDR, operand1, operand2);
         emit(i2);
@@ -164,7 +281,58 @@ class PredefLabelGenerator extends CodeGenerator {
     }
 
     void generatePrintInt() {
-        
+
+        Label label = pLabelFactory.createLabel(LabelType.PRINT_INT);
+        emitLabel(label);
+
+        // Instruction 1
+        generatePushLRCode();
+
+        // Instruction 2
+        Register register = Register.R0_REG;
+        Label msg_label1  = nLabelFactory.createLabel(LabelType.MESSAGE_LABEL);
+
+        Operand operand1 = buildOperand(Register.R1_REG.toString());
+        Operand operand2 = buildOperand(register.toString());
+        Instruction i2 = buildInstruction(OpCode.MOV, operand1, operand2);
+        emit(i2);
+
+        // Data for nul-byte terminator
+        String asciiMessage = PredefData.INT_MSG.toString();
+        int wordSize        = asciiMessage.length();
+
+        List<Instruction> msg_instructions = buildMsgLabelCode(wordSize, asciiMessage);
+        codegenInfo.addToDataSegment(msg_label1, msg_instructions);
+
+        operand1 = operand2;
+        operand2 = buildOperand(msg_label1.toString(), OperandType.DATA_TRANSFER_OPERAND);
+         i2 = buildInstruction(OpCode.LDR, operand1, operand2);
+        emit(i2);
+
+        // Instruction 3
+        int bytesCount   = 4;
+        Operand operand3 = buildOperand(String.valueOf(bytesCount), OperandType.IMM_OPERAND);
+        Instruction i3   = buildInstruction(OpCode.ADD, operand1, operand1, operand3);
+        emit(i3);
+
+        // Instruction 4
+        Label branchLabel = pLabelFactory.createLabel(LabelType.PRINT_F);
+        Instruction i4    = buildInstruction(OpCode.BL, branchLabel);
+        emit(i4);
+
+        // Instruction 5
+        int systemCode = 0;
+        operand2       = buildOperand(String.valueOf(systemCode), OperandType.IMM_OPERAND);
+        Instruction i5 = buildInstruction(OpCode.MOV, operand1, operand2);
+        emit(i5);
+
+        // Instruction 6
+        branchLabel    = pLabelFactory.createLabel(LabelType.F_FLUSH);
+        Instruction i6 = buildInstruction(OpCode.BL, branchLabel);
+        emit(i6);
+
+        // Instruction 7
+        generatePopPCCode();
     }
 
     void generateReadChar() {

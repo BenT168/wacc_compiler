@@ -9,6 +9,7 @@ import backend.register.Register;
 import backend.symtab.Attribute;
 import frontend.TypeCheckVisitor;
 import frontend.type.Type;
+import org.antlr.v4.runtime.atn.SemanticContext;
 import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.ArrayList;
@@ -77,11 +78,11 @@ class StatementGenerator extends CodeGenerator {
             Operand operand2    = buildOperand(place.toString());
 
             if (isWrite) {
-                // LDR stored, place
-                instruction = buildInstruction(OpCode.LDR, operand1, operand2);
+                // MOV stored, place
+                instruction = buildInstruction(OpCode.MOV, operand1, operand2);
             } else {
-                // LDR place, stored
-                instruction = buildInstruction(OpCode.LDR, operand2, operand1);
+                // MOV place, stored
+                instruction = buildInstruction(OpCode.MOV, operand2, operand1);
             }
             emit(instruction);
         } else if (ctx.arrayElem() != null) {
@@ -143,7 +144,7 @@ class StatementGenerator extends CodeGenerator {
         emit(branchInstr);
 
         Operand operand1 = buildOperand(Register.SP_REG.toString());
-        Operand operand3 = buildOperand(String.valueOf(stackSpaceUsed));
+        Operand operand3 = buildOperand(String.valueOf(stackSpaceUsed), OperandType.IMM_OPERAND);
         Instruction i2   = buildInstruction(OpCode.ADD, operand1, operand1, operand3);
         emit(i2);
 
@@ -178,11 +179,11 @@ class StatementGenerator extends CodeGenerator {
         Attribute attribute = symTabStack.getFirst().get(identifier);
         Variable stored     = attribute.getVariable();
 
-        // Load into new variable, address of pair; 'LDR v1 stored'
+        // Load into new variable, address of pair; 'MOV v1 stored'
         Variable v1      = newVarFactory.createNewVar();
         Operand operand1 = buildOperand(v1.toString());
         Operand operand2 = buildOperand(stored.toString());
-        Instruction i1   = buildInstruction(OpCode.LDR, operand1, operand2);
+        Instruction i1   = buildInstruction(OpCode.MOV, operand1, operand2);
         emit(i1);
 
         // Check null pointer
@@ -239,7 +240,7 @@ class StatementGenerator extends CodeGenerator {
         Attribute attribute    = symTabStack.getFirst().get(arrayIdentifier);
         Variable arrayVar      = attribute.getVariable();
 
-        OpCode opCode            = OpCode.LDR;
+        OpCode opCode            = OpCode.MOV;
         Operand arrayElemOperand = buildOperand(place.toString());
         Operand arrayVarOperand  = buildOperand(arrayVar.toString());
         Instruction i1           = buildInstruction(opCode, arrayElemOperand, arrayVarOperand);
@@ -297,8 +298,6 @@ class StatementGenerator extends CodeGenerator {
     }
 
     private void newPairGenerator(@NotNull WACCParser.AssignRHSContext ctx, Variable place) {
-        List<Instruction> block = new ArrayList<>();
-        
         int mallocSize = 8;
 
         Operand operand1 = buildOperand(Register.R0_REG.toString());
@@ -365,7 +364,6 @@ class StatementGenerator extends CodeGenerator {
     }
 
     private void arrayLiterGenerator(WACCParser.ArrayLiterContext ctx, Variable place) {
-        List<Instruction> block = new ArrayList<>();
         // 4 extra bytes for storing length
         int mallocSize = ctx.expr().size()*4 + 4;
 
@@ -440,7 +438,20 @@ class StatementGenerator extends CodeGenerator {
 
     @Override
     public CodegenInfo visitFree(@NotNull WACCParser.FreeContext ctx) {
-        return super.visitFree(ctx);
+        Variable place = newVarFactory.createNewVar();
+        ExpressionGenerator expressionGenerator = new ExpressionGenerator(this);
+        expressionGenerator.generate(ctx.expr(), place);
+
+        Operand operand1 = buildOperand(Register.R0_REG.toString());
+        Operand operand2 = buildOperand(place.toString());
+        Instruction i1   = buildInstruction(OpCode.MOV, operand1, operand2);
+        emit(i1);
+
+        Label label = pLabelFactory.createLabel(LabelType.FREE_PAIR);
+        Instruction i2 = buildInstruction(OpCode.BL, label);
+        emit(i2);
+
+        return codegenInfo;
     }
 
     @Override
@@ -485,13 +496,69 @@ class StatementGenerator extends CodeGenerator {
         ExpressionGenerator expressionGenerator = new ExpressionGenerator(this);
         expressionGenerator.generate(ctx.expr(), place);
 
-        Label targetLabel = pLabelFactory.createLabel(LabelType.PRINT_STRING);
-        codegenInfo.addPredefLabelRef(targetLabel);
-
-        Instruction i1 = buildInstruction(OpCode.BL, targetLabel);
-        emit(i1);
+        generatePreLongBranchCode(place);
+        generatePrintLabelCode(ctx.expr());
 
         return codegenInfo;
+    }
+
+    private void generatePrintLabelCode(@NotNull WACCParser.ExprContext ctx) {
+        Instruction instruction;
+        Label targetLabel = pLabelFactory.createLabel(LabelType.PRINT_STRING);
+
+        if ((ctx.expr().size() == 2 && isBinaryExprContext(ctx)) || (ctx.intLiter() != null)) {
+            targetLabel = pLabelFactory.createLabel(LabelType.PRINT_INT);
+        } else if (isUnaryExprContext(ctx)) {
+        } else if (ctx.charLiter() != null) {
+            targetLabel = pLabelFactory.createLabel(LabelType.PUT_CHAR);
+        } else if (ctx.boolLiter() != null) {
+            targetLabel = pLabelFactory.createLabel(LabelType.PRINT_BOOL);
+        }
+        codegenInfo.addPredefLabelRef(targetLabel);
+        instruction = buildInstruction(OpCode.BL, targetLabel);
+        emit(instruction);
+    }
+
+    private boolean isBinaryExprContext(@NotNull WACCParser.ExprContext ctx) {
+        try {
+            return ctx.PLUS() != null
+                    || ctx.DIV() != null
+                    || ctx.MINUS().size() == 1 // since '--' is the unary decrement operator.
+                    || ctx.MUL() != null
+                    || ctx.GREATER() != null
+                    || ctx.GREATER_EQUAL() != null
+                    || ctx.LESS() != null
+                    || ctx.LESS_EQUAL() != null
+                    || ctx.DOUBLE_EQUALS() != null
+                    || ctx.NOT_EQUAL() != null
+                    || ctx.OR() != null
+                    || ctx.AND() != null;
+        } catch (NullPointerException e) {
+            System.err.println("This should never happen!\n" +
+                    "Threw null pointer exception in method 'isBinaryExprContext" +
+                    "(WACCParser.ExprContext)'");
+            return false;
+        }
+    }
+
+    private boolean isUnaryExprContext(@NotNull WACCParser.ExprContext ctx) {
+        try {
+            return (ctx.CHR() != null
+                    || ctx.LEN() != null
+                    || ctx.NOT() != null
+                    || ctx.ORD() != null
+                    || ctx.MINUS().size() == 2); // Since '-' is the binary subtraction operator,
+            // and '--' is the unary decrement operator.
+        } catch (NullPointerException e) {
+            return false;
+        }
+    }
+
+    private void generatePreLongBranchCode(Variable place) {
+        Operand operand1 = buildOperand(Register.R0_REG.toString());
+        Operand operand2 = buildOperand(place.toString());
+        Instruction i1 = buildInstruction(OpCode.MOV, operand1, operand2);
+        emit(i1);
     }
 
     @Override
@@ -500,11 +567,14 @@ class StatementGenerator extends CodeGenerator {
         ExpressionGenerator expressionGenerator = new ExpressionGenerator(this);
         expressionGenerator.generate(ctx.expr(), place);
 
+        generatePreLongBranchCode(place);
+        generatePrintLabelCode(ctx.expr());
+
         Label targetLabel = pLabelFactory.createLabel(LabelType.PRINT_LINE);
         codegenInfo.addPredefLabelRef(targetLabel);
 
-        Instruction i1 = buildInstruction(OpCode.BL, targetLabel);
-        emit(i1);
+        Instruction i2 = buildInstruction(OpCode.BL, targetLabel);
+        emit(i2);
 
         return codegenInfo;
     }

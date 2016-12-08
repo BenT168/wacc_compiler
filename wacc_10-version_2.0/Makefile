@@ -3,7 +3,7 @@
 
 ANTLR_DIR	:= antlr
 SOURCE_DIR	:= src
-OUTPUT_DIR	:= bin
+OUTPUT_DIR	:= bin 
 
 # Tools
 
@@ -13,7 +13,7 @@ RM	:= rm -rf
 MKDIR	:= mkdir -p
 JAVA	:= java
 JAVAC	:= javac
-DEPENDENCIES := lib/xstream-1.4.7.jar:lib/antlr-4.4-complete.jar:lib/commons-cli-1.2.jar
+DEPENDENCIES := lib/antlr-4.4-complete.jar
 
 JFLAGS	:= -sourcepath $(SOURCE_DIR) -d $(OUTPUT_DIR) -cp $(DEPENDENCIES)
 
@@ -23,7 +23,7 @@ all: rules
 
 # runs the antlr build script then attempts to compile all .java files within src
 rules:
-	cd $(ANTLR_DIR) && ./$(ANTLR)
+	cd $(ANTLR_DIR) && ./$(ANTLR) 
 	$(FIND) $(SOURCE_DIR) -name '*.java' > $@
 	$(MKDIR) $(OUTPUT_DIR)
 	$(JAVAC) $(JFLAGS) @$@
@@ -32,3 +32,5 @@ rules:
 clean:
 	$(RM) rules $(OUTPUT_DIR)
 	$(RM) *.s
+
+
