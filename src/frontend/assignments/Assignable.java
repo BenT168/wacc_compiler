@@ -8,7 +8,10 @@ import frontend.Tree;
 
 public abstract class Assignable extends Tree {
 
-	TokSeq mallocSequence(int size, int varSize) {
+	/*
+	Method returns the token sequence of the instructions of loading and mallocing
+	 */
+	 TokSeq mallocSequence(int size, int varSize) {
 		LoadToken loadT = new LoadToken(Register.R0, Integer.toString(size*varSize));
 		BranchLinkToken bl = new BranchLinkToken("malloc");
 		return new TokSeq(loadT, bl);

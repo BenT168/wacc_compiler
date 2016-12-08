@@ -16,7 +16,7 @@ import symboltable.SymbolTable;
 
 public class ex_CompoundAssignNode extends StatNode {
 
-    //i += i -=
+    // Of the form : i += i -=
 
     private ExprNode variable;
     private BinaryOperators operator ;
@@ -29,6 +29,9 @@ public class ex_CompoundAssignNode extends StatNode {
         this.intLiter = intLiter;
     }
 
+    /*
+    Method checks that compound assign takes the correct types
+     */
     @Override
     public boolean check(SymbolTable st, ParserRuleContext ctx) {
         if (!operator.check(variable, intLiter)) {
@@ -36,6 +39,9 @@ public class ex_CompoundAssignNode extends StatNode {
         } return true;
     }
 
+    /*
+    Method generates ARM assembly code for compound assign
+     */
     @Override
     public TokSeq assemblyCodeGenerating(Register r) {
         TokSeq exprs = intLiter.assemblyCodeGenerating(r);
@@ -46,7 +52,4 @@ public class ex_CompoundAssignNode extends StatNode {
         return exprs;
     }
 
-    public static boolean isADoubleOperator() {
-        return isADoubleOperator();
-    }
 }

@@ -15,6 +15,9 @@ public class ex_OctLeaf extends ExprNode {
         this.value = trim(val);
     }
 
+    /*
+    Method cuts the Ob0 of oct value
+     */
     public static String trim(String val) {
         String res = (val.charAt(0) == '0' && val.charAt(1) == 'o')?
                 val.replaceFirst("0o*", "")
@@ -33,11 +36,17 @@ public class ex_OctLeaf extends ExprNode {
         return value;
     }
 
+    /*
+    Method returns Oct type
+     */
     @Override
     public BaseType getType() {
         return BaseType.OCT;
     }
 
+    /*
+    Method generates ARM code for oct value
+     */
     @Override
     public TokSeq assemblyCodeGenerating(Register r) {
         return new TokSeq( new LoadToken(r, value) );

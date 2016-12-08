@@ -24,16 +24,21 @@ public class ex_AddElemMapNode extends StatNode {
         this.value = value;
     }
 
+    /*
+    Method checks that addElem takes a mapType
+     */
     @Override
     public boolean check(SymbolTable st, ParserRuleContext ctx) {
         WACCParser.AddElemMapContext addctx = (WACCParser.AddElemMapContext) ctx;
         BaseType type = st.get(addctx.ident().getText()).getType();
         MapType mType;
+        // Check type is map type
         if(type instanceof MapType) {
             mType = (MapType) type;
         } else {
             throw new SemanticErrorException("Cannot perform addList to variable that is not a List Type");
         }
+        // Check that both maps are equal
         MapType mapType = new MapType(key.getType(), value.getType());
         if (mapType.isCompatible(mType)) {
             return true;
@@ -42,6 +47,9 @@ public class ex_AddElemMapNode extends StatNode {
                 + " does not match type of list: " + type.toString());
     }
 
+    /*
+    Method generates ARM assembly code for addelem
+     */
     @Override
     public TokSeq assemblyCodeGenerating(Register register) {
         TokSeq tokSeq = new TokSeq();

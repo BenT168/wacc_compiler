@@ -37,6 +37,7 @@ public abstract class BinaryOperators {
 	 * 2 - lhs and rhs must be of equal type, which must be either INT or CHAR (>=, >, <, <=)
 	 * 3 - always correct (== and !=)
 	 * 4 - lhs and rhs must be BOOL (&& and ||)
+	 * 5 - lhs must be a int variable and rhs must be an int (Double BinOps)
 	 */
 
 	// 1:

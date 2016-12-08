@@ -28,6 +28,9 @@ public class ex_ListElem extends ExprNode implements  AssignLHS {
         this.var = var;
     }
 
+    /*
+     Method checks that expr type is an int
+     */
     @Override
     public boolean check(SymbolTable st, ParserRuleContext ctx ) {
         if(!(expr.getType() == BaseType.INT)) {
@@ -36,6 +39,9 @@ public class ex_ListElem extends ExprNode implements  AssignLHS {
         return true;
     }
 
+    /*
+    Method returns list type of type
+     */
     @Override
     public BaseType getType() {
         BaseType type = listType;
@@ -43,6 +49,9 @@ public class ex_ListElem extends ExprNode implements  AssignLHS {
         return type;
     }
 
+    /*
+    Method generates ARM code for a list elem
+     */
     @Override
     public TokSeq assemblyCodeStoring(Register dest) {
         return listElemCommonAssembly(dest.getNext())
@@ -50,6 +59,9 @@ public class ex_ListElem extends ExprNode implements  AssignLHS {
     }
 
 
+    /*
+    Methods used for generating ARM code
+     */
     public TokSeq assemblyCodeGenerating(Register dest) {
         TokSeq out = new TokSeq();
         TokSeq listAccess = listElemCommonAssembly(dest);
@@ -61,14 +73,17 @@ public class ex_ListElem extends ExprNode implements  AssignLHS {
         return out;
     }
 
+    /* private Method which takes the bulk of generating ARM code
+     */
     private TokSeq listElemCommonAssembly(Register dest) {
         int posOnStack = var.getPosition().getStackIndex();
-
+        //Creates token sequence to add instructions
         TokSeq out = new TokSeq();
 
         AddImmToken addTok = new AddImmToken(dest, Register.sp, Integer.toString(posOnStack));
         out.append(addTok);
 
+        //Generate ARM code for expr
         TokSeq exprSeq = expr.assemblyCodeGenerating(dest.getNext());
         exprSeq.appendAll( new TokSeq(
                 new LoadAddressToken(dest, dest),
@@ -76,6 +91,7 @@ public class ex_ListElem extends ExprNode implements  AssignLHS {
                 new MovRegToken(Register.R1, dest),
                 new AddImmToken(dest, dest, Integer.toString(4))));
 
+        //Check that expr is an int
         if(listType.getBaseType().getVarSize() == BaseType.INT.getVarSize()) {
             exprSeq.append(new AddToken(dest, dest, dest.getNext(), "LSL #2"));
         } else {
@@ -84,19 +100,6 @@ public class ex_ListElem extends ExprNode implements  AssignLHS {
         out.appendAll(exprSeq);
 
         return out;
-    }
-
-
-    public String getIdent() {
-        return var.getIdent();
-    }
-
-    @Override
-    public int weight() {
-        int max = 0;
-        int exprWeight = expr.weight();
-        max = exprWeight > max ? exprWeight : max;
-        return max;
     }
 
     @Override
@@ -109,5 +112,23 @@ public class ex_ListElem extends ExprNode implements  AssignLHS {
                 new AddToken(dest, dest, dest.getNext()));
         return seq;
     }
+
+
+    public String getIdent() {
+        return var.getIdent();
+    }
+
+    /*
+    Methods returns max weight of expr
+     */
+    @Override
+    public int weight() {
+        int max = 0;
+        int exprWeight = expr.weight();
+        max = exprWeight > max ? exprWeight : max;
+        return max;
+    }
+
+
 
 }

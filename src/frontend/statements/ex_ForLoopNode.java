@@ -33,6 +33,9 @@ public class ex_ForLoopNode extends StatNode {
         this.loopBody = loopBody;
     }
 
+    /*
+    Method checks that loop conds are the correct types
+     */
     @Override
     public boolean check(SymbolTable st, ParserRuleContext ctx) {
         //loopCondOne should be a declaration
@@ -47,19 +50,27 @@ public class ex_ForLoopNode extends StatNode {
         return false;
     }
 
+    /*
+    Method returns value of inLoop
+     */
     public static boolean isInLoopAssembler() {
         return inLoop;
     }
 
-
+    /*
+    Method for generating ARM assemble code for for loop
+     */
     @Override
     public TokSeq assemblyCodeGenerating(Register register) {
         inLoop = true;
         TokSeq forLoopStat = new TokSeq();
+        // generate code for declare node of loop cond
         forLoopStat.appendAll(loopCondOne.assemblyCodeGenerating(register));
         String loop = "loop" + Labeller.counter.getLabel();
         forLoopStat.appendAll(new LabelToken(loop));
+        // generate code for loop body
         forLoopStat.appendAll(loopBody.assemblyCodeGenerating(register));
+        // generate code for the rest of the loop cond
         forLoopStat.appendAll(loopCondTwo.assemblyCodeGenerating(register.getNext().getNext()));
         forLoopStat.appendAll(loopCondThree.assemblyCodeGenerating(register));
         forLoopStat.appendAll(new TokSeq(new CompareToken(register, register.getNext().getNext())));
@@ -67,6 +78,9 @@ public class ex_ForLoopNode extends StatNode {
         return forLoopStat;
     }
 
+    /*
+    Method returns the branch cond depending on value activated in binary expr
+     */
     private String branchCond() {
         if(BinaryExpr.inLoopLTE) {
             return "LE";

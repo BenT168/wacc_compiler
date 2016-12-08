@@ -27,6 +27,9 @@ public class ArrayLiter extends Assignable {
 		}
 	}
 
+	/*
+	Method that checks that the types of all the exprnode in elems matches the basetype
+	 */
 	@Override
 	public boolean check(SymbolTable st, ParserRuleContext ctx) {
 		//Iterates through array  and checks all elements are of the same type (i.e. baseType)
@@ -38,12 +41,18 @@ public class ArrayLiter extends Assignable {
 		return true;
 	}
 
+	/*
+	Method returns an array type of the basetype
+	 */
 	@Override
 	public BaseType getType() {
 		//Base Type might be null if empty array
 		return new ArrayType(baseType);
 	}
 
+	/*
+	Method that generates the ARM assembly of the array liter
+	 */
 	@Override
 	public TokSeq assemblyCodeGenerating(Register dest) {
 		int arrayLength = elems.size();
@@ -64,15 +73,10 @@ public class ArrayLiter extends Assignable {
 
 			count++;
 		}
-
 		//store the arraySize
 		LoadToken loadSize = new LoadToken(dest.getNext(), Integer.toString(arrayLength));
 		StoreToken storeSize = new StoreToken(dest, dest.getNext());
-
-		allocateArray
-		.append(loadSize)
-		.append(storeSize);
-
+		allocateArray.append(loadSize).append(storeSize);
 		return allocateArray;
 	}
 

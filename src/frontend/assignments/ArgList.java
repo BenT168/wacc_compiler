@@ -16,21 +16,31 @@ import java.util.Iterator;
 
 
 public class ArgList extends Tree implements Iterable<ExprNode>{
-	Deque<ExprNode> args;
+
+	private Deque<ExprNode> args;
 
 	public ArgList() {
 		this.args = new ArrayDeque<>();
 	}
 
+
+	/*
+	Adding exprnode to arglist
+	*/
 	public void add(ExprNode expr) {
 		args.add(expr);
 	}
 
+	/*
+	Method returns arglist size
+	 */
 	public int size() {
 		return args.size();
 	}
 
-	//For comparisons during function calls
+	/*
+	For comparisons during function calls
+	 */
 	public boolean compareToParamList(ParamList params) {
 		Iterator<ExprNode> argIter = iterator();
 		Iterator<Param> paramIter = params.iterator();
@@ -44,26 +54,34 @@ public class ArgList extends Tree implements Iterable<ExprNode>{
 		return true;
 	}
 
+
+	/*
+	Method checks that the types of the arg lists are the same
+	 */
 	@Override
 	public boolean equals(Object other) {
-		//Checks that types of arg lists are the same
+		//Checks that the arg list is actually of type ArgList
 		if(!(other instanceof ArgList))
 			return false;
 
+		//Checks that arg lists are the same size
 		ArgList aln = (ArgList) other;
 		if(aln.size() != args.size())
 			return false;
 
+		//Iterates through list of exprnode and checks the type
 		Iterator<ExprNode> iter = aln.iterator();
 		for (ExprNode e1:this) {
 			ExprNode e2 = iter.next();
 			if (!e1.getType().isCompatible(e2.getType()))
 				return false;
 		}
-
 		return true;
 	}
 
+	/*
+	Methods to generate Iterators for arglist
+	 */
 	@Override
 	public Iterator<ExprNode> iterator() {
 		return args.iterator();
@@ -73,16 +91,25 @@ public class ArgList extends Tree implements Iterable<ExprNode>{
 		return args.descendingIterator();
 	}
 
+	/*
+	Method should never be called on arg list
+	 */
 	@Override
 	public boolean check(SymbolTable st, ParserRuleContext ctx) {
 		return true;
 	}
 
+	/*
+	Arglist has no type
+	 */
 	@Override
 	public BaseType getType() {
 		throw new UnsupportedOperationException("ArgList has no type.");
 	}
 
+	/*
+	Arglist should not generate code for ARM
+	 */
 	@Override
 	public TokSeq assemblyCodeGenerating(Register register) {
 		throw new UnsupportedOperationException(

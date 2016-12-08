@@ -29,6 +29,9 @@ public class ex_MapElem extends ExprNode implements AssignLHS {
         this.var = var;
     }
 
+    /*
+     Method checks that expr type is an int
+     */
     @Override
     public boolean check(SymbolTable st, ParserRuleContext ctx ) {
         if(!(expr.getType() == BaseType.INT)) {
@@ -37,23 +40,29 @@ public class ex_MapElem extends ExprNode implements AssignLHS {
         return true;
     }
 
-
     @Override
     public BaseType getType() {
       return null;
     }
 
-
+    /*
+    Method Returns type of key
+     */
     public BaseType getKey() {
         return mapType.getKey();
     }
 
+    /*
+    Method Returns type of value
+     */
     public BaseType getValue() {
         return mapType.getValue();
     }
 
 
-
+    /*
+     Method generates ARM code for a map elem
+     */
     @Override
     public TokSeq assemblyCodeStoring(Register dest) {
         return mapElemCommonAssembly(dest.getNext())
@@ -63,6 +72,9 @@ public class ex_MapElem extends ExprNode implements AssignLHS {
     }
 
 
+    /*
+    Methods used for generating ARM code
+     */
     public TokSeq assemblyCodeGenerating(Register dest) {
         TokSeq out = new TokSeq();
         TokSeq mapAccess = mapElemCommonAssembly(dest);
@@ -77,16 +89,18 @@ public class ex_MapElem extends ExprNode implements AssignLHS {
         return out;
     }
 
+    /* private Method which takes the bulk of generating ARM code
+    */
     private TokSeq mapElemCommonAssembly(Register dest) {
         int posOnStack = var.getPosition().getStackIndex();
-
+        //Creates token sequence to add instructions
         TokSeq out = new TokSeq();
 
         AddImmToken addTok = new AddImmToken(dest, Register.sp, Integer.toString(posOnStack));
         out.append(addTok);
 
+        //Generate ARM code for expr
         TokSeq exprSeq = expr.assemblyCodeGenerating(dest.getNext());
-
         exprSeq.appendAll( new TokSeq(
                 new LoadAddressToken(dest, dest),
                 new MovRegToken(Register.R0, dest.getNext()),
@@ -94,9 +108,11 @@ public class ex_MapElem extends ExprNode implements AssignLHS {
                 new CheckArrayBoundsToken(),
                 new AddImmToken(dest, dest, Integer.toString(4))));
 
+        //Check that key is an int
         if(mapType.getKey().getVarSize() == BaseType.INT.getVarSize()) {
             exprSeq.append(new AddToken(dest, dest, dest.getNext(), "LSL #2"));
         }
+        //Check that value is an int
         if(mapType.getValue().getVarSize() == BaseType.INT.getVarSize()) {
             exprSeq.append(new AddToken(dest, dest, dest.getNext(), "LSL #2"));
         } else if(getKey().getVarSize() != BaseType.INT.getVarSize() &&
@@ -106,6 +122,17 @@ public class ex_MapElem extends ExprNode implements AssignLHS {
         out.appendAll(exprSeq);
 
         return out;
+    }
+
+    @Override
+    public TokSeq loadAddr(Register dest) {
+        TokSeq seq = var.assemblyCodeGenerating(dest);
+        TokSeq mapIndex = expr.assemblyCodeGenerating(dest.getNext());
+        seq.appendAll(mapIndex);
+        seq.appendAll(
+                new LoadAddressToken(dest, dest),
+                new AddToken(dest, dest, dest.getNext()));
+        return seq;
     }
 
 
@@ -121,15 +148,5 @@ public class ex_MapElem extends ExprNode implements AssignLHS {
         return max;
     }
 
-    @Override
-    public TokSeq loadAddr(Register dest) {
-        TokSeq seq = var.assemblyCodeGenerating(dest);
-        TokSeq mapIndex = expr.assemblyCodeGenerating(dest.getNext());
-        seq.appendAll(mapIndex);
-        seq.appendAll(
-                new LoadAddressToken(dest, dest),
-                new AddToken(dest, dest, dest.getNext()));
-        return seq;
-    }
 
 }

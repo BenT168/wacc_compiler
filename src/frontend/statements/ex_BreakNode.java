@@ -15,6 +15,9 @@ public class ex_BreakNode extends StatNode {
     public ex_BreakNode() {
     }
 
+    /*
+    Method that generates the ARM assembler for break
+     */
     @Override
     public TokSeq assemblyCodeGenerating(Register r) {
         TokSeq breakStat = new TokSeq();

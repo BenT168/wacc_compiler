@@ -23,6 +23,9 @@ public class ex_NewList extends Assignable {
         this.type = type;
     }
 
+    /*
+    Method returns list object
+     */
     public ex_listObject getListObject() {
         return listObject;
     }
@@ -32,11 +35,17 @@ public class ex_NewList extends Assignable {
         return true;
     }
 
+    /*
+    Method returns list type of type
+    */
     @Override
     public BaseType getType() {
         return new ListType(type);
     }
 
+    /*
+    Method generates ARM code for a new list declaration
+    */
     @Override
     public TokSeq assemblyCodeGenerating(Register dest) {
         TokSeq firstAlloc = mallocSequence(1, MEMORY_SIZE);

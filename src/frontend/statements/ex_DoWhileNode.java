@@ -27,6 +27,9 @@ public class ex_DoWhileNode extends StatNode {
         this.loopBody = stat;
     }
 
+    /*
+    Method checks that loop cond is a boolean
+     */
     @Override
     public boolean check(SymbolTable st, ParserRuleContext ctx) {
         if (loopCond.getType() == BaseType.BOOL) {
@@ -36,15 +39,20 @@ public class ex_DoWhileNode extends StatNode {
         }
     }
 
+    /*
+    Method for generating ARM code for do while
+     */
     public TokSeq assemblyCodeGenerating(Register register) {
         String l0 = "l" + Labeller.counter.getLabel();
         String l1 = "l" + Labeller.counter.getLabel();
         TokSeq doWhileStat = new TokSeq(
                 new LabelToken(l1));
         checkBreak(register);
+        // generate code for loop body
         doWhileStat.appendAll(loopBody.assemblyCodeGenerating(register));
         doWhileStat.append(
                 new LabelToken(l0));
+        // generate code for loop cond
         doWhileStat.appendAll(loopCond.assemblyCodeGenerating(register));
         doWhileStat.appendAll(new TokSeq(
                 new CompareToken(register, "#1"),

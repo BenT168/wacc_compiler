@@ -15,6 +15,9 @@ public class ex_BinLeaf extends ExprNode {
         this.value = trim(val);
     }
 
+    /*
+    Method cuts the Ob0 of bin value
+     */
     public static String trim(String val) {
         String res = (val.charAt(0) == '0' && val.charAt(1) == 'b')?
                 val.replaceFirst("0b*", "")
@@ -33,11 +36,17 @@ public class ex_BinLeaf extends ExprNode {
         return value;
     }
 
+    /*
+    Method returns binary type
+   */
     @Override
     public BaseType getType() {
         return BaseType.BIN;
     }
 
+    /*
+    Method generates ARM code for binary value
+     */
     @Override
     public TokSeq assemblyCodeGenerating(Register r) {
         return new TokSeq( new LoadToken(r, value) );

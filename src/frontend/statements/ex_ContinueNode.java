@@ -15,6 +15,9 @@ public class ex_ContinueNode extends StatNode {
     public ex_ContinueNode() {
     }
 
+    /*
+    Method for generating ARM code for continue
+     */
     @Override
     public TokSeq assemblyCodeGenerating(Register register) {
         TokSeq contStat = new TokSeq();

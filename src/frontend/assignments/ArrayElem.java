@@ -19,9 +19,9 @@ import java.util.ArrayList;
 
 public class ArrayElem extends ExprNode implements AssignLHS {
 
-	Variable var;
-	ArrayList<ExprNode> locations;
-	ArrayType arrayType;
+	private Variable var;
+	private ArrayList<ExprNode> locations;
+	private ArrayType arrayType;
 
 	public ArrayElem(ArrayList<ExprNode> locations, Variable var) {
 		this.locations = locations;
@@ -29,6 +29,9 @@ public class ArrayElem extends ExprNode implements AssignLHS {
 		this.var = var;
 	}
 
+	/*
+	Method checks that each exprnode is of type int
+	 */
 	@Override
 	public boolean check( SymbolTable st, ParserRuleContext ctx ) {
 		for(ExprNode pos : locations) {
@@ -37,10 +40,12 @@ public class ArrayElem extends ExprNode implements AssignLHS {
 				return false;
 			}
 		}
-
 		return true;
 	}
 
+	/*
+	Returns the array type of the exprNode
+	 */
 	@Override
 	public BaseType getType() {
 		BaseType type = arrayType;
@@ -50,6 +55,9 @@ public class ArrayElem extends ExprNode implements AssignLHS {
 		return type;
 	}
 
+	/*
+	Methods that generate the assembly code for the array
+	 */
 	@Override
 	public TokSeq assemblyCodeStoring(Register dest) {
 		return arrayElemCommonAssembly(dest.getNext())
@@ -57,6 +65,7 @@ public class ArrayElem extends ExprNode implements AssignLHS {
 	}
 
 
+	@Override
 	public TokSeq assemblyCodeGenerating(Register dest) {
 		TokSeq out = new TokSeq();
 		TokSeq arrayAccess = arrayElemCommonAssembly(dest);
@@ -64,18 +73,23 @@ public class ArrayElem extends ExprNode implements AssignLHS {
 		out
 		.appendAll(arrayAccess)
 		.append(loadResult);
-
 		return out;
 	}
 
+	/* Private method which loops through the locations and generates the ARM assembly
+	 */
 	private TokSeq arrayElemCommonAssembly(Register dest) {
+		// Get position on stack
 		int posOnStack = var.getPosition().getStackIndex();
 
+		// Creates new token sequence to add instructions to
 		TokSeq out = new TokSeq();
 
+		// Creates space for the array to be stored
 		AddImmToken addTok = new AddImmToken(dest, Register.sp, Integer.toString(posOnStack));
 		out.append(addTok);
 
+		// Loop through locations and gets ARM assembly for each of the exprnode
 		for (ExprNode expr : locations) {
 			TokSeq exprSeq = expr.assemblyCodeGenerating(dest.getNext());
 
@@ -93,15 +107,20 @@ public class ArrayElem extends ExprNode implements AssignLHS {
 			}
 			out.appendAll(exprSeq);
 		}
-
 		return out;
 	}
 
 
+	/*
+	Method to return the variable name
+	 */
 	public String getIdent() {
 		return var.getIdent();
 	}
 
+	/*
+	Method returns max weight of all the exprnode in locations
+	 */
 	@Override
 	public int weight() {
 		int max = 0;
@@ -113,6 +132,9 @@ public class ArrayElem extends ExprNode implements AssignLHS {
 		return max;
 	}
 
+	/*
+	Method returns token sequence for loading and adding instruction
+	 */
 	@Override
 	public TokSeq loadAddr(Register dest) {
 		TokSeq seq = var.assemblyCodeGenerating(dest);

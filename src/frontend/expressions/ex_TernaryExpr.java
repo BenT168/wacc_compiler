@@ -23,6 +23,9 @@ public class ex_TernaryExpr extends ExprNode {
         this.thenExpr = thenExpr;
     }
 
+    /*
+    Method checks that ternary arguments are correctly typed
+     */
     @Override
     public boolean check(SymbolTable st, ParserRuleContext ctx) {
         if (cond.getType() == BaseType.BOOL && (ifExpr.getType() == ifExpr.getType())) {
@@ -33,6 +36,9 @@ public class ex_TernaryExpr extends ExprNode {
         }
     }
 
+    /*
+    Method returns ternary cond type
+     */
     @Override
     public BaseType getType() {
         return ifExpr.getType();
@@ -43,6 +49,9 @@ public class ex_TernaryExpr extends ExprNode {
         return this.cond.weight();
     }
 
+    /*
+    Method for generating code for ternary expr
+     */
     @Override
     public TokSeq assemblyCodeGenerating(Register register) {
         TokSeq ternaryExpr = cond.assemblyCodeGenerating(register);
@@ -51,10 +60,12 @@ public class ex_TernaryExpr extends ExprNode {
         ternaryExpr.appendAll(new TokSeq(
                 new CompareToken(register, "#0"),
                 new BranchToken("EQ", l0)));
+        //generate code for ifExpr
         ternaryExpr.appendAll(ifExpr.assemblyCodeGenerating(register));
         ternaryExpr.appendAll(new TokSeq(
                 new BranchToken(l1),
                 new LabelToken(l0)));
+        //generate code for thenExpr
         ternaryExpr.appendAll(thenExpr.assemblyCodeGenerating(register));
         ternaryExpr.append(new LabelToken(l1));
         return ternaryExpr;

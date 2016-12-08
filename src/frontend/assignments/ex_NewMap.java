@@ -30,11 +30,17 @@ public class ex_NewMap extends Assignable {
         return true;
     }
 
+    /*
+    Method returns map type of type1 and type 2
+     */
     @Override
     public BaseType getType() {
         return new MapType(type1, type2);
     }
 
+    /*
+    Method generates ARM code for a new map declaration
+     */
     @Override
     public TokSeq assemblyCodeGenerating(Register dest) {
         TokSeq firstAlloc = mallocSequence(2, MAP_SIZE);
@@ -44,6 +50,9 @@ public class ex_NewMap extends Assignable {
         return firstAlloc;
     }
 
+    /*
+   Method returns map object
+    */
     public ex_mapObject getMapObject() {
         return mapObject;
     }

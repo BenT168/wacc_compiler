@@ -50,6 +50,7 @@ public class BinaryExpr extends ExprNode {
 
 	@Override
 	public TokSeq assemblyCodeGenerating(Register r) {
+		// Generate code depending if + or *
 		if (operator == BinaryOperators.ADD || operator == BinaryOperators.MUL) {
 			if (lhs.weight() > rhs.weight()) {
 				TokSeq exprs = lhs.assemblyCodeGenerating(r);
@@ -62,10 +63,10 @@ public class BinaryExpr extends ExprNode {
 				exprs.appendAll(operator.apply(r, r.getNext()));
 				return exprs;
 			}
+			// Generate code if a loop cond
 		} else if(ex_ForLoopNode.isInLoopAssembler()) {
 			TokSeq exprs = rhs.assemblyCodeGenerating(r);
 			setForBranchCondInLoop();
-			//exprs.appendAll(operator.apply(r, r.getNext()));
 			return exprs;
 		} else {
 				TokSeq exprs = lhs.assemblyCodeGenerating(r);
@@ -75,6 +76,7 @@ public class BinaryExpr extends ExprNode {
 			}
 	}
 
+	//Sets the branch condition depending on the operator
 	private void setForBranchCondInLoop() {
 		if(operator == BinaryOperators.GRT) {
 			inLoopGT = true;
