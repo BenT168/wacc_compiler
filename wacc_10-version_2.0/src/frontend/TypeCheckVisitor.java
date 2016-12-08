@@ -10,7 +10,6 @@ import frontend.stat.*;
 import frontend.type.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 

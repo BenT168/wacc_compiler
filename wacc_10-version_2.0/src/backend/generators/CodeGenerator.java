@@ -13,11 +13,11 @@ import backend.register.ControlFlowGraph;
 import backend.register.InstructionMap;
 import backend.register.Register;
 import backend.register.RegisterAllocator;
+import backend.symtab.Attribute;
 import main.WACC;
 import message.Message;
 import message.MessageType;
 import org.antlr.v4.runtime.misc.NotNull;
-import org.antlr.v4.runtime.misc.Utils;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -34,16 +34,19 @@ public class CodeGenerator extends Backend implements CodeGeneratorInterface {
     // Static fields: only visible in 'CodeGenerator' class.
     private static PrintWriter assemblyFile;
     private final static List<Instruction> instructions = new ArrayList<>();
+
     // Instructions always written at last label in map.
-    private static Label currentLabel;
-    private static List<Instruction> currentInstructionBlock;
+    static Label currentLabel;
+    private static List<Instruction> currentInstructionBlock = new ArrayList<>();
     private final static InstructionMap<Label, Instruction> instructionMap = new InstructionMap<>();
+
     // Static fields: remain constant across all subclasses.
-    final static CodegenInfo codegenInfo = new CodegenInfo();
-    final static PredefinedLabelFactory pLabelFactory = new PredefinedLabelFactory();
-    final static NumberedLabelFactory nLabelFactory = new NumberedLabelFactory();
-    final static NewVariableFactory newVarFactory = new NewVariableFactory();
-    final static Deque<Map<String, Variable>> symTabStack = new ArrayDeque<>();
+    final static CodegenInfo                   codegenInfo   = new CodegenInfo();
+    final static PredefinedLabelFactory        pLabelFactory = new PredefinedLabelFactory();
+    final static NumberedLabelFactory          nLabelFactory = new NumberedLabelFactory();
+    final static NewVariableFactory            newVarFactory = new NewVariableFactory();
+    final static Deque<Map<String, Attribute>> symTabStack   = new ArrayDeque<>();
+
     // Non-static fields: will be different in subclasses that take this class as a
     // constructor.
     private LocalVariables localVariables;
@@ -86,8 +89,6 @@ public class CodeGenerator extends Backend implements CodeGeneratorInterface {
         }
 
         // TEMPORARY TESTING CODE
-        ControlFlowGraph cfg = new ControlFlowGraph(instructionMap);
-
         RegisterAllocator regAllocator = new RegisterAllocator();
 
         Map<Variable, Register> nodeRegMap = regAllocator.allocate(instructionMap);
@@ -101,30 +102,6 @@ public class CodeGenerator extends Backend implements CodeGeneratorInterface {
                                                           entry -> entry.getValue()
                                                   ));
 
-        List<Map<Integer, Set<Variable>>> livenessSets = regAllocator.getLivenessSets();
-
-        for (Integer node : cfg.getGraph().keySet()) {
-            System.out.println("\nNode: " + String.valueOf(node));
-            for (Integer i : cfg.getGraph().get(node)) {
-                StringBuilder sb = new StringBuilder();
-                sb.append("Successor ").append(String.valueOf(i)).
-                        append(": ").
-                        append(cfg.getInstruction(i).toString());
-                for (Map m : livenessSets) {
-                    sb.append(m.get(i).toString());
-                }
-                sb.append(" Gen Set: ").append(cfg.getGenSet(i)).append(" Kill Set: ").append(cfg.getKillSet(i));
-                System.out.println(sb.toString());
-            }
-        }
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry<Variable, Register> allocation : nodeRegMap.entrySet()) {
-            sb.append(" Variable: ").append(allocation.getKey().toString());
-            sb.append(" Register: ").append(allocation.getValue().toString());
-            System.out.println(sb.toString());
-        }
-        // END
-
         // The flatMap() operation has the effect of applying a one-to-many
         // transformation to the elements of the stream, and then flattening
         // the resulting elements into a new stream.
@@ -134,22 +111,32 @@ public class CodeGenerator extends Backend implements CodeGeneratorInterface {
                                             flatMap(list -> list.stream()).
                                             collect(Collectors.toList());
 
+
         for (Instruction i : allInstructions) {
             List<Operand> operands = i.getOperands();
             List<Operand> updatedOperands = new ArrayList<>();
+
             for (Operand oper : operands) {
                 String operandText = oper.toString();
-                if (matchesVarSyntax(operandText)) {
-                    String registerText = stringRegisterMap.get(operandText).toString();
-                    oper.setOperandText(registerText);
+                String rawVarText = oper.getPreBuildText();
+
+                if (matchesVarSyntax(rawVarText)) {
+                    String registerText = stringRegisterMap.get(rawVarText).toString();
+                    operandText = operandText.replaceAll(rawVarText, registerText);
+                    oper.setOperandText(operandText);
                 }
                 updatedOperands.add(oper);
             }
             i.setOperands(updatedOperands);
         }
         // Testing
-        for (Instruction i : allInstructions) {
-            System.out.println(i.toString());
+        Set<Label> labels = instructionMap.keySet();
+        for (Label l : labels) {
+            List<Instruction> instructions = instructionMap.get(l);
+            System.out.println(l.toString());
+            for (Instruction i : instructions) {
+                System.out.println("\t" + i.toString());
+            }
         }
         // End
 
@@ -221,5 +208,74 @@ public class CodeGenerator extends Backend implements CodeGeneratorInterface {
     void emitDirective(Directive directive) {
         assemblyFile.println(directive.toString());
         assemblyFile.flush();
+    }
+
+    @Override
+    public Operand buildOperand(String input) {
+        return new OperandBuilder().insertStringInput(input).build();
+    }
+
+    @Override
+    public Operand buildOperand(String input, int offset, boolean isOffset) {
+        OperandBuilderInterface builder = new OperandBuilder().insertStringInput(input);
+        Operand operand;
+        if (isOffset) {
+            operand = builder.
+                    insertType(OperandType.MEM_ADDR_WITH_OFFSET_OPERAND).
+                    insertOffset(offset).build();
+        } else {
+            operand = builder.
+                    insertType(OperandType.SHIFT_OPERAND).
+                    insertOffset(offset).build();
+        }
+        return operand;
+    }
+
+    @Override
+    public Operand buildOperand(String input, OperandType type) {
+        return new OperandBuilder().
+                insertStringInput(input).
+                insertType(type).build();
+    }
+
+    @Override
+    public Operand buildOperand(String input, OperandType type, int callOffset) {
+        if (!type.equals(OperandType.CALL_OPERAND)) {
+            System.err.println("Type must be " + OperandType.CALL_OPERAND.toString());
+        }
+        return new OperandBuilder().
+                insertStringInput(input).
+                insertOffset(callOffset).
+                insertType(OperandType.CALL_OPERAND).build();
+    }
+
+    @Override
+    public Instruction buildInstruction(OpCode opCode, Label label) {
+        return new InstructionBuilder().
+                insertOpCode(opCode).
+                insertLabel(label).build();
+    }
+
+    @Override
+    public Instruction buildInstruction(OpCode opCode, Operand... operands) {
+        InstructionBuilderInterface builder = new InstructionBuilder().insertOpCode(opCode);
+
+        for (Operand operand : operands) {
+            builder.insertOperand(operand);
+        }
+        return builder.build();
+    }
+
+    @Override
+    public Instruction buildInstruction(Directive directive, Operand operand) {
+        return new InstructionBuilder().
+                insertDirective(directive).
+                insertOperand(operand).build();
+    }
+
+    @Override
+    public Instruction buildInstruction(Directive directive) {
+        return new InstructionBuilder().
+                insertDirective(directive).build();
     }
 }

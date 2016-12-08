@@ -6,7 +6,7 @@ public enum Register {
     R9_REG("r9"), R10_REG("r10"), R11_REG("r11"), R12_REG("r12"),
     // reserved registers
     R0_REG("r0"), PC_REG("pc"), LR_REG("lr"), SP_REG("sp"), R1_REG("r1"),
-    R2_REG("r2"), R3_REG("r3");
+    R2_REG("r2"), R3_REG("r3"), SPILLED_REG("spilled");
 
 
     private String registerText;

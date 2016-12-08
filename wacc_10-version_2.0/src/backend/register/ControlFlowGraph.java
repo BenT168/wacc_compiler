@@ -6,8 +6,6 @@ import backend.data.Variable;
 import backend.label.Label;
 
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 /**
@@ -46,6 +44,10 @@ public class ControlFlowGraph {
                                            map(instr -> indexer.createIndexedInstuction(instr))).
                                    collect(Collectors.toList());
 
+        // IMPORTANT: Need to reset instruction indexer in order to begin counting
+        // from 0 again.
+        indexer.reset();
+
         for (Label l : instructionMap.keySet()) {
             List<Instruction> instrs = instructionMap.get(l);
             List<IndexedInstruction> indexed_instrs = new ArrayList<>();
@@ -79,8 +81,10 @@ public class ControlFlowGraph {
             assert branchLabel != null;
             Integer branchIndex = indexedInstructionMap.get(branchLabel).get(0).getIndex();
             outEdges.add(branchIndex);
-        } else if (!isPopNode(instr) && index < instructions.size()-1) {
-            // Assuming only pop instruction is POP {pc} at end of function.
+        } else if ((!isPopNode(instr) && index < instructions.size()-1) || (isPopNode(instr) && index < instructions.size()-2)) {
+            // The POP {pc} instruction has no successor only when it its index
+            // is 'instructions.size()-1'; i.e: when it is the last instruction
+            // in the list.
             outEdges.add(index+1);
         }
         graph.put(index, outEdges);

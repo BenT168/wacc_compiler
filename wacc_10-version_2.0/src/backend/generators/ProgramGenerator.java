@@ -5,10 +5,9 @@ import backend.data.*;
 import backend.label.Label;
 import backend.label.LabelType;
 import backend.register.Register;
+import backend.symtab.Attribute;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 class ProgramGenerator extends CodeGenerator {
 
@@ -16,7 +15,10 @@ class ProgramGenerator extends CodeGenerator {
         super(parent);
     }
 
-    void generate(WACCParser.ProgramContext ctx) {
+    public void generate(WACCParser.ProgramContext ctx) {
+        Map<String, Attribute> initialSymTab = new HashMap<>();
+        symTabStack.add(initialSymTab);
+
         generateFunctions(ctx);
         generateMainFunction(ctx);
         generateFooter(ctx);
@@ -24,10 +26,8 @@ class ProgramGenerator extends CodeGenerator {
     }
 
     private void generateHeader(WACCParser.ProgramContext ctx) {
-        // Data Segment code generation
-        Map<Label, List<Instruction>> dataSegment = codegenInfo.getDataSegment();
-        Set<Map.Entry<Label, List<Instruction>>> entries = dataSegment.entrySet();
-        prefix_emit(entries);
+        Map<Label, List<Instruction>> entries = codegenInfo.getDataSegment();
+        prefix_emit(entries.entrySet());
     }
 
     private void generateFunctions(WACCParser.ProgramContext ctx) {
@@ -40,26 +40,26 @@ class ProgramGenerator extends CodeGenerator {
 
         // Instruction: PUSH {lr}
         Register lr = Register.LR_REG;
-        Operand operand1 = new OperandBuilderImpl().
-                insertStringInput(lr.toString()).
-                insertType(OperandType.STACK_OPERAND).build();
-        Instruction i1 = new InstructionBuilderImpl().
-                insertOpCode(OpCode.PUSH).
-                insertOperand(operand1).build();
+        Operand operand1 = buildOperand(lr.toString(), OperandType.STACK_OPERAND);
+        Instruction i1   = buildInstruction(OpCode.PUSH, operand1);
         emit(i1);
 
         StatementGenerator statementGenerator = new StatementGenerator(this);
         statementGenerator.generate(ctx.stat());
 
-        // Instruction: POP {pc}
-        Register pc = Register.PC_REG;
-        operand1 = new OperandBuilderImpl().
-                insertStringInput(pc.toString()).
-                insertType(OperandType.STACK_OPERAND).build();
-        Instruction i2 = new InstructionBuilderImpl().
-                insertOpCode(OpCode.POP).
-                insertOperand(operand1).build();
+        // Instruction: LDR r0, =0
+        int exitCode     = 0;
+        Register r0      = Register.R0_REG;
+        operand1         = buildOperand(r0.toString());
+        Operand operand2 = buildOperand(String.valueOf(exitCode));
+        Instruction i2   = buildInstruction(OpCode.LDR, operand1, operand2);
         emit(i2);
+
+        // Instruction: POP {pc}
+        Register pc    = Register.PC_REG;
+        operand1       = buildOperand(pc.toString(), OperandType.STACK_OPERAND);
+        Instruction i3 = buildInstruction(OpCode.POP, operand1);
+        emit(i3);
 
         emitDirective(Directive.LTORG);
     }
