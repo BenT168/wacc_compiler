@@ -27,7 +27,7 @@ public class Optimiser {
         while (tokens.hasMoreElements()) {
             StringTokenizer pieces = new StringTokenizer(tokens.nextToken(), delims);
             String instr = pieces.nextToken();
-            String ops = " ";
+            String ops = "";
             while (pieces.hasMoreElements()) {
                 ops = ops.concat(pieces.nextToken());
                 }
