@@ -29,8 +29,6 @@ NOT: '!' ;
 LEN: 'len' ;
 ORD: 'ord' ;
 CHR: 'chr' ;
-//PLUSPLUS: '++';
-//MINUSMINUS: '--';
 
 //boolean-literals
 TRUE: 'true' ;
@@ -65,7 +63,7 @@ CLOSE_SQUARE: ']' ;
 //numbers
 fragment DIGIT : '0'..'9' ;
 fragment SIGN : ( PLUS | MINUS );
-INTEGER: SIGN? DIGIT+ ;
+INTEGER: DIGIT+ ;
 
 fragment BINARY : [0-1] ;
 BIN_LITER: '0b' SIGN? BINARY+ ;

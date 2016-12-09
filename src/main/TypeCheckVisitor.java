@@ -556,11 +556,11 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 				return binExpr;
 
 			case 2:
-					// Unary Expression of type `OP expressions`
-					ExprNode expr = (ExprNode) visit(ctx.expr(0));
-					UnaryOperators unaryOp = UnaryOperators.evalUnOp(ctx.getChild(0).getText());
-					UnaryExpr unaryExpr = new UnaryExpr(unaryOp, expr);
-					unaryExpr.check(currentSymbolTable, ctx);
+				// Unary Expression of type `OP expressions`
+				ExprNode expr = (ExprNode) visit(ctx.expr(0));
+				UnaryOperators unaryOp = UnaryOperators.evalUnOp(ctx.getChild(0).getText());
+				UnaryExpr unaryExpr = new UnaryExpr(unaryOp, expr);
+				unaryExpr.check(currentSymbolTable, ctx);
 
 					return unaryExpr;
 			default: // in this case this is a single rule (i.e. int_liter, char_liter)
