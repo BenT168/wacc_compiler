@@ -11,6 +11,9 @@ import java.util.*;
 
 class ProgramGenerator extends CodeGenerator {
 
+    static Set<Label> innerLabelsReferenced = new HashSet<>();
+    private static Set<Label> labelsGenerated = new HashSet<>();
+
     ProgramGenerator(CodeGenerator parent) {
         super(parent);
     }
@@ -71,10 +74,12 @@ class ProgramGenerator extends CodeGenerator {
         // and a list of operands.
         for (Label label : codegenInfo.getPredefinedLabelsReferenced()) {
             generatePredefLabelsCode(label);
+            labelsGenerated.add(label);
         }
+        generateInnerLabelsReferencedCode(innerLabelsReferenced);
     }
 
-    private void generatePredefLabelsCode(Label label) {
+    void generatePredefLabelsCode(Label label) {
         PredefLabelGenerator pGenerator = new PredefLabelGenerator(this);
         switch (label.getLabelType()) {
             case CHECK_ARRAY_BOUNDS:
@@ -110,6 +115,25 @@ class ProgramGenerator extends CodeGenerator {
             case THROW_RUNTIME_ERROR:
                 pGenerator.generateThrowRuntimeError();
                 break;
+        }
+    }
+
+    // Recursive procedure to generate labels that are first referenced within
+    // other pre-defined labels - and ensure we do not generate the same label
+    // and associated code, multiple times. Should work for mutually recursive
+    // label references as well.
+    private void generateInnerLabelsReferencedCode(Set<Label> innerLabelsReferenced) {
+        Iterator<Label> iterator = innerLabelsReferenced.iterator();
+        while (iterator.hasNext()) {
+            Label l = iterator.next();
+            if (!labelsGenerated.contains(l)) {
+                generatePredefLabelsCode(l);
+            }
+            innerLabelsReferenced.remove(l);
+            labelsGenerated.add(l);
+        }
+        if (!innerLabelsReferenced.isEmpty()) {
+            generateInnerLabelsReferencedCode(innerLabelsReferenced);
         }
     }
 }

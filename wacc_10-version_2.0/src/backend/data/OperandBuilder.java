@@ -57,10 +57,11 @@ public class OperandBuilder implements OperandBuilderInterface {
                 operandText = "=" + operandText;
                 break;
             case SHIFT_OPERAND:
-                operandText += " LSL #" + String.valueOf(shiftValue);
+                operandText += ", LSL #" + String.valueOf(shiftValue);
                 break;
             case MEM_ADDR_WITH_OFFSET_OPERAND:
                 operandText = "[" + operandText + ", #" + String.valueOf(offset) + "]";
+                break;
             case CALL_OPERAND:
                 operandText = "[" + operandText + ", #" + String.valueOf(offset) + "]!";
                 break;

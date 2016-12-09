@@ -53,7 +53,7 @@ class FunctionGenerator extends CodeGenerator {
         operand1 = buildOperand(Register.PC_REG.toString(), OperandType.STACK_OPERAND);
         Instruction i2 = buildInstruction(OpCode.POP, operand1);
         emit(i2);
-        emitDirective(Directive.LTORG);
+        emit(Directive.LTORG);
 
         symTabStack.removeFirst();
     }

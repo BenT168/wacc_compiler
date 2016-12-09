@@ -5,9 +5,11 @@ package backend.data;
  */
 public enum PredefData {
     NUL_BYTE("\"\\0\""),
-    NUL_REF_ERROR("\"NullReferenceError: dereference a null reference\n\\0\""),
+    NUL_REF_ERROR("\"NullReferenceError: dereference a null reference\\n\\0\""),
     STRING_MSG("\"%.*s\\0\""),
-    INT_MSG("\"%d\\0\"");
+    INT_MSG("\"%d\\0\""),
+    ARRAY_INDEX_OUT_OF_BOUNDS_NEGATIVE("\"ArrayIndexOutOfBoundsError: negative index\\n\\0\""),
+    ARRAY_INDEX_OUT_OF_BOUNDS_TOO_LARGE("\"ArrayIndexOutOfBoundsError: index too large\\n\\0\"");
 
     private String data;
 

@@ -36,7 +36,7 @@ class ExpressionGenerator extends CodeGenerator {
         } else if (ctx.ident() != null) {
             generateIdent(ctx.ident(), place);
         } else if (ctx.arrayElem() != null) {
-            generateArrayElem(ctx.arrayElem(), place);
+            generateArrayElem(ctx.arrayElem(), place, true);
         } else if (ctx.OPEN_PARENTHESES() != null) {
             generate(ctx.expr(0), place);
         } else {
@@ -44,7 +44,7 @@ class ExpressionGenerator extends CodeGenerator {
         }
     }
 
-    private boolean isBinaryExprContext(@NotNull WACCParser.ExprContext ctx) {
+    static boolean isBinaryExprContext(@NotNull WACCParser.ExprContext ctx) {
         try {
             return ctx.PLUS() != null
                     || ctx.DIV() != null
@@ -66,7 +66,7 @@ class ExpressionGenerator extends CodeGenerator {
         }
     }
 
-    private boolean isUnaryExprContext(@NotNull WACCParser.ExprContext ctx) {
+    static boolean isUnaryExprContext(@NotNull WACCParser.ExprContext ctx) {
         try {
             return (ctx.CHR() != null
                     || ctx.LEN() != null
@@ -179,20 +179,6 @@ class ExpressionGenerator extends CodeGenerator {
 
     private void generateUnaryExpr(@NotNull WACCParser.ExprContext ctx, Variable place) {
         generate(ctx.expr(0), place);
-
-        OpCode opCode;
-        Operand operand1 = buildOperand(place.toString());
-
-        if (ctx.CHR() != null) {
-
-        } else if (ctx.LEN() != null || ctx.MINUS() != null || ctx.ORD() != null) {
-
-        } else if (ctx.NOT() != null) {
-
-        } else {
-            System.err.println("This should never happen!\n" +
-                    "Invalid unary expression: " + ctx.getText());
-        }
     }
 
     /**
@@ -276,7 +262,7 @@ class ExpressionGenerator extends CodeGenerator {
         emit(instruction);
     }
 
-    private void generateArrayElem(@NotNull WACCParser.ArrayElemContext ctx, Variable place) {
+    void generateArrayElem(@NotNull WACCParser.ArrayElemContext ctx, Variable place, boolean isRead) {
         // Load into 'place', the array reference obtained from the symbol table
         // (i.e: the base pointer to the array). Note that the length of the
         // array is stored at [base_pointer] and the first element at [base_pointer, #4]
@@ -311,13 +297,11 @@ class ExpressionGenerator extends CodeGenerator {
 
             // Checking array bounds
 
-            // Load into the array reference, the value at the array reference
-            // Remember, the value at the array reference (i.e: with offset 0)
-            // is the length of the array.
-            OpCode opCode1             = OpCode.LDR;
+            // No need to dereference in order to obtain the address of the array; it is already held in the variable
+            /*OpCode opCode1             = OpCode.LDR;
             Operand arrayRefMemOperand = buildOperand(place.toString(), OperandType.MEM_ADDR_OPERAND);
             Instruction i2             = buildInstruction(opCode1, arrayRefOperand, arrayRefMemOperand);
-            emit(i2);
+            emit(i2);*/
 
             OpCode opCode2         = OpCode.MOV;
             Operand reg_r0_operand = buildOperand(Register.R0_REG.toString());
@@ -329,22 +313,30 @@ class ExpressionGenerator extends CodeGenerator {
             emit(i4);
 
             // Check array bounds: branch instruction
-            Label branchLabel       = pLabelFactory.createLabel(LabelType.CHECK_ARRAY_BOUNDS);
+            Label branchLabel = pLabelFactory.createLabel(LabelType.CHECK_ARRAY_BOUNDS);
+            codegenInfo.addPredefLabelRef(branchLabel);
             Instruction branchInstr = buildInstruction(OpCode.BL, branchLabel);
-
             emit(branchInstr);
 
             // Add 4-byte offset since array length stored at index 0.
-            opCode         = OpCode.ADD;
-            Instruction i5 = buildInstruction(opCode, arrayRefOperand, arrayRefMemOperand, fixedArrOffsetOperand);
+            opCode = OpCode.ADD;
+            Instruction i5 = buildInstruction(opCode, arrayRefOperand, fixedArrOffsetOperand);
             emit(i5);
 
             // Add index multiplied by 4 to account for byte-addressable memory
             // and 4-byte integers.
             int indexShiftValue          = 2;
-            Operand lsl_2_exprVarOperand = buildOperand(var.toString(), indexShiftValue, false);
+            Operand lsl_2_exprVarOperand = buildOperand(var.toString(), indexShiftValue, OperandType.SHIFT_OPERAND);
             Instruction i6               = buildInstruction(opCode, arrayRefOperand, arrayRefOperand, lsl_2_exprVarOperand);
             emit(i6);
+
+            if (isRead) {
+                // Dereference array element address.
+                opCode         = OpCode.LDR;
+                Operand arrayRefMemOperand = buildOperand(place.toString(), OperandType.MEM_ADDR_OPERAND);
+                Instruction i7 = buildInstruction(opCode, arrayRefOperand, arrayRefMemOperand);
+                emit(i7);
+            }
         }
     }
 }

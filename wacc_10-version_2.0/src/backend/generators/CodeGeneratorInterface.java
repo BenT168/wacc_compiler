@@ -23,11 +23,9 @@ public interface CodeGeneratorInterface {
      *                 False if it is for a shifted, immediate operand.
      * @return
      */
-    Operand buildOperand(String input, int offset, boolean isOffset);
+    Operand buildOperand(String input, int offset, OperandType operandType);
 
     Operand buildOperand(String input, OperandType type);
-
-    Operand buildOperand(String input, OperandType type, int callOffset);
 
     Instruction buildInstruction(OpCode opCode, Label label);
 

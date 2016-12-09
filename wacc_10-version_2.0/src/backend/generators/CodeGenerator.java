@@ -16,7 +16,9 @@ import backend.register.RegisterAllocator;
 import backend.symtab.Attribute;
 import main.WACC;
 import message.Message;
+import message.MessageBody;
 import message.MessageType;
+import message.util.TemplateMessageBody;
 import org.antlr.v4.runtime.misc.NotNull;
 
 import java.io.*;
@@ -56,6 +58,7 @@ public class CodeGenerator extends Backend implements CodeGeneratorInterface {
     private LocalStack localStack;
 
     public CodeGenerator() {
+        // TODO: Add message observers.
     }
 
     /**
@@ -175,9 +178,17 @@ public class CodeGenerator extends Backend implements CodeGeneratorInterface {
         // Calculate statistics and send summary to observers.
         long endTime = System.nanoTime();
         long elapsedTime = endTime - startTime;
+
+        // Create summary message.
         Message message = WACC.messageFactory.create(MessageType.COMPILER_SUMMARY);
-        // Stub to show usage
-        // message.addMessageBody(MessageBody);
+
+        // Create message body.
+        List<String> compilerSummaryMsg = new ArrayList<>();
+        compilerSummaryMsg.add(String.valueOf(elapsedTime));
+        MessageBody messageBody = new TemplateMessageBody(compilerSummaryMsg);
+
+        // Add message body to message and send message.
+        message.addMessageBody(messageBody);
         sendMessage(message);
     }
 
@@ -223,6 +234,11 @@ public class CodeGenerator extends Backend implements CodeGeneratorInterface {
         assemblyFile.flush();
     }
 
+    void emit(Directive directive) {
+        assemblyFile.println("\t\t" + directive.toString());
+        assemblyFile.flush();
+    }
+
     void emitLabel(Label label) {
         if (currentLabel != null && currentInstructionBlock != null) {
             instructionMap.putIfAbsent(currentLabel, currentInstructionBlock);
@@ -245,19 +261,9 @@ public class CodeGenerator extends Backend implements CodeGeneratorInterface {
     }
 
     @Override
-    public Operand buildOperand(String input, int offset, boolean isOffset) {
-        OperandBuilderInterface builder = new OperandBuilder().insertStringInput(input);
-        Operand operand;
-        if (isOffset) {
-            operand = builder.
-                    insertType(OperandType.MEM_ADDR_WITH_OFFSET_OPERAND).
-                    insertOffset(offset).build();
-        } else {
-            operand = builder.
-                    insertType(OperandType.SHIFT_OPERAND).
-                    insertOffset(offset).build();
-        }
-        return operand;
+    public Operand buildOperand(String input, int offset, OperandType operandType) {
+        OperandBuilderInterface builder = new OperandBuilder();
+        return builder.insertStringInput(input).insertType(operandType).insertOffset(offset).build();
     }
 
     @Override
@@ -265,17 +271,6 @@ public class CodeGenerator extends Backend implements CodeGeneratorInterface {
         return new OperandBuilder().
                 insertStringInput(input).
                 insertType(type).build();
-    }
-
-    @Override
-    public Operand buildOperand(String input, OperandType type, int callOffset) {
-        if (!type.equals(OperandType.CALL_OPERAND)) {
-            System.err.println("Type must be " + OperandType.CALL_OPERAND.toString());
-        }
-        return new OperandBuilder().
-                insertStringInput(input).
-                insertOffset(callOffset).
-                insertType(OperandType.CALL_OPERAND).build();
     }
 
     @Override

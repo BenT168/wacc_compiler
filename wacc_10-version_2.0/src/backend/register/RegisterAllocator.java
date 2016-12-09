@@ -10,6 +10,7 @@ import java.util.*;
 
 public class RegisterAllocator implements Allocator {
 
+    private static List<Register> reservedRegs = Arrays.asList(Register.PC_REG, Register.LR_REG, Register.SP_REG, Register.R0_REG, Register.R1_REG);
     private List<Map<Integer, Set<Variable>>> livenessSets;
     private Map<Integer, Set<Variable>> liveInSets;
     private Map<Integer, Set<Variable>> liveOutSets;
@@ -60,11 +61,22 @@ public class RegisterAllocator implements Allocator {
         // from all its connected nodes.
         for (int i = nodeStack.size()-1; i >= 0 ; i--) {
 
-            EnumSet<Register> availableRegisters = EnumSet.allOf(Register.class);
+            List<Register> availableRegisters = new ArrayList<>();
+            for (Register reg : EnumSet.allOf(Register.class)) {
+                if (!reservedRegs.contains(reg)) {
+                    availableRegisters.add(reg);
+                }
+            }
             Map.Entry<Variable, Set<Variable>> node = nodeStack.removeFirst();
 
             for (Variable adjNode : node.getValue()) {
-                Register allocatedReg = availableRegisters.stream().findFirst().get();
+                Register allocatedReg;
+                try {
+                    allocatedReg = availableRegisters.get(0);
+                } catch (IndexOutOfBoundsException e) {
+                    // TODO:
+                    allocatedReg = Register.SPILLED_REG;
+                }
                 nodeRegMap.put(adjNode, allocatedReg);
                 availableRegisters.remove(allocatedReg);
             }
@@ -72,10 +84,11 @@ public class RegisterAllocator implements Allocator {
             // MID: All adjacent nodes are coloured at this point.
             if (availableRegisters.isEmpty()) {
                 // Mark for spilling
-                System.out.println("Spilled");
+                //System.out.println("Spilled");
+                nodeRegMap.put(node.getKey(), Register.SPILLED_REG);
             } else {
                 // Allocate register
-                Register allocatedReg = availableRegisters.stream().findFirst().get();
+                Register allocatedReg = availableRegisters.get(0);
                 nodeRegMap.put(node.getKey(), allocatedReg);
             }
         }

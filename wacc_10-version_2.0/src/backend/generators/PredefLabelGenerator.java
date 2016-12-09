@@ -8,7 +8,10 @@ import backend.register.Register;
 import java.util.ArrayList;
 import java.util.List;
 
+import static backend.generators.ProgramGenerator.innerLabelsReferenced;
+
 class PredefLabelGenerator extends CodeGenerator {
+
 
     PredefLabelGenerator(CodeGenerator parent) {
         super(parent);
@@ -18,7 +21,64 @@ class PredefLabelGenerator extends CodeGenerator {
         Label label = pLabelFactory.createLabel(LabelType.CHECK_ARRAY_BOUNDS);
         emitLabel(label);
 
+        // Instruction 1
+        generatePushLRCode();
+
+        // Instruction 2
+        Operand operand1 = buildOperand(Register.R0_REG.toString());
+        Operand operand2 = buildOperand(String.valueOf(0), OperandType.IMM_OPERAND);
+        Instruction i2   = buildInstruction(OpCode.CMP, operand1, operand2);
+        emit(i2);
+
+        // Instruction 3
+        Label msg_label1 = nLabelFactory.createLabel(LabelType.MESSAGE_LABEL);
+
+        String asciiMessage = PredefData.ARRAY_INDEX_OUT_OF_BOUNDS_NEGATIVE.toString();
+        int wordSize        = asciiMessage.length()-3;
+        List<Instruction> msg_instructions = buildMsgLabelCode(wordSize, asciiMessage);
+        codegenInfo.addToDataSegment(msg_label1, msg_instructions);
+
+        operand2 = buildOperand(msg_label1.toString(), OperandType.DATA_TRANSFER_OPERAND);
+        Instruction i3   = buildInstruction(OpCode.LDRLT, operand1, operand2);
+        emit(i3);
+
+        // Instruction 4
+        Label branchLabel = pLabelFactory.createLabel(LabelType.THROW_RUNTIME_ERROR);
+        innerLabelsReferenced.add(branchLabel);
+        Instruction i4    = buildInstruction(OpCode.BLLT, branchLabel);
+        emit(i4);
+
+        // Instruction 5
+        operand2 = buildOperand(Register.R1_REG.toString());
+        Operand operand3 = buildOperand(Register.R1_REG.toString(), OperandType.MEM_ADDR_OPERAND);
+        Instruction i5 = buildInstruction(OpCode.LDR, operand2, operand3);
+        emit(i5);
+
+        // Instruction 6
+        Instruction i6 = buildInstruction(OpCode.CMP, operand1, operand2);
+        emit(i6);
+
+        // Instruction 7
+        Label msg_label2 = nLabelFactory.createLabel(LabelType.MESSAGE_LABEL);
+
+        String asciiMessage1                = PredefData.ARRAY_INDEX_OUT_OF_BOUNDS_TOO_LARGE.toString();
+        int wordSize1                       = asciiMessage1.length()-3;
+        List<Instruction> msg_instructions1 = buildMsgLabelCode(wordSize1, asciiMessage1);
+        codegenInfo.addToDataSegment(msg_label2, msg_instructions1);
+
+        operand2 = buildOperand(msg_label2.toString(), OperandType.DATA_TRANSFER_OPERAND);
+        Instruction i7 = buildInstruction(OpCode.LDRCS, operand1, operand2);
+        emit(i7);
+
+        // Instruction 8
+        Instruction i8  = buildInstruction(OpCode.BLCS, branchLabel);
+        emit(i8);
+
+        // Instruction 9
+        generatePopPCCode();
+
     }
+
 
     void generateThrowOverflowError() {
         Label label = pLabelFactory.createLabel(LabelType.THROW_OVERFLOW_ERROR);
@@ -34,7 +94,9 @@ class PredefLabelGenerator extends CodeGenerator {
         // Instruction 2
         Label label1              = pLabelFactory.createLabel(LabelType.THROW_RUNTIME_ERROR);
         Instruction instruction2  = buildInstruction(OpCode.BL, label1);
+        innerLabelsReferenced.add(label1);
         emit(instruction2);
+
     }
 
     void generateCheckNullPointer() {
@@ -69,11 +131,13 @@ class PredefLabelGenerator extends CodeGenerator {
 
         // Instruction 4
         Label label1    = pLabelFactory.createLabel(LabelType.THROW_RUNTIME_ERROR);
+        innerLabelsReferenced.add(label1);
         Instruction i4  = buildInstruction(OpCode.BLEQ, label1);
         emit(i4);
 
         // Instruction 5
         generatePopPCCode();
+
     }
 
     private void generatePushLRCode() {
@@ -127,6 +191,7 @@ class PredefLabelGenerator extends CodeGenerator {
 
         // Instruction 4
         Label branchLabel = pLabelFactory.createLabel(LabelType.THROW_RUNTIME_ERROR);
+        innerLabelsReferenced.add(branchLabel);
         i2 = buildInstruction(OpCode.BEQ, branchLabel);
         emit(i2);
 
@@ -151,7 +216,7 @@ class PredefLabelGenerator extends CodeGenerator {
         emit(i2);
 
         // Instruction 9
-        operand2 = buildOperand(Register.R0_REG.toString(), 4, true);
+        operand2 = buildOperand(Register.R0_REG.toString(), 4, OperandType.MEM_ADDR_WITH_OFFSET_OPERAND);
         i2 = buildInstruction(OpCode.LDR, operand1, operand2);
         emit(i2);
 
@@ -168,6 +233,7 @@ class PredefLabelGenerator extends CodeGenerator {
 
         // Instruction 13
         generatePopPCCode();
+
     }
 
     void generatePrintString() {
@@ -344,6 +410,24 @@ class PredefLabelGenerator extends CodeGenerator {
     }
 
     void generateThrowRuntimeError() {
-        
+        emitLabel(pLabelFactory.createLabel(LabelType.THROW_RUNTIME_ERROR));
+
+        // Instruction 1
+        Label branchLabel = pLabelFactory.createLabel(LabelType.PRINT_STRING);
+        innerLabelsReferenced.add(branchLabel);
+        Instruction i1 = buildInstruction(OpCode.BL, branchLabel);
+        emit(i1);
+
+        // Instruction 2
+        Operand operand1 = buildOperand(Register.R0_REG.toString());
+        Operand operand2 = buildOperand(String.valueOf(-1), OperandType.IMM_OPERAND);
+        Instruction i2   = buildInstruction(OpCode.MOV, operand1, operand2);
+        emit(i2);
+
+        // Instruction 3
+        branchLabel = pLabelFactory.createLabel(LabelType.EXIT);
+        Instruction i3 = buildInstruction(OpCode.BL, branchLabel);
+        emit(i3);
+
     }
 }

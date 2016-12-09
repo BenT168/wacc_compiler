@@ -79,7 +79,21 @@ public class ControlFlowGraph {
             }
             Label branchLabel = instr.getLabeL();
             assert branchLabel != null;
-            Integer branchIndex = indexedInstructionMap.get(branchLabel).get(0).getIndex();
+
+            // Instructions for 'branchLabel'
+            Iterator<Map.Entry<Label, List<IndexedInstruction>>> mapIterator = indexedInstructionMap.entrySet().iterator();
+
+            Label key = null;
+            while (mapIterator.hasNext()) {
+                key = mapIterator.next().getKey();
+                if (key.equals(branchLabel)) {
+                    break;
+                }
+            }
+            while (mapIterator.hasNext() && indexedInstructionMap.get(key).isEmpty()) {
+                key = mapIterator.next().getKey();
+            }
+            Integer branchIndex = indexedInstructionMap.get(key).get(0).getIndex();
             outEdges.add(branchIndex);
         } else if ((!isPopNode(instr) && index < instructions.size()-1) || (isPopNode(instr) && index < instructions.size()-2)) {
             // The POP {pc} instruction has no successor only when it its index

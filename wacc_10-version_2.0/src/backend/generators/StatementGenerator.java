@@ -8,7 +8,7 @@ import backend.label.LabelType;
 import backend.register.Register;
 import backend.symtab.Attribute;
 import frontend.TypeCheckVisitor;
-import frontend.type.Type;
+import frontend.type.*;
 import org.antlr.v4.runtime.atn.SemanticContext;
 import org.antlr.v4.runtime.misc.NotNull;
 
@@ -86,12 +86,13 @@ class StatementGenerator extends CodeGenerator {
             }
             emit(instruction);
         } else if (ctx.arrayElem() != null) {
+            ExpressionGenerator expressionGenerator = new ExpressionGenerator(this);
             // 'v1' will hold address of indexed array element.
             Variable v1 = newVarFactory.createNewVar();
-            generateArrayElem(ctx.arrayElem(), v1);
+            expressionGenerator.generateArrayElem(ctx.arrayElem(), v1, false);
 
             Operand operand1 = buildOperand(place.toString());
-            Operand operand2 = buildOperand(v1.toString(), OperandType.MEM_ADDR_OPERAND);
+            Operand operand2 = buildOperand(v1.toString(), OperandType.MEM_ADDR_OPERAND); // TODO
 
             if (isWrite) {
                 // STR place, [v1]
@@ -131,7 +132,7 @@ class StatementGenerator extends CodeGenerator {
             for (WACCParser.ExprContext exprCtx : ctx.argList().expr()) {
                 expressionGenerator.generate(exprCtx, place);
                 Operand operand1 = buildOperand(place.toString());
-                Operand operand2 = buildOperand(Register.SP_REG.toString(), OperandType.CALL_OPERAND, -memoryPerParam);
+                Operand operand2 = buildOperand(Register.SP_REG.toString(), -memoryPerParam, OperandType.CALL_OPERAND);
                 Instruction i1   = buildInstruction(OpCode.STR, operand1, operand2);
                 emit(i1);
                 stackSpaceUsed += memoryPerParam;
@@ -211,7 +212,7 @@ class StatementGenerator extends CodeGenerator {
 
         // LDR v1, [v1] or LDR v1, [v1, #4]
         operand1       = operand2;
-        operand2       = buildOperand(v1.toString(), offset, true);
+        operand2       = buildOperand(v1.toString(), offset, OperandType.MEM_ADDR_WITH_OFFSET_OPERAND);
         Instruction i3 = buildInstruction(OpCode.LDR, operand1, operand2);
         emit(i3);
 
@@ -224,78 +225,6 @@ class StatementGenerator extends CodeGenerator {
             instruction = buildInstruction(OpCode.LDR, operand1, operand2);
         }
         emit(instruction); 
-    }
-
-    private void generateArrayElem(@NotNull WACCParser.ArrayElemContext ctx, Variable place) {
-        // Load into 'place', the array reference obtained from the symbol table
-        // (i.e: the base pointer to the array). Note that the length of the
-        // array is stored at [base_pointer] and the first element at [base_pointer, #4]
-        // Generate indexes and load into new variables.
-        // 'arrayVar' holds the variable that holds the address of the array
-        // 'place' holds the variable that holds the address of the particular
-        // element in the array that we wish to access.
-        int fixedArrOffset = 4;
-        Operand fixedArrOffsetOperand = buildOperand(String.valueOf(fixedArrOffset), OperandType.IMM_OPERAND);
-
-        String arrayIdentifier = ctx.ident().getText();
-        Attribute attribute    = symTabStack.getFirst().get(arrayIdentifier);
-        Variable arrayVar      = attribute.getVariable();
-
-        OpCode opCode            = OpCode.MOV;
-        Operand arrayElemOperand = buildOperand(place.toString());
-        Operand arrayVarOperand  = buildOperand(arrayVar.toString());
-        Instruction i1           = buildInstruction(opCode, arrayElemOperand, arrayVarOperand);
-        emit(i1);
-
-        // Accessing address of particular element in array.
-        List<Variable> indexes = new ArrayList<>();
-        ExpressionGenerator expressionGenerator = new ExpressionGenerator(this);
-
-        for (int i = ctx.expr().size() - 1; i >= 0; i--) {
-            WACCParser.ExprContext exprContext = ctx.expr(i);
-            Variable var = newVarFactory.createNewVar();
-            expressionGenerator.generate(exprContext, var);
-            indexes.add(var);
-
-            // Get length of array.
-            // To do this, we access the array element at the address of the
-            // array, with an offset 0.
-            OpCode opCode1 = OpCode.LDR;
-
-            Operand arrayElemMemOperand = buildOperand(place.toString(), OperandType.MEM_ADDR_OPERAND);
-            Instruction i2              = buildInstruction(opCode1, arrayElemOperand, arrayElemMemOperand);
-            emit(i2);
-
-            // Check array bounds
-            opCode1 = OpCode.MOV;
-
-            Operand reg_r0_operand = buildOperand(Register.R0_REG.toString());
-            Operand reg_r1_operand = buildOperand(Register.R1_REG.toString());
-            Operand exprVarOperand = buildOperand(var.toString());
-            Instruction i3 = buildInstruction(opCode1, reg_r0_operand, exprVarOperand);
-            Instruction i4 = buildInstruction(opCode1, reg_r1_operand, arrayElemOperand);
-            emit(i3);
-            emit(i4);
-
-            // Check array bounds: branch instruction
-            Label branchLabel = pLabelFactory.createLabel(LabelType.CHECK_ARRAY_BOUNDS);
-            Instruction branchInstr = buildInstruction(OpCode.BL, branchLabel);
-            emit(branchInstr);
-
-            // Add 4-byte offset to move the array element pointer to the first
-            // element of the array.
-            opCode = OpCode.ADD;
-            Instruction i5 = buildInstruction(opCode, arrayElemOperand, arrayElemOperand, fixedArrOffsetOperand);
-            emit(i5);
-
-            // Add index, as specified by result of expression evaluation,
-            // multiplied by 4 to account for byte-addressable memory
-            // and 4-byte integers.
-            int indexShiftValue = 2;
-            Operand lsl_2_exprVarOperand = buildOperand(var.toString(), indexShiftValue, false);
-            Instruction i6 = buildInstruction(opCode, arrayElemOperand, arrayElemOperand, lsl_2_exprVarOperand);
-            emit(i6);
-        }
     }
 
     private void newPairGenerator(@NotNull WACCParser.AssignRHSContext ctx, Variable place) {
@@ -359,7 +288,7 @@ class StatementGenerator extends CodeGenerator {
         // Store address of first expression at address in pair reference with offset 4
         int offset1 = 4;
         operand1       = buildOperand(Register.R0_REG.toString());
-        operand2       = buildOperand(place.toString(), offset1, true);
+        operand2       = buildOperand(place.toString(), offset1, OperandType.MEM_ADDR_WITH_OFFSET_OPERAND);
         Instruction i9 = buildInstruction(OpCode.STR, operand1, operand2);
         emit(i9);
     }
@@ -394,7 +323,7 @@ class StatementGenerator extends CodeGenerator {
             String memAddrStr = place.toString();
 
             operand1       = buildOperand(v1.toString());
-            operand2       = buildOperand(memAddrStr, offset1, true);
+            operand2       = buildOperand(memAddrStr, offset1, OperandType.MEM_ADDR_WITH_OFFSET_OPERAND);
             Instruction i4 = buildInstruction(OpCode.STR, operand1, operand2);
             emit(i4);
         }
@@ -408,7 +337,7 @@ class StatementGenerator extends CodeGenerator {
 
         // Store length at address of array reference with offset 0
         int offset     = 0;
-        operand2       = buildOperand(place.toString(), offset, true);
+        operand2       = buildOperand(place.toString(), offset, OperandType.MEM_ADDR_WITH_OFFSET_OPERAND);
         Instruction i6 = buildInstruction(OpCode.STR, operand1, operand2);
         emit(i6);
     }
@@ -507,53 +436,77 @@ class StatementGenerator extends CodeGenerator {
         Instruction instruction;
         Label targetLabel = pLabelFactory.createLabel(LabelType.PRINT_STRING);
 
-        if ((ctx.expr().size() == 2 && isBinaryExprContext(ctx)) || (ctx.intLiter() != null)) {
+        if ((ctx.expr().size() == 2 && ExpressionGenerator.isBinaryExprContext(ctx)) || (ctx.intLiter() != null)) {
             targetLabel = pLabelFactory.createLabel(LabelType.PRINT_INT);
-        } else if (isUnaryExprContext(ctx)) {
-            // TODO:
+        } else if (ExpressionGenerator.isUnaryExprContext(ctx)) {
+            generateUnaryExprPrintLabel(ctx);
         } else if (ctx.charLiter() != null) {
             targetLabel = pLabelFactory.createLabel(LabelType.PUT_CHAR);
         } else if (ctx.boolLiter() != null) {
             targetLabel = pLabelFactory.createLabel(LabelType.PRINT_BOOL);
+        } else if (ctx.arrayElem() != null) {
+            String arrayIdentifier = ctx.arrayElem().ident().getText();
+            Attribute attribute = symTabStack.getFirst().get(arrayIdentifier);
+            Type type = attribute.getType();
+            generatePrintLabelFromType(type);
+
+        } else if (ctx.ident() != null) {
+            String identifier = ctx.ident().getText();
+            Attribute attribute = symTabStack.getFirst().get(identifier);
+            Type type = attribute.getType();
+
+            targetLabel = generatePrintLabelFromType(type);
         }
         codegenInfo.addPredefLabelRef(targetLabel);
         instruction = buildInstruction(OpCode.BL, targetLabel);
         emit(instruction);
     }
 
-    private boolean isBinaryExprContext(@NotNull WACCParser.ExprContext ctx) {
-        try {
-            return ctx.PLUS() != null
-                    || ctx.DIV() != null
-                    || ctx.MINUS().size() == 1 // since '--' is the unary decrement operator.
-                    || ctx.MUL() != null
-                    || ctx.GREATER() != null
-                    || ctx.GREATER_EQUAL() != null
-                    || ctx.LESS() != null
-                    || ctx.LESS_EQUAL() != null
-                    || ctx.DOUBLE_EQUALS() != null
-                    || ctx.NOT_EQUAL() != null
-                    || ctx.OR() != null
-                    || ctx.AND() != null;
-        } catch (NullPointerException e) {
-            System.err.println("This should never happen!\n" +
-                    "Threw null pointer exception in method 'isBinaryExprContext" +
-                    "(WACCParser.ExprContext)'");
-            return false;
+    private Label generatePrintLabelFromType(Type type) {
+        Label targetLabel = pLabelFactory.createLabel(LabelType.PRINT_STRING);
+
+        if (type instanceof ArrayType) {
+            BaseType baseType = ((ArrayType) type).getBaseType();
+            generatePrintLabelFromType(baseType);
+        } else if (type instanceof BaseType) {
+            BaseType baseType = (BaseType) type;
+            if (baseType.getTypeCode().equals(BaseTypeEnum.INT)) {
+                targetLabel = pLabelFactory.createLabel(LabelType.PRINT_INT);
+            } else if (baseType.getTypeCode().equals(BaseTypeEnum.CHAR)) {
+                targetLabel = pLabelFactory.createLabel(LabelType.PUT_CHAR);
+            } else if (baseType.getTypeCode().equals(BaseTypeEnum.BOOL)) {
+                targetLabel = pLabelFactory.createLabel(LabelType.PRINT_BOOL);
+            } else {
+                targetLabel = pLabelFactory.createLabel(LabelType.PRINT_STRING);
+            }
+        } else if (type instanceof PairType) {
+            // TODO:
+            Type type1 = ((PairType) type).getType1();
+        } else {
+            System.err.println("Could not deduce type.");
         }
+        return targetLabel;
     }
 
-    private boolean isUnaryExprContext(@NotNull WACCParser.ExprContext ctx) {
-        try {
-            return (ctx.CHR() != null
-                    || ctx.LEN() != null
-                    || ctx.NOT() != null
-                    || ctx.ORD() != null
-                    || ctx.MINUS().size() == 2); // Since '-' is the binary subtraction operator,
-            // and '--' is the unary decrement operator.
-        } catch (NullPointerException e) {
-            return false;
+    private void generateUnaryExprPrintLabel(@NotNull WACCParser.ExprContext ctx) {
+
+        Label targetLabel;
+
+        if (ctx.CHR() != null) {
+            targetLabel = pLabelFactory.createLabel(LabelType.PUT_CHAR);
+        } else if (ctx.LEN() != null || ctx.MINUS() != null || ctx.ORD() != null) {
+            targetLabel = pLabelFactory.createLabel(LabelType.PRINT_INT);
+            codegenInfo.addPredefLabelRef(targetLabel);
+        } else if (ctx.NOT() != null) {
+            targetLabel = pLabelFactory.createLabel(LabelType.PRINT_BOOL);
+            codegenInfo.addPredefLabelRef(targetLabel);
+        } else {
+            System.err.println("This should never happen!\n" +
+                    "Invalid unary expression: " + ctx.getText());
+            return;
         }
+        Instruction instruction = buildInstruction(OpCode.BL, targetLabel);
+        emit(instruction);
     }
 
     private void generatePreLongBranchCode(Variable place) {
