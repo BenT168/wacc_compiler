@@ -178,8 +178,21 @@ class ExpressionGenerator extends CodeGenerator {
     }
 
     private void generateUnaryExpr(@NotNull WACCParser.ExprContext ctx, Variable place) {
-        Variable place1 = newVarFactory.createNewVar();
-        generate(ctx.expr(0), place1);
+        generate(ctx.expr(0), place);
+
+        OpCode opCode;
+        Operand operand1 = buildOperand(place.toString());
+
+        if (ctx.CHR() != null) {
+
+        } else if (ctx.LEN() != null || ctx.MINUS() != null || ctx.ORD() != null) {
+
+        } else if (ctx.NOT() != null) {
+
+        } else {
+            System.err.println("This should never happen!\n" +
+                    "Invalid unary expression: " + ctx.getText());
+        }
     }
 
     /**

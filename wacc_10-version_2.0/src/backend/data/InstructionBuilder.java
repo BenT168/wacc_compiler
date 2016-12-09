@@ -59,8 +59,9 @@ public class InstructionBuilder implements InstructionBuilderInterface {
             if (!matchesVarSyntax(pureOperandString)) {
                 break;
             }
+            OperandType type = operand.getOperandType();
             Variable var = new Variable(pureOperandString);
-            if (operand.getOperandType().equals(OperandType.DEFAULT_OPERAND)) {
+            if (type.equals(OperandType.DEFAULT_OPERAND)) {
                 // STR instruction has the first operand as a source operand.
                 // There is only ever one destination operand, and in all other instructions
                 // this is the first operand.
@@ -71,7 +72,9 @@ public class InstructionBuilder implements InstructionBuilderInterface {
                         instruction.removeFromKillSet(var);
                     instruction.addToGenSet(var);
                 }
-            } else if (operand.getOperandType().equals(OperandType.MEM_ADDR_OPERAND)) {
+            } else if ((type.equals(OperandType.MEM_ADDR_OPERAND) ||
+                        type.equals(OperandType.MEM_ADDR_WITH_OFFSET_OPERAND)) ||
+                        type.equals(OperandType.SHIFT_OPERAND)) {
                 instruction.addToGenSet(var);
             }
         }

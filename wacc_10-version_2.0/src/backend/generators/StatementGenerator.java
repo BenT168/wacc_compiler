@@ -133,6 +133,7 @@ class StatementGenerator extends CodeGenerator {
                 Operand operand1 = buildOperand(place.toString());
                 Operand operand2 = buildOperand(Register.SP_REG.toString(), OperandType.CALL_OPERAND, -memoryPerParam);
                 Instruction i1   = buildInstruction(OpCode.STR, operand1, operand2);
+                emit(i1);
                 stackSpaceUsed += memoryPerParam;
             }
         }
@@ -509,6 +510,7 @@ class StatementGenerator extends CodeGenerator {
         if ((ctx.expr().size() == 2 && isBinaryExprContext(ctx)) || (ctx.intLiter() != null)) {
             targetLabel = pLabelFactory.createLabel(LabelType.PRINT_INT);
         } else if (isUnaryExprContext(ctx)) {
+            // TODO:
         } else if (ctx.charLiter() != null) {
             targetLabel = pLabelFactory.createLabel(LabelType.PUT_CHAR);
         } else if (ctx.boolLiter() != null) {

@@ -8,6 +8,9 @@
 #ignore temp files
 *~
 
+#ignore assembly files
+*.s
+
 #ignore pdf files (just keep source files)
 *.pdf
 

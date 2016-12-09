@@ -143,7 +143,7 @@ public class CodeGenerator extends Backend implements CodeGeneratorInterface {
             for (Map.Entry<Label, List<Instruction>> entry : dataSegment.entrySet()) {
                 Label dataLabel = entry.getKey();
                 List<Instruction> instructionList = entry.getValue();
-                finalAssemblyFile.print(dataLabel.toString() + ":");
+                finalAssemblyFile.print(dataLabel.toString() + ":\n");
 
                 for (Instruction i : instructionList) {
                     finalAssemblyFile.println("\t" + i.toString());

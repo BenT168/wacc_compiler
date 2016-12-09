@@ -3,6 +3,7 @@ package backend.register;
 import backend.data.Instruction;
 import backend.data.Variable;
 import backend.label.Label;
+import org.antlr.v4.runtime.misc.Array2DHashSet;
 import util.MapUtil;
 
 import java.util.*;
@@ -13,21 +14,33 @@ public class RegisterAllocator implements Allocator {
     private Map<Integer, Set<Variable>> liveInSets;
     private Map<Integer, Set<Variable>> liveOutSets;
 
+    // The following variables are needed to keep track of 'liveOutSet'
+    // accumulation in when calculating the 'liveOutSet' for every instruction
+    // index. Without these top-level variables, we would unable to perform
+    // proper register allocation for loops (possibly receiving a stack overflow
+    // error during the method recursion).
+    private List <Boolean> outSetCalculatedNodes;
+    private Set<Variable> accumulatedOutSet;
+
     public RegisterAllocator() {
         this.livenessSets = new ArrayList<>();
         this.liveInSets = new HashMap<>();
         this.liveOutSets = new HashMap<>();
+        this.outSetCalculatedNodes = new ArrayList<>();
+        this.accumulatedOutSet = new HashSet<>();
     }
 
     public Map<Variable, Register> allocate(InstructionMap<Label, Instruction> groupedInstructions) {
         ControlFlowGraph cfg = new ControlFlowGraph(groupedInstructions);
         Map<Integer, Set<Variable>> killSets = new LinkedHashMap<>();
+
         for (int i = 0; i < cfg.getInstructions().size(); i++) {
             killSets.put(i, cfg.getKillSet(i));
         }
-        this.livenessSets = buildLivenessSets(cfg);
-        Map<Integer, Set<Variable>> liveOutSets = livenessSets.get(1);
-        InterferenceGraph interferenceGraph = new InterferenceGraph(killSets, liveOutSets);
+
+        this.livenessSets                       = buildLivenessSets(cfg);
+        Map<Integer, Set<Variable>> liveOutSets = livenessSets.get(1);  // Index 1 for live out set; index 0 for live in set.
+        InterferenceGraph interferenceGraph     = new InterferenceGraph(killSets, liveOutSets);
 
         // Stack of entries:
         // each entry contains a node and its list of adjacent nodes.
@@ -51,9 +64,9 @@ public class RegisterAllocator implements Allocator {
             Map.Entry<Variable, Set<Variable>> node = nodeStack.removeFirst();
 
             for (Variable adjNode : node.getValue()) {
-                Register allocated = availableRegisters.stream().findFirst().get();
-                nodeRegMap.put(adjNode, allocated);
-                availableRegisters.remove(allocated);
+                Register allocatedReg = availableRegisters.stream().findFirst().get();
+                nodeRegMap.put(adjNode, allocatedReg);
+                availableRegisters.remove(allocatedReg);
             }
 
             // MID: All adjacent nodes are coloured at this point.
@@ -90,16 +103,19 @@ public class RegisterAllocator implements Allocator {
 
         // Sort keys in ascending order
         List<Integer> sortedNodes = new ArrayList<>(cfgGraph.keySet());
-        sortedNodes.sort((node1, node2) -> node2 - node1);
+        Collections.sort(sortedNodes);
 
         do {
+            // Reset the condition on nodes visited.
+            outSetCalculatedNodes = resetNodes(sortedNodes.size());
+            accumulatedOutSet = resetAccumulatedSet();
             for (int i = sortedNodes.size()-1; i >= 0; i--) {
                 Integer node = sortedNodes.get(i);
                 currentInSets.put(node, liveInSets.get(node));
                 currentOutSets.put(node, liveOutSets.get(node));
 
                 Set<Variable> newOutSet = getLiveOutSet(node, cfg);
-                Set<Variable> newInSet = getLiveInSet(node, cfg);
+                Set<Variable> newInSet = getLiveInSet(node, cfg, newOutSet, true);
                 liveInSets.put(node, newInSet);
                 liveOutSets.put(node, newOutSet);
             }
@@ -112,30 +128,47 @@ public class RegisterAllocator implements Allocator {
     }
 
     /**
-     * Mutually recursive function with {@link RegisterAllocator#getLiveOutSet(int, ControlFlowGraph)}
+     * Mutually recursive function with
+     * {@link RegisterAllocator#getLiveOutSet(int, ControlFlowGraph)}.
      * The method returns the set of variables that are live at the start of instruction
      * 'node' - where instruction 'node' is the instuction indexed with the value 'node'.
      * @param node The index of the instruction in the list of all program instructions.
      * @param cfg Our control flow graph of instructions throughout the entire
      *            program. This is obtained by indexing all instructions, in
      *            order, via the use of our {@link InstructionIndexer} class.
+     * @param newOutSet
+     * @param outSetCalculated Indicates whether the live out set at index {@param node}
+     *                         has already been calculated, and if so, whether parameter
+     *                         {@param newOutSet} is this set.
      * @return The set of variables that are live at the start of the instruction 'node'.
      */
-    private Set<Variable> getLiveInSet(int node, ControlFlowGraph cfg) {
+    private Set<Variable> getLiveInSet(int node, ControlFlowGraph cfg, Set<Variable> newOutSet, boolean outSetCalculated) {
+        if (node == 0) {
+            // The initial instruction has an empty 'Live In' set by definition.
+            return Collections.emptySet();
+        }
         Set<Variable> liveInSet = new HashSet<>();
 
-        Set<Variable> liveOutSet = getLiveOutSet(node, cfg);
-        liveInSet.addAll(liveOutSet);
+        if (outSetCalculated) {
+            liveInSet.addAll(newOutSet);
+        } else {
+            // We must calculate the 'live in' set.
+            // We do not modify the input parameter in order to avoid side effects.
+            Set<Variable> liveOutSet = getLiveOutSet(node, cfg);
+            liveInSet.addAll(liveOutSet);
+        }
 
         for (Variable v : cfg.getKillSet(node)) {
             liveInSet.remove(v);
         }
         liveInSet.addAll(cfg.getGenSet(node));
+
         return liveInSet;
     }
 
     /**
-     * Mutually recursive function with {@link RegisterAllocator#getLiveInSet(int, ControlFlowGraph)}
+     * Mutually recursive function with
+     * {@link RegisterAllocator#getLiveInSet(int, ControlFlowGraph, Set, boolean)}.
      * The method returns the set of variables that are live at the end of instruction
      * 'node' - where instruction 'node' is the instuction indexed with the value 'node'.
      * @param node The index of the instruction in the list of all program instructions.
@@ -145,15 +178,42 @@ public class RegisterAllocator implements Allocator {
      * @return The set of variables that are live at the end of the instruction 'node'.
      */
     private Set<Variable> getLiveOutSet(int node, ControlFlowGraph cfg) {
+        if (node == cfg.getGraph().size() - 1) {
+            // The final instruction's 'Live Out' set is "effectively" empty,
+            // since we are at the program end.
+            return Collections.emptySet();
+        }
+        if (isOutSetCalculatedNode(node)) {
+            return accumulatedOutSet;
+        }
+        outSetCalculatedNodes.add(node, true);
         Set<Variable> liveOutSet = new HashSet<>();
+        // We need a way of accumulating the results from getLiveInSet in the for loop.
         for (Integer successor : cfg.getGraph().get(node)) {
-            Set<Variable> liveInSet = getLiveInSet(successor, cfg);
+            Set<Variable> liveInSet = getLiveInSet(successor, cfg, new HashSet<>(), isOutSetCalculatedNode(successor));
             liveOutSet.addAll(liveInSet);
+            accumulatedOutSet.addAll(liveInSet);
         }
         return liveOutSet;
     }
 
     public List<Map<Integer, Set<Variable>>> getLivenessSets() {
         return livenessSets;
+    }
+
+    private boolean isOutSetCalculatedNode(int node) {
+        return outSetCalculatedNodes.get(node);
+    }
+
+    private List<Boolean> resetNodes(int arraySize) {
+        List<Boolean> result = new ArrayList<>(arraySize);
+        for (int i = 0; i < arraySize; i++) {
+            result.add(false);
+        }
+        return result;
+    }
+
+    private Set<Variable> resetAccumulatedSet() {
+        return new HashSet<>();
     }
 }
