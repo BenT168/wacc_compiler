@@ -8,14 +8,14 @@ import java.util.StringTokenizer;
 public class Optimiser {
 
     private String code;
-    private Map instructions = new LinkedHashMap<String, String>();
+    private Map<String, String> instructions = new LinkedHashMap<String, String>();
 
     /* takes as argument unoptimised generated assembly and returns its optimised version */
     public String optimise(String code) {
         this.code = code;
         analyse();
         removeRedundant();
-        //updateCode();
+        updateCode();
         return code;
     }
 
@@ -23,11 +23,11 @@ public class Optimiser {
     private void analyse() {
         String delims = "\n";
         StringTokenizer tokens = new StringTokenizer(code, delims);
-        delims = " ";
+        delims = "";
         while (tokens.hasMoreElements()) {
             StringTokenizer pieces = new StringTokenizer(tokens.nextToken(), delims);
             String instr = pieces.nextToken();
-            String ops = " ";
+            String ops = "";
             while (pieces.hasMoreElements()) {
                 ops = ops.concat(pieces.nextToken());
                 }
