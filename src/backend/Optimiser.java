@@ -15,8 +15,8 @@ public class Optimiser {
         this.code = code;
         analyse();
         removeRedundant();
-        updateCode();
-        return this.code;
+        //updateCode();
+        return code;
     }
 
     /* analyses assembly code to separate and store instructions into hashmap */
