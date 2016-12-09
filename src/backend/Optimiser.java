@@ -19,17 +19,17 @@ public class Optimiser {
 
     /* analyses assembly code to separate and store instructions into hashmap */
     private void analyse() {
-        List<String> instructions = new ArrayList<>();
-        String[] lines = code.split("\n");
-
-        for (String line : lines) {
-            if (!(line.startsWith(".") || line.endsWith(":"))) {
-                instructions.add(line);
+        String delims = "\n";
+        StringTokenizer tokens = new StringTokenizer(code, delims);
+        delims = "";
+        while (tokens.hasMoreElements()) {
+            StringTokenizer pieces = new StringTokenizer(tokens.nextToken(), delims);
+            String instr = pieces.nextToken();
+            String ops = " ";
+            while (pieces.hasMoreElements()) {
+                ops = ops.concat(pieces.nextToken());
             }
-        }
-        for (String instruction : instructions) {
-            String[] splitInstr = instruction.split(" ");
-            instructionMap.put(splitInstr[0], splitInstr[1]);
+            instructionMap.put(instr, ops);
         }
     }
 
