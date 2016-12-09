@@ -82,7 +82,8 @@ public class Main {
 	          File file = new File(assemblyFilename);
 	          BufferedWriter output = new BufferedWriter(new FileWriter(file));
 	          output.write(Optimiser.optimiser.optimise(assemblyString));
-	          output.close();
+			  //output.write(assemblyString);
+			output.close();
 	        } catch ( IOException e ) {
 	           e.printStackTrace();
 	        }
