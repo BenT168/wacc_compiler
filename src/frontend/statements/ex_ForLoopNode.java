@@ -69,7 +69,7 @@ public class ex_ForLoopNode extends StatNode {
         String loop = "loop" + Labeller.counter.getLabel();
         forLoopStat.appendAll(new LabelToken(loop));
         // generate code for loop body
-        forLoopStat.appendAll(loopBody.assemblyCodeGenerating(register));
+        forLoopStat.appendAll(loopBody.assemblyCodeGenerating(register.getNext()));
         // generate code for the rest of the loop cond
         forLoopStat.appendAll(loopCondTwo.assemblyCodeGenerating(register.getNext().getNext()));
         forLoopStat.appendAll(loopCondThree.assemblyCodeGenerating(register));

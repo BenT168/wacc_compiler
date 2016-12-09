@@ -21,12 +21,13 @@ public class Optimiser {
     private void analyse() {
         String delims = "\n";
         StringTokenizer tokens = new StringTokenizer(code, delims);
-        delims = "";
+        delims = " ";
         while (tokens.hasMoreElements()) {
             StringTokenizer pieces = new StringTokenizer(tokens.nextToken(), delims);
             String instr = pieces.nextToken();
             String ops = " ";
             while (pieces.hasMoreElements()) {
+                ops = ops.concat("");
                 ops = ops.concat(pieces.nextToken());
             }
             instructionMap.put(instr, ops);

@@ -8,8 +8,8 @@
 # Program:
 
 begin
-  i = 0 ;
-  println " i = " + i ;
+  int i = 0 ;
+  println i ;
   i += 2 ;
-  println " i = " + i ;
+  println i
 end
