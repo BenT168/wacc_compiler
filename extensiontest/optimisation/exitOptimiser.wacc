@@ -1,0 +1,20 @@
+# simple integer variable declaration and assignment
+
+# Output:
+# #empty#
+
+# Exit:
+# 10
+
+# Program:
+
+begin
+  int a = 13;
+  if a != 13
+  then
+    exit a
+  else
+    a = 10;
+    exit a
+  fi
+end

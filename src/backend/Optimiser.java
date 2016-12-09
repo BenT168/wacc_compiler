@@ -16,20 +16,21 @@ public class Optimiser {
         analyse();
         removeRedundant();
         updateCode();
-        return code;
+        return this.code;
     }
 
     /* analyses assembly code to separate and store instructions into hashmap */
     private void analyse() {
         String delims = "\n";
         StringTokenizer tokens = new StringTokenizer(code, delims);
-        delims = "";
+        delims = " ";
         while (tokens.hasMoreElements()) {
             StringTokenizer pieces = new StringTokenizer(tokens.nextToken(), delims);
             String instr = pieces.nextToken();
-            String ops = "";
+            String ops = " ";
             while (pieces.hasMoreElements()) {
                 ops = ops.concat(pieces.nextToken());
+                ops = ops.concat(" ");
                 }
             instructions.put(instr, ops);
         }
@@ -63,7 +64,7 @@ public class Optimiser {
         if (current.getKey().equals("STR") && next.getKey().equals("LDR")
                 || next.getKey().equals("STR") && current.getKey().equals("LDR")) {
             if (current.getValue().equals(next.getValue())) {
-                instructions.remove(next);
+                instructions.remove(current);
                 return true;
             }
         }
