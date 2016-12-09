@@ -51,7 +51,7 @@ class ProgramGenerator extends CodeGenerator {
         int exitCode     = 0;
         Register r0      = Register.R0_REG;
         operand1         = buildOperand(r0.toString());
-        Operand operand2 = buildOperand(String.valueOf(exitCode));
+        Operand operand2 = buildOperand(String.valueOf(exitCode), OperandType.DATA_TRANSFER_OPERAND);
         Instruction i2   = buildInstruction(OpCode.LDR, operand1, operand2);
         emit(i2);
 

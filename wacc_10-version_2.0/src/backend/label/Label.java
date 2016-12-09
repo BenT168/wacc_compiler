@@ -26,4 +26,22 @@ public final class Label {
     public String toString() {
         return this.labelType.toString() + labelSuffix;
     }
+
+    @Override
+    public boolean equals(Object that) {
+        if (!(that instanceof Label)) {
+            return false;
+        }
+        Label obj = (Label) that;
+        return this.hashCode() == obj.hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((labelType == null) ? 0 : labelType.hashCode());
+        result = prime * result + labelSuffix.hashCode();
+        return result;
+    }
 }

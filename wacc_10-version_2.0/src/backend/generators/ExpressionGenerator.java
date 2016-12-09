@@ -206,7 +206,7 @@ class ExpressionGenerator extends CodeGenerator {
 
     private void generateStringLiter(@NotNull WACCParser.StringLiterContext ctx, Variable place) {
         String stringValue = ctx.getText();
-        int messageSize    = stringValue.length();
+        int messageSize    = stringValue.length()-2; // '-2' to account for apostrophes on either side of string.
         Label msg_label    = nLabelFactory.createLabel(LabelType.MESSAGE_LABEL);
 
         List<Instruction> dataSegmentInstrs = new ArrayList<>();
@@ -259,7 +259,7 @@ class ExpressionGenerator extends CodeGenerator {
 
         Operand operand1        = buildOperand(place.toString());
         Operand operand2        = buildOperand(stored.toString());
-        Instruction instruction = buildInstruction(OpCode.LDR, operand1, operand2);
+        Instruction instruction = buildInstruction(OpCode.MOV, operand1, operand2);
         emit(instruction);
     }
 
@@ -275,7 +275,7 @@ class ExpressionGenerator extends CodeGenerator {
         Attribute attribute  = symTabStack.getFirst().get(arrIdentifier);
         Variable arrayRef    = attribute.getVariable();
 
-        OpCode opCode           = OpCode.LDR;
+        OpCode opCode           = OpCode.MOV;
         Operand arrayRefOperand = buildOperand(place.toString());
         Operand operand2        = buildOperand(arrayRef.toString());
         Instruction i1          = buildInstruction(opCode, arrayRefOperand, operand2);
