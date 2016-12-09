@@ -1,14 +1,12 @@
 package backend;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Optimiser {
 
     private String code;
-    private Map<String, String> instructions = new LinkedHashMap<String, String>();
+    Map<String, String> instructionMap = new HashMap<>();
+
 
     /* takes as argument unoptimised generated assembly and returns its optimised version */
     public String optimise(String code) {
@@ -16,28 +14,28 @@ public class Optimiser {
         analyse();
         removeRedundant();
         updateCode();
-        return this.code;
+        return code;
     }
 
     /* analyses assembly code to separate and store instructions into hashmap */
     private void analyse() {
-        String delims = "\n";
-        StringTokenizer tokens = new StringTokenizer(code, delims);
-        delims = "";
-        while (tokens.hasMoreElements()) {
-            StringTokenizer pieces = new StringTokenizer(tokens.nextToken(), delims);
-            String instr = pieces.nextToken();
-            String ops = "";
-            while (pieces.hasMoreElements()) {
-                ops = ops.concat(pieces.nextToken());
-                }
-            instructions.put(instr, ops);
+        List<String> instructions = new ArrayList<>();
+        String[] lines = code.split("\n");
+
+        for (String line : lines) {
+            if (!(line.startsWith(".") || line.endsWith(":"))) {
+                instructions.add(line);
+            }
+        }
+        for (String instruction : instructions) {
+            String[] splitInstr = instruction.split(" ");
+            instructionMap.put(splitInstr[0], splitInstr[1]);
         }
     }
 
     /* cleans assembly code from redundancies and updates code local variable */
     private void removeRedundant() {
-        Iterator<Map.Entry<String, String>> it = instructions.entrySet().iterator();
+        Iterator<Map.Entry<String, String>> it = instructionMap.entrySet().iterator();
         Map.Entry<String, String> current = it.next();
             while (it.hasNext()) {
                 Map.Entry<String, String> next = it.next();
@@ -51,7 +49,7 @@ public class Optimiser {
     private boolean removeDuplicates(Map.Entry<String, String> current, Map.Entry<String, String> next) {
         if (next.getKey().equals(current.getKey())) {
             if (next.getValue().equals(current.getValue())) {
-                instructions.remove(current);
+                instructionMap.remove(current);
                 return true;
             }
         }
@@ -63,7 +61,7 @@ public class Optimiser {
         if (current.getKey().equals("STR") && next.getKey().equals("LDR")
                 || next.getKey().equals("STR") && current.getKey().equals("LDR")) {
             if (current.getValue().equals(next.getValue())) {
-                instructions.remove(current);
+                instructionMap.remove(current);
                 return true;
             }
         }
@@ -71,7 +69,7 @@ public class Optimiser {
     }
 
     private void updateCode() {
-        Iterator<Map.Entry<String, String>> it = instructions.entrySet().iterator();
+        Iterator<Map.Entry<String, String>> it = instructionMap.entrySet().iterator();
         code = "";
         while (it.hasNext()) {
             Map.Entry<String, String> current = it.next();
