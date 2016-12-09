@@ -536,6 +536,16 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 
 		switch (ctx.getChildCount()) {
 			case 3:
+				// Unary Expression of type 'ident OP'
+				if(ctx.ident() != null && (ctx.PLUS(0) != null && ctx.PLUS(1) != null|| ctx.MINUS(0) != null &&
+						ctx.MINUS(1) != null)) {
+					ExprNode expr = (ExprNode) visit(ctx.ident());
+					UnaryOperators unaryOp = UnaryOperators.evalUnOp(ctx.getChild(1).getText() + ctx.getChild(2).getText());
+					UnaryExpr unaryExpr = new UnaryExpr(unaryOp, expr);
+					unaryExpr.check(currentSymbolTable, ctx);
+
+					return unaryExpr;
+				}
 				// Binary Expression of type `lhs OP rhs`
 				ExprNode lhs = (ExprNode) visit(ctx.expr(0));
 				ExprNode rhs = (ExprNode) visit(ctx.expr(1));
@@ -546,15 +556,6 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 				return binExpr;
 
 			case 2:
-				// Unary Expression of type 'ident OP'
-				if(ctx.ident() != null && (ctx.PLUSPLUS() != null || ctx.MINUSMINUS() != null)) {
-					ExprNode expr = (ExprNode) visit(ctx.ident());
-					UnaryOperators unaryOp = UnaryOperators.evalUnOp(ctx.getChild(1).getText());
-					UnaryExpr unaryExpr = new UnaryExpr(unaryOp, expr);
-					unaryExpr.check(currentSymbolTable, ctx);
-
-					return unaryExpr;
-				} else {
 					// Unary Expression of type `OP expressions`
 					ExprNode expr = (ExprNode) visit(ctx.expr(0));
 					UnaryOperators unaryOp = UnaryOperators.evalUnOp(ctx.getChild(0).getText());
@@ -562,8 +563,6 @@ public class TypeCheckVisitor extends WACCParserBaseVisitor<Tree> {
 					unaryExpr.check(currentSymbolTable, ctx);
 
 					return unaryExpr;
-
-				}
 			default: // in this case this is a single rule (i.e. int_liter, char_liter)
 				return visit(ctx.getChild(0));
 		}

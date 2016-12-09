@@ -29,8 +29,8 @@ NOT: '!' ;
 LEN: 'len' ;
 ORD: 'ord' ;
 CHR: 'chr' ;
-PLUSPLUS: '++';
-MINUSMINUS: '--';
+//PLUSPLUS: '++';
+//MINUSMINUS: '--';
 
 //boolean-literals
 TRUE: 'true' ;

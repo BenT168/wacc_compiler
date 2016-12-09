@@ -95,9 +95,6 @@ baseType: INT
 // Expressions.
         // Unary expressions bind the tightest.
 expr    : (NOT | MINUS | LEN | ORD | CHR) expr
-        //Loops
-        | ident PLUSPLUS
-        | ident MINUSMINUS
         // binary expressions with order of precedence
         | expr (MUL | DIV | MOD) expr
         | expr (PLUS | MINUS) expr
@@ -110,6 +107,9 @@ expr    : (NOT | MINUS | LEN | ORD | CHR) expr
         | OPEN_PARENTHESES expr CLOSE_PARENTHESES
         //Ternary expression
         | expr TERNARY expr COLON expr
+        //Loops
+        | ident PLUS PLUS
+        | ident MINUS MINUS
         // expression literals
         | (intLiter | boolLiter | charLiter | stringLiter | pairLiter | ident | arrayElem | listElem )
         | (binLiter | hexLiter | octLiter )
